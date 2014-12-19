@@ -1,0 +1,5 @@
+Jinja2==2.7.3
+MySQL-python==1.2.4
+SQLAlchemy==0.9.8
+Twisted==14.0.2
+redis==2.10.3
