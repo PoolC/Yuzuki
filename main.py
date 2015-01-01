@@ -1,8 +1,8 @@
 from twisted.web.resource import Resource
-from twisted.web.server import Site
 from twisted.internet import reactor, endpoints
 
 from route import ROUTE
+from helper.site import YuzukiSite
 
 
 class Main(Resource):
@@ -14,5 +14,5 @@ class Main(Resource):
             self.putChild(path, ROUTE[path])
 
 
-endpoints.serverFromString(reactor, "tcp:8080").listen(Site(Main()))
+endpoints.serverFromString(reactor, "tcp:8080").listen(YuzukiSite(Main()))
 reactor.run()

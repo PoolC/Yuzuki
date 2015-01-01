@@ -1,7 +1,7 @@
-from twisted.web.resource import Resource
+from helper.resource import YuzukiResource
 
 
-class Hello(Resource):
+class Hello(YuzukiResource):
     isLeaf = True
 
     def render_GET(self, request):

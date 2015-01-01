@@ -11,7 +11,7 @@ class User(Base):
     username = Column(String(255), index=True, unique=True, nullable=False)
     nickname = Column(String(255), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
-    groups = relationship("Group", secondary="assoc_user_group")
+    #groups = relationship("Group", secondary="assoc_user_group")
     pd_realname = Column(String(255), nullable=False)
     pd_email = Column(String(255))
     pd_address = Column(String(255))
