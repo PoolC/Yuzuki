@@ -1,0 +1,30 @@
+[loggers]
+keys=root
+
+[formatters]
+keys=simple
+
+[formatter_simple]
+format=[%(levelname)s] %(asctime)s - %(name)s : %(message)s
+datefmt=%Y-%m-%d %H:%M:%S
+
+[handlers]
+keys=file,screen
+
+[handler_file]
+class=handlers.TimedRotatingFileHandler
+interval=midnight
+backupCount=5
+formatter=simple
+level=DEBUG
+args=('log/yuzuki.log',)
+
+[handler_screen]
+class=StreamHandler
+formatter=simple
+level=DEBUG
+args=(sys.stdout,)
+
+[logger_root]
+level=NOTSET
+handlers=screen,file
