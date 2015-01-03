@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
 from sqlalchemy.orm import relationship
 from model.base import Base
+from helper.pbkdf2 import pbkdf2, pbkdf2_check
 
 
 class User(Base):
@@ -25,10 +26,13 @@ class User(Base):
                  pd_hakbeon=None, pd_bio=None):
         self.username = username
         self.nickname = nickname
-        self.password = password
+        self.password = pbkdf2(password)
         self.pd_realname = pd_realname
         self.pd_email = pd_email
         self.pd_address = pd_address
         self.pd_phone = pd_phone
         self.pd_hakbeon = pd_hakbeon
         self.pd_bio = pd_bio
+
+    def check_password(self, password):
+        return pbkdf2_check(password, self.password)
