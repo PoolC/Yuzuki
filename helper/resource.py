@@ -24,20 +24,19 @@ class YuzukiResource(Resource):
         # TODO: auto login
         result = Resource.render(self, request)
         request.finalize()
-        result.encode("UTF-8")
-        return result
-    
+        return result.encode("UTF-8")
+
     @staticmethod
     def get_template(name, parent=None, glob=None):
         return YuzukiResource.jinja2_env.get_template(name, parent, glob)
-    
+
     @staticmethod
     def render_template(name, request, context=None):
         if context == None:
             context = dict()
         context["request"] = request
-        return YuzukiResource.get_template(name).render(context).encode("utf-8")
-    
+        return YuzukiResource.get_template(name).render(context)
+
     @staticmethod
     def render_template_from_text(text, context=None):
         if context == None:
