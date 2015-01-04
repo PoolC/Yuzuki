@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from twisted.web.http import UNAUTHORIZED
 
 from helper.resource import YuzukiResource
