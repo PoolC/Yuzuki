@@ -7,6 +7,8 @@ from model.base import Base
 
 # import all models you defined here
 from model.user import User
+from model.group import Group
+from model.association.user_group import UserGroupAssociation
 
 class DatabaseHelper(object):
     _engine = create_engine(DB_CONNECTION_STRING)

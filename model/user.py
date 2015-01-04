@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from model.base import Base
 from helper.pbkdf2 import pbkdf2, pbkdf2_check
 
@@ -20,10 +21,9 @@ class User(Base):
     pd_hakbeon = Column(Integer())
     pd_bio = Column(Text())
     created_at = Column(DateTime(), default=datetime.now)
-    is_admin = Column(Boolean)
+    is_admin = Column(Boolean, default=False)
 
-    def __init__(self, username, nickname, password, pd_realname, pd_email=None, pd_address=None, pd_phone=None,
-                 pd_hakbeon=None, pd_bio=None):
+    def __init__(self, username, nickname, password, pd_realname, pd_email, pd_address, pd_phone, pd_hakbeon, pd_bio):
         self.username = username
         self.nickname = nickname
         self.password = pbkdf2(password)
@@ -36,3 +36,6 @@ class User(Base):
 
     def check_password(self, password):
         return pbkdf2_check(password, self.password)
+
+    def __repr__(self):
+        return "<User name=%s>" % self.username
