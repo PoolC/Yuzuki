@@ -6,6 +6,8 @@ from twisted.web.resource import Resource
 from twisted.web.http import FORBIDDEN
 
 from helper.md_ext import MarkdownExtension
+from config import SITE_NAME
+
 
 class YuzukiResource(Resource):
     jinja2_ext = [
@@ -15,6 +17,7 @@ class YuzukiResource(Resource):
                                                      encoding="utf-8"),
                              extensions=jinja2_ext)
     jinja2_env.globals = {
+        "site_name": SITE_NAME,
         "datetime": datetime,
     }
 
