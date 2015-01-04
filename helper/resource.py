@@ -17,7 +17,7 @@ class YuzukiResource(Resource):
     jinja2_env.globals = {
         "datetime": datetime,
     }
-    
+
     def render(self, request):
         request.initialize(self)
         request.logger.info(request.path + " " + request.getClientIP())
@@ -43,15 +43,16 @@ class YuzukiResource(Resource):
             context = dict()
         template = YuzukiResource.jinja2_env.from_string(text)
         return template.render(context).encode("utf-8")
-    
+
     @staticmethod
     def generate_error_message(request, code, brief, detail):
         context = {
-            "brief"     : brief,
-            "detail"    : detail,
-            "title"     : str(code) + " - " + str(brief),
+            "brief": brief,
+            "detail": detail,
+            "title": str(code) + " - " + str(brief),
         }
         return YuzukiResource.render_template("error.html", request, context)
+
 
 def need_login(f):
     def _render_wrapper(resource, request):
@@ -63,7 +64,9 @@ def need_login(f):
                                                          FORBIDDEN,
                                                          "Forbidden",
                                                          "로그인 한 사용자만 볼 수 있는 페이지입니다")
+
     return _render_wrapper
+
 
 def need_admin_permission(f):
     def _render_wrapper(resource, request):
@@ -75,4 +78,5 @@ def need_admin_permission(f):
                                                          FORBIDDEN,
                                                          "Forbidden",
                                                          "관리자만 볼 수 있는 페이지입니다")
+
     return _render_wrapper
