@@ -6,4 +6,4 @@ class Index(YuzukiResource):
 
     def render_GET(self, request):
         # TODO: index page
-        return "Hello, World!"
+        return self.render_template("index.html", request)
