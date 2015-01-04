@@ -14,5 +14,6 @@ ROUTE = {
     "logout": Logout(),
     "register": Register(),
     "favicon.ico": File("static/img/favicon.ico"),
+    "static": File("static"),
     "hello": Hello(),
 }
