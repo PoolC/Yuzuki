@@ -18,12 +18,12 @@ class User(Base):
     pd_email = Column(String(255))
     pd_address = Column(String(255))
     pd_phone = Column(String(255))
-    pd_hakbeon = Column(Integer())
+    pd_bunryu = Column(Integer())
     pd_bio = Column(Text())
     created_at = Column(DateTime(), default=datetime.now)
     is_admin = Column(Boolean, default=False)
 
-    def __init__(self, username, nickname, password, pd_realname, pd_email, pd_address, pd_phone, pd_hakbeon, pd_bio):
+    def __init__(self, username, nickname, password, pd_realname, pd_email, pd_address, pd_phone, pd_bunryu, pd_bio):
         self.username = username
         self.nickname = nickname
         self.password = pbkdf2(password)
@@ -31,7 +31,7 @@ class User(Base):
         self.pd_email = pd_email
         self.pd_address = pd_address
         self.pd_phone = pd_phone
-        self.pd_hakbeon = pd_hakbeon
+        self.pd_bunryu = pd_bunryu
         self.pd_bio = pd_bio
 
     def check_password(self, password):
