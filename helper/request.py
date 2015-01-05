@@ -102,7 +102,8 @@ class YuzukiRequest(Request):
             body = self._ndk_resource.generate_error_message(self,
                                                              INTERNAL_SERVER_ERROR,
                                                              "Internal Server Error",
-                                                             "서버 에러가 발생하였습니다.")
+                                                             u"서버 에러가 발생하였습니다.")
+            body = body.encode("UTF-8")
             self.setResponseCode(INTERNAL_SERVER_ERROR)
             self.setHeader(b'content-type', b"text/html")
             self.setHeader(b'content-length', intToBytes(len(body)))
