@@ -66,7 +66,7 @@ def need_login(f):
             return YuzukiResource.generate_error_message(request,
                                                          FORBIDDEN,
                                                          "Forbidden",
-                                                         "로그인 한 사용자만 볼 수 있는 페이지입니다")
+                                                         u"로그인 한 사용자만 볼 수 있는 페이지입니다")
 
     return _render_wrapper
 
@@ -80,6 +80,6 @@ def need_admin_permission(f):
             return YuzukiResource.generate_error_message(request,
                                                          FORBIDDEN,
                                                          "Forbidden",
-                                                         "관리자만 볼 수 있는 페이지입니다")
+                                                         u"관리자만 볼 수 있는 페이지입니다")
 
     return _render_wrapper
