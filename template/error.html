@@ -1,1 +1,41 @@
-hey
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>{{ site_name }} - {{ title }}</title>
+    <style>
+        @font-face {
+            font-family: 'Noto Sans';
+            font-style: normal;
+            font-weight: normal;
+            src: url('/static/font/NotoSans/NotoSansCJKkr-Regular.otf');
+            unicode-range: U+0020-007E, U+1100-11F9, U+3000-303F, U+3131-318E, U+327F-327F, U+AC00-D7A3, U+FF01-FF60;
+        }
+
+        @font-face {
+            font-family: 'Noto Sans';
+            font-style: normal;
+            font-weight: bold;
+            src: url('/static/font/NotoSans/NotoSansCJKkr-Bold.otf');
+            unicode-range: U+0020-007E, U+1100-11F9, U+3000-303F, U+3131-318E, U+327F-327F, U+AC00-D7A3, U+FF01-FF60;
+        }
+
+        html * {
+            font-family: 'Noto Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .foo {
+            text-align: center;
+            display: block;
+            width: 700px;
+            margin: 30px auto;
+        }
+    </style>
+</head>
+<body>
+<h1 class="foo">{{ brief }}</h1>
+
+<p class="foo">{{ detail }}</p>
+<img class="foo" src="/static/img/illya.jpg"/>
+</body>
+</html>
