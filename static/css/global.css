@@ -118,7 +118,7 @@ body {
     font-family: 'Noto Sans';
     font-style: normal;
     font-weight: normal;
-    src: url('../font/NotoSans/NotoSansCJKkr-Regular.otf');
+    src: url('/static/font/NotoSans/NotoSansCJKkr-Regular.otf');
     unicode-range: U+0020-007E, U+1100-11F9, U+3000-303F, U+3131-318E, U+327F-327F, U+AC00-D7A3, U+FF01-FF60;
 }
 
@@ -126,7 +126,7 @@ body {
     font-family: 'Noto Sans';
     font-style: normal;
     font-weight: bold;
-    src: url('../font/NotoSans/NotoSansCJKkr-Bold.otf');
+    src: url('/static/font/NotoSans/NotoSansCJKkr-Bold.otf');
     unicode-range: U+0020-007E, U+1100-11F9, U+3000-303F, U+3131-318E, U+327F-327F, U+AC00-D7A3, U+FF01-FF60;
 }
 
