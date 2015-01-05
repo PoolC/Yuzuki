@@ -52,7 +52,7 @@ class YuzukiResource(Resource):
         context = {
             "brief": brief,
             "detail": detail,
-            "title": str(code) + " - " + str(brief),
+            "title": str(code) + " " + str(brief),
         }
         return YuzukiResource.render_template("error.html", request, context)
 
