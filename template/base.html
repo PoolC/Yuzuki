@@ -57,17 +57,17 @@
                 <li>
                     <a data-toggle="collapse" data-target="#somoim">소모임 게시판</a>
                     <ul id="somoim" class="nav nav-collapse collapse">
-                        <li><a href="#">소모임1</a></li>
-                        <li><a href="#">소모임2</a></li>
-                        <li><a href="#">소모임3</a></li>
+                        {% for board in board_meta["somoim"] %}
+                            <li><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
+                        {% endfor %}
                     </ul>
                 </li>
                 <li>
                     <a data-toggle="collapse" data-target="#normal">일반 게시판</a>
                     <ul id="normal" class="nav nav-collapse collapse">
-                        <li><a href="#">일반게시판1</a></li>
-                        <li><a href="#">일반게시판2</a></li>
-                        <li><a href="#">일반게시판3</a></li>
+                        {% for board in board_meta["normal"] %}
+                            <li><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
+                        {% endfor %}
                     </ul>
                 </li>
                 <li class="disabled"><a href="#">채팅방</a></li>
