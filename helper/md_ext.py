@@ -14,7 +14,7 @@ markdown_extension_list = [
     ]
 md = Markdown(extensions=markdown_extension_list)
 
-def do_markdown(source):
+def markdown_convert(source):
     return md.convert(source)
 
 class MarkdownExtension(Extension):
@@ -31,5 +31,5 @@ class MarkdownExtension(Extension):
     
     def _markdown_support(self, caller=None):
         body = Markup(caller()).unescape()
-        result = do_markdown(body)
+        result = markdown_convert(body)
         return result
