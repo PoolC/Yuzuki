@@ -20,7 +20,7 @@ class YuzukiRequest(Request):
         if you need to do something just before or just after a request is initialized,
         write it here
         """
-        self._ndk_resource = resource
+        self._yzk_resource = resource
         self.logger = logging.getLogger(resource.__class__.__module__)
     
     def finalize(self):
@@ -99,7 +99,7 @@ class YuzukiRequest(Request):
             return Request.processingFailed(self, reason)
         else:
             self.logger.error(reason)
-            body = self._ndk_resource.generate_error_message(self,
+            body = self._yzk_resource.generate_error_message(self,
                                                              INTERNAL_SERVER_ERROR,
                                                              "Internal Server Error",
                                                              u"서버 에러가 발생하였습니다.")
