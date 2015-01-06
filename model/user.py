@@ -20,6 +20,7 @@ class User(Base):
     pd_phone = Column(String(255))
     pd_bunryu = Column(Integer(), ForeignKey("group.uid"), nullable=False)
     pd_bio = Column(Text())
+    bunryu = relationship("Group", foreign_keys=pd_bunryu)
     created_at = Column(DateTime(), default=datetime.now)
     is_admin = Column(Boolean, default=False)
     is_blocked = Column(Boolean, default=False)
