@@ -19,5 +19,5 @@ ROUTE = {
     "favicon.ico": File("static/img/favicon.ico"),
     "static": File("static"),
     "hello": Hello(),
-    "welcome": Welcome()
+    "welcome": Welcome(),
 }
