@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block head %}
+    <style>
+        .subject {
+            width: 50%;
+        }
+
+        .author {
+            width: 20%;
+        }
+
+        .timestamp {
+            width: 30%;
+        }
+
+        .outer-wrap {
+            float: left;
+            position: relative;
+            left: 50%;
+            padding-top: 10px;
+        }
+
+        #pagination {
+            float: left;
+            left: -50%;
+            position: relative;
+        }
+
+        .clear {
+            clear: both;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="col-xs-12">
+        <h1>{{ board.repr }}</h1>
+    </div>
+    {% if articles %}
+        <div class="col-xs-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="subject">제목</th>
+                    <th class="author">작성자</th>
+                    <th class="timestamp">작성시간</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td class="subject">{{ article.subject }}</td>
+                        <td class="author">{{ article.user.nickname }}</td>
+                        <td class="timestamp">{{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="outer-wrap">
+                <div id="pagination"></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-xs-12 alert alert-warning"><strong>이런!</strong> 이 페이지에는 아무 글도 없습니다.</div>
+    {% endif %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="/static/js/jquery.bootpag.min.js"></script>
+    <script>
+        $("#pagination").bootpag({
+            total: 12,
+            page: {{ page }},
+            maxVisible: 10,
+            leaps: false,
+            href: "/board?name={{ board.name }}&page={{ "{{" }}number{{ "}}" }}"
+        });
+    </script>
+{% endblock %}
