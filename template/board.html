@@ -69,7 +69,7 @@
     <script src="/static/js/jquery.bootpag.min.js"></script>
     <script>
         $("#pagination").bootpag({
-            total: 12,
+            total: {{ page_total }},
             page: {{ page }},
             maxVisible: 10,
             leaps: false,

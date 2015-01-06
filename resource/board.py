@@ -40,9 +40,15 @@ class BoardView(YuzukiResource):
         start_idx = self.ARTICLE_PER_PAGE * (page - 1)
         end_idx = start_idx + self.ARTICLE_PER_PAGE - 1
         articles = query[start_idx:end_idx]
+        total_article_count = query.count()
+        if total_article_count % self.ARTICLE_PER_PAGE == 0:
+            page_total = total_article_count / self.ARTICLE_PER_PAGE
+        else:
+            page_total = total_article_count / self.ARTICLE_PER_PAGE + 1
         context = {
             "articles": articles,
             "board": board,
             "page": page,
+            "page_total": page_total,
         }
         return self.render_template("board.html", request, context)
