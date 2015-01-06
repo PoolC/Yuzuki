@@ -23,7 +23,7 @@ class Board(Base):
         self.write_group = write_group
         self.comment_group = comment_group
         self.classification = classification
-        self.order = order;
+        self.order = order
 
     def __repr__(self):
         return "<Board name=%s>" % self.name
