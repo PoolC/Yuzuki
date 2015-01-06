@@ -1,7 +1,4 @@
-from twisted.web.http import UNAUTHORIZED
-
 from helper.resource import YuzukiResource
-from model.user import User
 
 
 class Logout(YuzukiResource):
