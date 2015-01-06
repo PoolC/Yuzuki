@@ -5,4 +5,4 @@ class About(YuzukiResource):
     isLeaf = True
 
     def render_GET(self, request):
-        return "Hello, World!"
+        return self.render_template("about.html", request)
