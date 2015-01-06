@@ -66,8 +66,12 @@ class Register(YuzukiResource):
 
         # bunryu existence check
         query = request.dbsession.query(Group).filter(Group.uid == new_user.pd_bunryu)
-        if not request.dbsession.query(query.exists()).scalar():
+        result = query.all()
+        if not result:
             return u"존재하지 않는 분류 그룹입니다."
+        else:
+            group = result[0]
+            group.users.append(new_user)
 
         # all green
         return None
