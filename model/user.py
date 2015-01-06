@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
 from model.base import Base
@@ -18,7 +18,7 @@ class User(Base):
     pd_email = Column(String(255))
     pd_address = Column(String(255))
     pd_phone = Column(String(255))
-    pd_bunryu = Column(Integer())
+    pd_bunryu = Column(Integer(), ForeignKey("group.uid"), nullable=False)
     pd_bio = Column(Text())
     created_at = Column(DateTime(), default=datetime.now)
     is_admin = Column(Boolean, default=False)

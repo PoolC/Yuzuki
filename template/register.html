@@ -3,9 +3,17 @@
     <link rel="stylesheet" href="/static/css/register.css"/>
 {% endblock %}
 {% block body %}
-    <h1>가입신청</h1>
-    <span class="help-block">*표는 필수항목</span>
-    <form action="/register" method="post">
+    <div class="col-md-12">
+        <h1>가입신청</h1>
+        <span class="help-block">*표는 필수항목</span>
+
+        {% if err %}
+            <div class="alert alert-danger" role="alert">
+                ※ {{ err }}
+            </div>
+        {% endif %}
+    </div>
+    <form id="register-form" action="/register" method="post">
         <div class="form-group col-md-12">
             <label for="username">ID(*)</label>
             <input id="username" name="username" class="form-control" type="text" placeholder="로그인에 사용할 ID" required/>
@@ -16,15 +24,16 @@
         </div>
         <div class="form-group col-md-6">
             <label for="password">비밀번호(*)</label>
-            <input id="password" name="password" class="form-control" type="password" placeholder="비밀번호" pattern=".{8}"
+            <input id="password" class="form-control" type="password" placeholder="비밀번호" pattern=".{8}"
                    title="비밀번호는 최소 8자리여야 합니다."
                    required/>
             <span class="help-block">※ 최소 8글자 이상</span>
+            <input id="password_real" name="password" type="hidden"/>
         </div>
         <div class="form-group col-md-6">
             <div class="col-md-11">
                 <label for="password_confirm">비밀번호 확인</label>
-                <input id="password_confirm" name="password_confirm" class="form-control" type="password"
+                <input id="password_confirm" class="form-control" type="password"
                        placeholder="비밀번호 확인" title="입력했던 비밀번호와 같은 값을 입력하세요."/>
             </div>
             <div class="col-md-1">
@@ -68,5 +77,6 @@
     </form>
 {% endblock %}
 {% block script %}
+    <script src="/static/js/sha256.js"></script>
     <script src="/static/js/register.js"></script>
 {% endblock %}
