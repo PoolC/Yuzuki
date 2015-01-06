@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-class NodokaException(Exception):
+class YuzukiException(Exception):
     """
     parent of all Nodoka level defined exception
     """
     pass
 
-class MissingArgument(NodokaException):
+class MissingArgument(YuzukiException):
     status = 400
     
     def __init__(self, key):
-        NodokaException.__init__(self, "Missing argument key is \"%s\"." % key)
+        YuzukiException.__init__(self, "Missing argument key is \"%s\"." % key)
 
-class DuplicateArgumentGiven(NodokaException):
+class DuplicateArgumentGiven(YuzukiException):
     status = 400
     
     def __init__(self, key):
-        NodokaException.__init__(self, "Duplicate key \"%s\" is given as argument" % key)
+        YuzukiException.__init__(self, "Duplicate key \"%s\" is given as argument" % key)
