@@ -39,5 +39,5 @@ class Login(YuzukiResource):
             "redirect": redirect
         }
         if error:
-            context["error"] = "ID나 비밀번호가 잘못되었습니다."
+            context["err"] = u"ID나 비밀번호가 잘못되었습니다."
         return self.render_template("login.html", request, context)

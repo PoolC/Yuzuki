@@ -1,0 +1,23 @@
+html * {
+    font-family: 'Noto Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.login-form {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-top: 50px;
+    padding: 20px;
+}
+
+#login-form {
+    margin-top: 30px;
+}
+
+#login-form > div {
+    margin-top: 10px;
+}
+
+.form-group label {
+    white-space: nowrap;
+    overflow: hidden;
+}

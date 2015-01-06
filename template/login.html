@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="ko">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/css/noto_sans.css"/>
+    <link rel="stylesheet" href="/static/css/login.css"/>
+    <title>{{ site_name }} - 로그인</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-4">
+            <div class="login-form">
+                <h1>로그인</h1>
+                {% if err %}
+                    <div class="alert alert-danger" role="alert">
+                        ※ {{ err }}
+                    </div>
+                {% endif %}
+                <form class="form-horizontal" id="login-form" action="/login" method="post">
+                    <div class="form-group">
+                        <label for="username" class="col-xs-3 control-label">ID</label>
+
+                        <div class="col-xs-9">
+                            <input id="username" name="username" class="form-control" type="text" placeholder="ID"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-xs-3 control-label">비밀번호</label>
+
+                        <div class="col-xs-9">
+                            <input id="password" class="form-control" type="password" placeholder="비밀번호" required/>
+                        </div>
+                        <input id="password-real" name="password" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="remember_me" type="checkbox"> 자동 로그인
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <input type="submit" value="로그인" class="btn btn-default"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="/static/js/sha256.js"></script>
+<script src="/static/js/login.js"></script>
+</body>
+</html>
