@@ -3,6 +3,7 @@ from twisted.web.static import File
 from resource.index import Index
 from resource.about import About
 from resource.api import Api
+from resource.board import Board
 from resource.hello import Hello
 from resource.login import Login
 from resource.logout import Logout
@@ -13,6 +14,7 @@ ROUTE = {
     "": Index(),
     "about": About(),
     "api": Api(),
+    "board": Board(),
     "login": Login(),
     "logout": Logout(),
     "register": Register(),
