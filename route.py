@@ -6,6 +6,7 @@ from resource.hello import Hello
 from resource.login import Login
 from resource.logout import Logout
 from resource.register import Register
+from resource.welcome import Welcome
 
 ROUTE = {
     "": Index(),
@@ -16,4 +17,5 @@ ROUTE = {
     "favicon.ico": File("static/img/favicon.ico"),
     "static": File("static"),
     "hello": Hello(),
+    "welcome": Welcome()
 }
