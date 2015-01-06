@@ -22,6 +22,7 @@ class User(Base):
     pd_bio = Column(Text())
     created_at = Column(DateTime(), default=datetime.now)
     is_admin = Column(Boolean, default=False)
+    is_blocked = Column(Boolean, default=False)
 
     def __init__(self, username, nickname, password, pd_realname, pd_email, pd_address, pd_phone, pd_bunryu, pd_bio):
         self.username = username
