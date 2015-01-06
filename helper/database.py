@@ -9,6 +9,8 @@ from model.base import Base
 from model.user import User
 from model.group import Group
 from model.association.user_group import UserGroupAssociation
+from model.board import Board
+from model.article import Article
 
 class DatabaseHelper(object):
     _engine = create_engine(DB_CONNECTION_STRING)
