@@ -1,7 +1,7 @@
 var ok_sign = $(".password-confirm-ok");
 var no_sign = $(".password-confirm-no");
 var password = $("#password");
-var password_confirm = $("#password_confirm");
+var password_confirm = $("#password-confirm");
 
 ok_sign.hide();
 no_sign.hide();
@@ -22,8 +22,8 @@ var show_password_validity_sign = function () {
 };
 $("#register-form").submit(function (e) {
     var password_hash = CryptoJS.SHA256($("#password").val()).toString();
-    $("#password_real").val(password_hash);
+    $("#password-real").val(password_hash);
     return true;
 });
-$("#password_confirm").on("input propertychange paste", show_password_validity_sign);
+$("#password-confirm").on("input propertychange paste", show_password_validity_sign);
 $("#password").on("input propertychange paste", show_password_validity_sign);
