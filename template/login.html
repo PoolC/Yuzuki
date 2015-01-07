@@ -20,6 +20,7 @@
                     </div>
                 {% endif %}
                 <form class="form-horizontal" id="login-form" action="/login" method="post">
+                    <input type="hidden" name="redirect" value="{{ redirect }}"/>
                     <div class="form-group">
                         <label for="username" class="col-xs-3 control-label">ID</label>
 

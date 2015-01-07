@@ -39,7 +39,7 @@ class Login(YuzukiResource):
             return self.render_login_page(request, self.INVALID_CREDENTIAL)
 
     def render_login_page(self, request, err):
-        redirect = request.get_argument("redirect", "")
+        redirect = request.get_argument("redirect", "/")
         context = {
             "redirect": redirect
         }
