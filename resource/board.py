@@ -47,10 +47,12 @@ class BoardView(YuzukiResource):
             page_total = total_article_count / self.ARTICLE_PER_PAGE
         else:
             page_total = total_article_count / self.ARTICLE_PER_PAGE + 1
+        can_write = request.user and board.write_group in request.user.groups
         context = {
             "articles": articles,
             "board": board,
             "page": page,
             "page_total": page_total,
+            "can_write": can_write,
         }
         return self.render_template("board.html", request, context)
