@@ -6,10 +6,11 @@ from helper.resource import YuzukiResource
 from model.board import Board
 from model.article import Article
 from exception import BadArgument
+from config import ARTICLE_PER_PAGE
 
 
 class BoardView(YuzukiResource):
-    ARTICLE_PER_PAGE = 15
+    _ARTICLE_PER_PAGE = ARTICLE_PER_PAGE
 
     def render_GET(self, request):
         name = request.get_argument("name")
@@ -39,14 +40,14 @@ class BoardView(YuzukiResource):
             .filter(Article.board == board) \
             .order_by(Article.uid.desc()) \
             .options(subqueryload(Article.user))
-        start_idx = self.ARTICLE_PER_PAGE * (page - 1)
-        end_idx = start_idx + self.ARTICLE_PER_PAGE - 1
+        start_idx = self._ARTICLE_PER_PAGE * (page - 1)
+        end_idx = start_idx + self._ARTICLE_PER_PAGE - 1
         articles = query[start_idx:end_idx]
         total_article_count = query.count()
-        if total_article_count % self.ARTICLE_PER_PAGE == 0:
-            page_total = total_article_count / self.ARTICLE_PER_PAGE
+        if total_article_count % self._ARTICLE_PER_PAGE == 0:
+            page_total = total_article_count / self._ARTICLE_PER_PAGE
         else:
-            page_total = total_article_count / self.ARTICLE_PER_PAGE + 1
+            page_total = total_article_count / self._ARTICLE_PER_PAGE + 1
         can_write = request.user and board.write_group in request.user.groups
         context = {
             "articles": articles,
