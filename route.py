@@ -2,6 +2,7 @@ from twisted.web.static import File
 
 from resource.index import Index
 from resource.article import ArticleParent
+from resource.reply import ReplyParent
 from resource.about import About
 from resource.api import Api
 from resource.board import BoardView
@@ -14,6 +15,7 @@ from resource.welcome import Welcome
 ROUTE = {
     "": Index(),
     "article": ArticleParent(),
+    "reply": ReplyParent(),
     "about": About(),
     "api": Api(),
     "board": BoardView(),

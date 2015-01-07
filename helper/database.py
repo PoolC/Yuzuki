@@ -11,6 +11,7 @@ from model.group import Group
 from model.association.user_group import UserGroupAssociation
 from model.board import Board
 from model.article import Article
+from model.reply import Reply
 
 class DatabaseHelper(object):
     _engine = create_engine(DB_CONNECTION_STRING)
