@@ -52,13 +52,13 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a id="about" href="/about">소개</a></li>
-                <li><a id="notice" href="/board?name=notice">공지사항</a></li>
+                <li id="about"><a href="/about">소개</a></li>
+                <li id="notice"><a href="/board?name=notice">공지사항</a></li>
                 <li>
                     <a data-toggle="collapse" data-target="#somoim">소모임 게시판</a>
                     <ul id="somoim" class="nav nav-collapse collapse">
                         {% for board in board_meta["somoim"] %}
-                            <li><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
+                            <li id="{{ board[0] }}"><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -66,7 +66,7 @@
                     <a data-toggle="collapse" data-target="#normal">일반 게시판</a>
                     <ul id="normal" class="nav nav-collapse collapse">
                         {% for board in board_meta["normal"] %}
-                            <li><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
+                            <li id="{{ board[0] }}"><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>

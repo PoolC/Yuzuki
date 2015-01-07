@@ -95,6 +95,7 @@
 {% block script %}
     <script src="/static/js/jquery.bootpag.js"></script>
     <script>
+        // pagination
         $("#pagination").bootpag({
             total: {{ page_total }},
             page: {{ page }},
@@ -102,5 +103,17 @@
             leaps: false,
             href: "/board?name={{ board.name }}&page={{ "{{" }}number{{ "}}" }}"
         });
+
+        // activate sidebar menu
+        if ("{{ board.name }}" === "notice") {
+            var notice_li = $("#notice");
+            notice_li.addClass("active");
+            notice_li.append("<span class=\"sr-only\">현재 선택됨</span>");
+        } else {
+            var board_li = $("#{{ board.name }}");
+            board_li.parent().addClass("in");
+            board_li.addClass("active");
+            board_li.append("<span class=\"sr-only\">현재 선택됨</span>");
+        }
     </script>
 {% endblock %}
