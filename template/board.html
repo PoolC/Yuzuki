@@ -74,7 +74,7 @@
                 </table>
                 <div class="col-xs-12">
                     {% if can_write %}
-                        <a class="btn btn-default pull-right">글쓰기</a>
+                        <a href="/article/write?name={{ board.name }}" class="btn btn-default pull-right">글쓰기</a>
                     {% endif %}
                 </div>
                 <div class="outer-wrap">
@@ -86,7 +86,7 @@
             <div class="col-xs-12 alert alert-warning"><strong>이런!</strong> 이 페이지에는 아무 글도 없습니다.</div>
             <div class="col-xs-12">
                 {% if can_write %}
-                    <a class="btn btn-default pull-right">글쓰기</a>
+                    <a href="/article/write?name={{ board.name }}" class="btn btn-default pull-right">글쓰기</a>
                 {% endif %}
             </div>
         {% endif %}

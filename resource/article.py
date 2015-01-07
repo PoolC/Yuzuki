@@ -4,6 +4,7 @@ from sqlalchemy.orm import subqueryload
 
 from helper.resource import YuzukiResource
 from model.article import Article
+from model.board import Board
 
 
 class ArticleParent(YuzukiResource):
@@ -48,7 +49,59 @@ class ArticleView(YuzukiResource):
 
 
 class ArticleWrite(YuzukiResource):
-    pass
+    def render_GET(self, request):
+        if request.user and any([group.name == "anybody" for group in request.user.groups]):
+            board_name = request.get_argument("name")
+            query = request.dbsession.query(Board).filter(Board.name == board_name)
+            result = query.all()
+            if not result:
+                request.setResponseCode(NOT_FOUND)
+                return self.generate_error_message(request,
+                                                   UNAUTHORIZED,
+                                                   "Unauthorized",
+                                                   u"게시판이 존재하지 않습니다.")
+            board = result[0]
+            context = {"board": board}
+            return self.render_template("article_write.html", request, context)
+        else:
+            request.setResponseCode(UNAUTHORIZED)
+            return self.generate_error_message(request,
+                                               UNAUTHORIZED,
+                                               "Unauthorized",
+                                               u"회원만 게시글을 쓸 수 있습니다.")
+
+    def render_POST(self, request):
+        if request.user:
+            board_name = request.get_argument("name")
+            query = request.dbsession.query(Board).filter(Board.name == board_name)
+            result = query.all()
+            if not result:
+                request.setResponseCode(NOT_FOUND)
+                return self.generate_error_message(request,
+                                                   NOT_FOUND,
+                                                   "Not Found",
+                                                   u"게시판이 존재하지 않습니다.")
+            board = result[0]
+            if request.user in board.write_group.users:
+                subject = request.get_argument("subject")
+                content = request.get_argument("content")
+                article = Article(board, request.user, subject, content)
+                request.dbsession.add(article)
+                request.dbsession.commit()
+                request.redirect("/article/view?id=%s" % article.uid)
+                return "article posted"
+            else:
+                request.setResponseCode(UNAUTHORIZED)
+                return self.generate_error_message(request,
+                                                   UNAUTHORIZED,
+                                                   "Unauthorized",
+                                                   u"글쓰기 권한이 없습니다.")
+        else:
+            request.setResponseCode(UNAUTHORIZED)
+            return self.generate_error_message(request,
+                                               UNAUTHORIZED,
+                                               "Unauthorized",
+                                               u"회원만 게시글을 쓸 수 있습니다.")
 
 
 class ArticleDelete(YuzukiResource):
