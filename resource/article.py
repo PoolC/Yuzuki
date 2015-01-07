@@ -5,6 +5,8 @@ from sqlalchemy.orm import subqueryload
 from helper.resource import YuzukiResource
 from model.article import Article
 from model.board import Board
+from model.reply import Reply
+from config import REPLY_PER_PAGE
 
 
 class ArticleParent(YuzukiResource):
@@ -35,9 +37,14 @@ class ArticleView(YuzukiResource):
         article = result[0]
         if article.board.name == "notice" or (
                     request.user and any([group.name == "anybody" for group in request.user.groups])):
+            reply_count = self.dbsession.query(Reply).filter(Reply.enabled == True).filter(Reply.article == article).count()
+            reply_total_page = reply_count / REPLY_PER_PAGE
+            if reply_count % REPLY_PER_PAGE != 0:
+                reply_total_page += 1
             context = {
                 "article": article,
                 "page": page,
+                "reply_total_page": reply_total_page,
             }
             return self.render_template("article_view.html", request, context)
         else:

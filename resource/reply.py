@@ -9,6 +9,7 @@ from exception import BadArgument
 from helper.resource import YuzukiResource
 from model.article import Article
 from model.reply import Reply
+from config import REPLY_PER_PAGE
 
 
 class ReplyParent(YuzukiResource):
@@ -22,7 +23,7 @@ class ReplyParent(YuzukiResource):
 
 
 class ReplyView(YuzukiResource):
-    REPLY_PER_PAGE = 15
+    _REPLY_PER_PAGE = REPLY_PER_PAGE
 
     def render_GET(self, request):
         article_id = request.get_argument("article_id")
@@ -46,8 +47,8 @@ class ReplyView(YuzukiResource):
                 .filter(Reply.enabled == True) \
                 .order_by(Reply.uid.desc()) \
                 .options(subqueryload(Reply.user))
-            start_idx = self.REPLY_PER_PAGE * (page - 1)
-            end_idx = start_idx + self.REPLY_PER_PAGE - 1
+            start_idx = self._REPLY_PER_PAGE * (page - 1)
+            end_idx = start_idx + self._REPLY_PER_PAGE - 1
             result = query[start_idx:end_idx]
             return json.dumps([reply.to_dict() for reply in result])
         else:
