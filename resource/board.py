@@ -16,6 +16,7 @@ class BoardView(YuzukiResource):
         # user must be in "anybody" group with exception for "notice" board
         if name != "notice" and (
                     not request.user or not any([group.name == "anybody" for group in request.user.groups])):
+            request.setResponseCode(UNAUTHORIZED)
             return self.generate_error_message(request,
                                                UNAUTHORIZED,
                                                "Unauthorized",
@@ -27,6 +28,7 @@ class BoardView(YuzukiResource):
         query = request.dbsession.query(Board).filter(Board.name == name)
         result = query.all()
         if not result:
+            request.setResponseCode(NOT_FOUND)
             return self.generate_error_message(request,
                                                NOT_FOUND,
                                                "Not Found",

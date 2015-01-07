@@ -102,18 +102,19 @@ class YuzukiRequest(Request):
         else:
             if issubclass(reason.type, YuzukiException):
                 self.logger.warning(reason)
+                self.setResponseCode(BAD_REQUEST)
                 body = self._yzk_resource.generate_error_message(self,
                                                                  BAD_REQUEST,
                                                                  "Bad Request",
                                                                  u"올바르지 않은 요청입니다.")
             else:
                 self.logger.error(reason)
+                self.setResponseCode(INTERNAL_SERVER_ERROR)
                 body = self._yzk_resource.generate_error_message(self,
                                                                  INTERNAL_SERVER_ERROR,
                                                                  "Internal Server Error",
                                                                  u"서버 에러가 발생하였습니다.")
             body = body.encode("UTF-8")
-            self.setResponseCode(INTERNAL_SERVER_ERROR)
             self.setHeader(b'content-type', b"text/html")
             self.setHeader(b'content-length', intToBytes(len(body)))
             self.write(body)
