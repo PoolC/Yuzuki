@@ -1,0 +1,61 @@
+.meta {
+    padding: 10px;
+    border-top: #f0f0f0 1px solid;
+    border-bottom: #f0f0f0 1px solid;
+}
+
+.meta strong {
+    color: #999;
+}
+
+.meta > div:first-child {
+    padding-left: 5px;
+}
+
+.content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: #f0f0f0 1px solid;
+}
+
+.buttons {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#article-delete {
+    margin-left: 30px;
+}
+
+#reply-table {
+    font-size: 10pt;
+}
+
+#reply-table tr:last-child td {
+    border-bottom: 1px solid #ddd;
+}
+
+.reply-nickname {
+    width: 15%;
+}
+
+.reply-content {
+    width: 65%;
+}
+
+.outer-wrap {
+    float: left;
+    position: relative;
+    left: 50%;
+    padding-top: 10px;
+}
+
+#pagination {
+    float: left;
+    left: -50%;
+    position: relative;
+}
+
+.clear {
+    clear: both;
+}
