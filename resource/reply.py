@@ -57,9 +57,43 @@ class ReplyView(YuzukiResource):
 
 class ReplyWrite(YuzukiResource):
     def render_POST(self, request):
-        pass
+        article_id = request.get_argument("article_id")
+        query = request.dbsession.query(Article) \
+            .filter(Article.uid == article_id) \
+            .filter(Article.enabled == True) \
+            .options(subqueryload(Article.board))
+        result = query.all()
+        if not result:
+            request.setResponseCode(NOT_FOUND)
+            return "article not found"
+        article = result[0]
+        if request.user and request.uesr in article.board.comment_group.users:
+            content = request.get_argument("content")
+            reply = Reply(article, request.user, content)
+            request.dbsession.add(reply)
+            request.dbsession.commit()
+            return "success"
+        else:
+            request.setResponseCode(UNAUTHORIZED)
+            return "unauthorized"
 
 
 class ReplyDelete(YuzukiResource):
     def render_DELETE(self, request):
-        pass
+        reply_id = request.get_argument("id")
+        query = request.dbsession.query(Reply) \
+            .filter(Reply.uid == reply_id) \
+            .filter(Reply.enabled == True) \
+            .options(subqueryload(Reply.user))
+        result = query.all()
+        if not result:
+            request.setResponseCode(NOT_FOUND)
+            return "repy not found"
+        reply = result[0]
+        if request.user and (request.user == reply.user or request.user.is_admin):
+            reply.enabled = False
+            request.dbsession.commit()
+            return "success"
+        else:
+            request.setResponseCode(UNAUTHORIZED)
+            return "unauthorized"
