@@ -11,6 +11,10 @@
             color: #999;
         }
 
+        .meta > div:first-child {
+            padding-left: 5px;
+        }
+
         .content {
             padding-top: 20px;
             padding-bottom: 20px;
@@ -39,11 +43,11 @@
             <strong>글쓴이</strong> {{ article.user.nickname }}
         </div>
         <div class="col-xs-4">
-            <strong>작성시각</strong> {{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}
+            <strong>작성시간</strong> {{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}
         </div>
         <div class="col-xs-4">
             {% if article.is_modified %}
-                <strong>변경시각</strong> {{ article.last_modified.strftime("%y-%m-%d %H:%M:%S") }}
+                <strong>변경시간</strong> {{ article.last_modified.strftime("%y-%m-%d %H:%M:%S") }}
             {% endif %}
         </div>
     </div>
