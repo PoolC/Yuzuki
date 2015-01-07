@@ -34,14 +34,31 @@
     <div class="row replies">
         <div class="col-xs-12">
             <table id="reply-table" class="table">
-
+                <tfoot>
+                {% if request.user and request.user in article.board.comment_group.users %}
+                    <tr>
+                        <form method="post" action="/reply/write" class="col-xs-12 form-horizontal">
+                            <input type="hidden" name="article_id" value="{{ article.uid }}"/>
+                            <td class="reply-nickname">
+                                <label class="current-user-nickname"
+                                       for="reply-input">{{ request.user.nickname }}</label>
+                            </td>
+                            <td class="reply-content">
+                                <input id="reply-input" type="text" name="content" class="form-control"/>
+                            </td>
+                            <td>
+                                {% if page %}
+                                    <input type="hidden" name="page" value="{{ page }}"/>
+                                {% endif %}
+                                <input type="submit" value="완료" class="btn btn-default"/>
+                            </td>
+                        </form>
+                    </tr>
+                {% endif %}
+                </tfoot>
             </table>
         </div>
-        {% if request.user and request.user in article.board.comment_group.users %}
-            <div class="col-xs-12">
-                hey
-            </div>
-        {% endif %}
+
         <div class="outer-wrap">
             <div id="pagination"></div>
             <div class="clear"></div>
@@ -118,7 +135,7 @@
         };
 
         var render_reply_table = function (data) {
-            $("#reply-table").html("");
+            $("#reply-table tbody").html("");
             for (var i = 0; i < data.length; i++) {
                 var reply_el = render_reply(data[i]);
                 $("#reply-table").append(reply_el);

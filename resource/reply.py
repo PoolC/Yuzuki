@@ -66,17 +66,28 @@ class ReplyWrite(YuzukiResource):
         result = query.all()
         if not result:
             request.setResponseCode(NOT_FOUND)
-            return "article not found"
+            return self.generate_error_message(request,
+                                               NOT_FOUND,
+                                               "Not Found",
+                                               u"게시글이 존재하지 않습니다.")
         article = result[0]
-        if request.user and request.uesr in article.board.comment_group.users:
+        if request.user and request.user in article.board.comment_group.users:
             content = request.get_argument("content")
             reply = Reply(article, request.user, content)
             request.dbsession.add(reply)
             request.dbsession.commit()
+            page = request.get_argument("page", None)
+            redirect = "/article/view?id=%s" % article.uid
+            if page:
+                redirect += "&page=%s" % page
+            request.redirect(redirect)
             return "success"
         else:
             request.setResponseCode(UNAUTHORIZED)
-            return "unauthorized"
+            return self.generate_error_message(request,
+                                               UNAUTHORIZED,
+                                               "Unauthorized",
+                                               u"댓글을 쓸 권한이 없습니다.")
 
 
 class ReplyDelete(YuzukiResource):

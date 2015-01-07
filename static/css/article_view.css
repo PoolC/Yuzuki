@@ -59,3 +59,7 @@
 .clear {
     clear: both;
 }
+
+.current-user-nickname {
+    margin-top: 7px;
+}
