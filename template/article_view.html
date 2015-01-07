@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block head %}
+    <style>
+        .meta {
+            padding: 10px;
+            border-top: #f0f0f0 1px solid;
+            border-bottom: #f0f0f0 1px solid;
+        }
+
+        .meta strong {
+            color: #999;
+        }
+
+        .content {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-bottom: #f0f0f0 1px solid;
+        }
+
+        .buttons {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>{{ article.board.repr }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>{{ article.subject }}</h2>
+        </div>
+    </div>
+    <div class="row meta">
+        <div class="col-xs-2">
+            <strong>글쓴이</strong> {{ article.user.nickname }}
+        </div>
+        <div class="col-xs-4">
+            <strong>작성시각</strong> {{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}
+        </div>
+        <div class="col-xs-4">
+            {% if article.is_modified %}
+                <strong>변경시각</strong> {{ article.last_modified.strftime("%y-%m-%d %H:%M:%S") }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row content">
+
+        <div class="col-xs-12">
+            {{ article.compiled_content }}
+        </div>
+    </div>
+    <div class="row buttons">
+        <div class="col-xs-12">
+            {% if page %}
+                <a class="btn btn-default pull-left" href="/board?name={{ article.board.name }}&page={{ page }}">목차</a>
+            {% else %}
+                <a class="btn btn-default pull-left" href="/board?name={{ article.board.name }}">목차</a>
+            {% endif %}
+            {% if request.user == article.user or request.user.is_admin %}
+                <span class="btn btn-default pull-right article-delete">삭제</span>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
