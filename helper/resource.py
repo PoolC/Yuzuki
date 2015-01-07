@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import urllib
 from datetime import datetime
 
 from jinja2 import Environment, FileSystemLoader
@@ -31,7 +30,6 @@ class YuzukiResource(Resource):
         "site_name": SITE_NAME,
         "datetime": datetime,
         "board_meta": board_meta,
-        "urllib": urllib,
     }
 
     def render(self, request):
