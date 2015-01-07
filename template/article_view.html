@@ -68,6 +68,16 @@
 {% endblock %}
 {% block script %}
     <script>
+        if ("{{ article.board.name }}" === "notice") {
+            var notice_li = $("#notice");
+            notice_li.addClass("active");
+            notice_li.append("<span class=\"sr-only\">현재 선택됨</span>");
+        } else {
+            var board_li = $("#{{ article.board.name }}");
+            board_li.parent().addClass("in");
+            board_li.addClass("active");
+            board_li.append("<span class=\"sr-only\">현재 선택됨</span>");
+        }
         $("#article-delete").click(function () {
             $.ajax("/article/delete?id={{ article.uid }}", {
                 type: "DELETE"
