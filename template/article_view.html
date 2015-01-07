@@ -61,8 +61,26 @@
                 <a class="btn btn-default pull-left" href="/board?name={{ article.board.name }}">목차</a>
             {% endif %}
             {% if request.user == article.user or request.user.is_admin %}
-                <span class="btn btn-default pull-right article-delete">삭제</span>
+                <span id="article-delete" class="btn btn-default pull-right">삭제</span>
             {% endif %}
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $("#article-delete").click(function () {
+            $.ajax("/article/delete?id={{ article.uid }}", {
+                type: "DELETE"
+            }).done(function () {
+                alert("success");
+                {% if page %}
+                    window.location.replace("/board?name={{ article.board.name }}&page={{ page }}");
+                {% else %}
+                    window.location.replace("/board?name={{ article.board.name }}");
+                {% endif %}
+            }).fail(function () {
+                alert("게시물 삭제에 실패하였습니다. 새로고침 후 다시 시도해주세요.");
+            });
+        });
+    </script>
 {% endblock %}
