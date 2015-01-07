@@ -48,7 +48,7 @@
                 vis = Math.floor((page - 1) / maxV) * maxV,
                 $page = $bootpag.find('li');
             settings.page = page = page < 0 ? 0 : page > settings.total ? settings.total : page;
-            $page.removeClass('disabled');
+            $page.removeClass('active');
             lp = page - 1 < 1 ? 1 :
                 settings.leaps && page - 1 >= settings.maxVisible ?
                 Math.floor((page - 1) / maxV) * maxV : page - 1;
@@ -119,6 +119,9 @@
                     return false;
                 }
                 var page = parseInt(me.attr('data-lp'), 10);
+                if (settings.renderNew) {
+                    renderPage($bootpag, page);
+                }
                 $owner.trigger('page', page);
             });
             renderPage($bootpag, settings.page);
