@@ -4,6 +4,7 @@ from sqlalchemy.orm import subqueryload
 
 from helper.resource import YuzukiResource
 from model.article import Article
+from model.article_record import ArticleRecord
 from model.board import Board
 from model.reply import Reply
 from exception import BadArgument
@@ -18,6 +19,7 @@ class ArticleParent(YuzukiResource):
         self.putChild("view", ArticleView())
         self.putChild("write", ArticleWrite())
         self.putChild("delete", ArticleDelete())
+        self.putChild("edit", ArticleEdit())
 
 
 class ArticleView(YuzukiResource):
@@ -136,3 +138,64 @@ class ArticleDelete(YuzukiResource):
         else:
             request.setResponseCode(UNAUTHORIZED)
             return "unauthorized user"
+
+
+class ArticleEdit(YuzukiResource):
+    def render_GET(self, request):
+        article_id = request.get_argument("id")
+        query = request.dbsession.query(Article). \
+            filter(Article.uid == article_id). \
+            filter(Article.enabled == True). \
+            options(subqueryload(Article.board))
+        result = query.all()
+        if not result:
+            request.setResponseCode(NOT_FOUND)
+            return self.generate_error_message(request,
+                                               NOT_FOUND,
+                                               "Not Found",
+                                               u"게시글이 존재하지 않습니다.")
+        article = result[0]
+        if request.user and request.user == article.user:
+            context = {"article": article}
+            return self.render_template("article_edit.html", request, context)
+        else:
+            request.setResponseCode(UNAUTHORIZED)
+            return self.generate_error_message(request,
+                                               UNAUTHORIZED,
+                                               "Unauthorized",
+                                               u"게시글을 수정할 권한이 없습니다.")
+
+    def render_POST(self, request):
+        article_id = request.get_argument("id")
+        query = request.dbsession.query(Article). \
+            filter(Article.uid == article_id). \
+            filter(Article.enabled == True). \
+            options(subqueryload(Article.board))
+        result = query.all()
+        if not result:
+            request.setResponseCode(NOT_FOUND)
+            return self.generate_error_message(request,
+                                               NOT_FOUND,
+                                               "Not Found",
+                                               u"게시글이 존재하지 않습니다.")
+        article = result[0]
+        if request.user and request.user == article.user:
+            subject = request.get_argument("subject")
+            content = request.get_argument("content")
+            # no empty subject
+            if subject.strip():
+                article_record = ArticleRecord(article)
+                article.subject = subject
+                article.change_content(content)
+                request.dbsession.add(article_record)
+                request.dbsession.commit()
+                request.redirect("/article/view?id=%s" % article.uid)
+                return "article edit success"
+            else:
+                raise BadArgument("subject", "empty")
+        else:
+            request.setResponseCode(UNAUTHORIZED)
+            return self.generate_error_message(request,
+                                               UNAUTHORIZED,
+                                               "Unauthorized",
+                                               u"게시글을 수정할 권한이 없습니다.")
