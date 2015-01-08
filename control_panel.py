@@ -11,5 +11,7 @@ from model.reply import Reply
 from model.article_record import ArticleRecord
 from model.reply_record import ReplyRecord
 
+anybody = dbsession.query(Group).filter(Group.name == "anybody")
+
 import code
 code.interact(local=locals())
