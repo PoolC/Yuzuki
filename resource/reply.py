@@ -76,7 +76,7 @@ class ReplyWrite(YuzukiResource):
         if request.user and request.user in article.board.comment_group.users:
             content = request.get_argument("content")
             # no empty reply
-            if content.stript():
+            if content.strip():
                 reply = Reply(article, request.user, content)
                 request.dbsession.add(reply)
                 request.dbsession.commit()

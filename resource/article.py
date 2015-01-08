@@ -98,7 +98,7 @@ class ArticleWrite(YuzukiResource):
                 subject = request.get_argument("subject")
                 content = request.get_argument("content")
                 # no empty subject
-                if subject.stript():
+                if subject.strip():
                     article = Article(board, request.user, subject, content)
                     request.dbsession.add(article)
                     request.dbsession.commit()
