@@ -22,6 +22,9 @@ class Article(Base):
     is_modified = Column(Boolean, default=False, onupdate=True)
     last_modified = Column(DateTime, onupdate=datetime.now)
     created_at = Column(DateTime, default=datetime.now)
+    deleted_at = Column(DateTime)
+    deleted_user_id = Column(Integer(), ForeignKey("user.uid"))
+    deleted_user = relationship("User", foreign_keys=deleted_user_id)
 
     def __init__(self, board, user, subject, content):
         self.board = board

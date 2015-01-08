@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from twisted.web.http import NOT_FOUND, UNAUTHORIZED
 from sqlalchemy.orm import subqueryload
 
@@ -9,7 +11,6 @@ from model.board import Board
 from model.reply import Reply
 from exception import BadArgument
 from config import REPLY_PER_PAGE
-
 
 class ArticleParent(YuzukiResource):
     isLeaf = False
@@ -133,6 +134,8 @@ class ArticleDelete(YuzukiResource):
         article = result[0]
         if request.user and (request.user == article.user or request.user.is_admin):
             article.enabled = False
+            article.deleted_at = datetime.now()
+            article.deleted_user = request.user
             request.dbsession.commit()
             return "delete success"
         else:

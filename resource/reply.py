@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 import json
 
 from twisted.web.http import NOT_FOUND, UNAUTHORIZED
@@ -109,6 +110,8 @@ class ReplyDelete(YuzukiResource):
         reply = result[0]
         if request.user and (request.user == reply.user or request.user.is_admin):
             reply.enabled = False
+            reply.deleted_at = datetime.now()
+            reply.deleted_user = request.user
             request.dbsession.commit()
             return "success"
         else:
