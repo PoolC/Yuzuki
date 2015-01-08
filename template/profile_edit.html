@@ -117,8 +117,11 @@
     <script src="/static/js/password_confirm.js"></script>
     <script>
         $("#edit-form").submit(function (e) {
-            var password_hash = CryptoJS.SHA256($("#password").val()).toString();
-            $("#password-real").val(password_hash);
+            var password_input = $("#password")
+            if (password_input.val() !== "") {
+                var password_hash = CryptoJS.SHA256($("#password").val()).toString();
+                $("#password-real").val(password_hash);
+            }
             return true;
         });
     </script>
