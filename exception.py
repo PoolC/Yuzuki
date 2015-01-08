@@ -2,7 +2,7 @@
 
 class YuzukiException(Exception):
     """
-    parent of all Nodoka level defined exception
+    parent of all Yuzuki level defined exception
     """
     pass
 
