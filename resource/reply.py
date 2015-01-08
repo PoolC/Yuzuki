@@ -8,6 +8,7 @@ from exception import BadArgument
 from helper.resource import YuzukiResource
 from model.article import Article
 from model.reply import Reply
+from model.reply_record import ReplyRecord
 from config import REPLY_PER_PAGE
 
 
@@ -19,6 +20,7 @@ class ReplyParent(YuzukiResource):
         self.putChild("view", ReplyView())
         self.putChild("write", ReplyWrite())
         self.putChild("delete", ReplyDelete())
+        self.putChild("edit", ReplyEdit())
 
 
 class ReplyView(YuzukiResource):
@@ -109,6 +111,33 @@ class ReplyDelete(YuzukiResource):
             reply.enabled = False
             request.dbsession.commit()
             return "success"
+        else:
+            request.setResponseCode(UNAUTHORIZED)
+            return "unauthorized"
+
+
+class ReplyEdit(YuzukiResource):
+    def render_POST(self, request):
+        reply_id = request.get_argument("id")
+        query = request.dbsession.query(Reply) \
+            .filter(Reply.uid == reply_id) \
+            .filter(Reply.enabled == True) \
+            .options(subqueryload(Reply.user))
+        result = query.all()
+        if not result:
+            request.setResponseCode(NOT_FOUND)
+            return "reply not found"
+        reply = result[0]
+        if request.user and request.user == reply.user:
+            content = self.get_argument("content")
+            if content.stript():
+                ReplyRecord(reply)
+                reply.content = content
+                request.dbsession.add(ReplyRecord)
+                request.dbsession.commit()
+                return "reply edit success"
+            else:
+                raise BadArgument("content", "empty")
         else:
             request.setResponseCode(UNAUTHORIZED)
             return "unauthorized"
