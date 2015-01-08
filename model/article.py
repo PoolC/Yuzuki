@@ -26,6 +26,7 @@ class Article(Base):
     deleted_user_id = Column(Integer(), ForeignKey("user.uid"))
     deleted_user = relationship("User", foreign_keys=deleted_user_id)
     reply_count = Column(Integer())
+    replies = relationship("Reply")
 
     def __init__(self, board, user, subject, content):
         self.board = board
