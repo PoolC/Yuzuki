@@ -1,10 +1,13 @@
+from hashlib import sha256
 import cgi
 from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, ForeignKey
+
 from sqlalchemy.orm import relationship
 
 from model.base import Base
+
 from helper.pbkdf2 import pbkdf2, pbkdf2_check
 from helper.md_ext import markdown_convert
 
@@ -40,6 +43,9 @@ class User(Base):
 
     def check_password(self, password):
         return pbkdf2_check(password, self.password)
+
+    def change_password(self, password):
+        self.password = pbkdf2(sha256(password).hexdigest())
 
     def __repr__(self):
         return "<User name=%s>" % self.username
