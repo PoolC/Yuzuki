@@ -35,7 +35,7 @@
     </div>
     <div class="row profile-row">
         <div class="col-xs-2 profile-label">별명</div>
-        <div class="col-xs-10">{{ request.user.nickname }}</div>
+        <div class="col-xs-10">{{ request.user.nickname | e }}</div>
     </div>
     <div class="row profile-row">
         <div class="col-xs-2 profile-label">실명</div>

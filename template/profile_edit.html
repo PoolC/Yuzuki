@@ -49,11 +49,11 @@
     <form id="edit-form" method="post">
         <div class="row profile-row">
             <div class="col-xs-2 profile-label">ID</div>
-            <div class="col-xs-3">{{ request.user.username }}</div>
+            <div class="col-xs-3">{{ request.user.username | e}}</div>
         </div>
         <div class="row profile-row">
             <div class="col-xs-2 profile-label">별명</div>
-            <div class="col-xs-3">{{ request.user.nickname }}</div>
+            <div class="col-xs-3">{{ request.user.nickname | e }}</div>
             <div class="col-xs-3"><input name="nickname" type="text" class="form-control"/></div>
         </div>
         <div class="row profile-row">

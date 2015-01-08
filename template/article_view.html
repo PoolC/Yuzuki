@@ -10,14 +10,14 @@
     </div>
     <div class="row">
         <div class="col-xs-12 article-subject">
-            <h2>{{ article.subject }}</h2>
+            <h2>{{ article.subject | e }}</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="meta row">
                 <div class="col-xs-2">
-                    <strong>글쓴이</strong> {{ article.user.nickname }}
+                    <strong>글쓴이</strong> {{ article.user.nickname | e }}
                 </div>
                 <div class="col-xs-4">
                     <strong>작성시간</strong> {{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}
@@ -45,7 +45,7 @@
 
                     <div class="reply-nickname col-xs-2">
                         <label class="current-user-nickname"
-                               for="reply-input">{{ request.user.nickname }}</label>
+                               for="reply-input">{{ request.user.nickname | e }}</label>
                     </div>
                     <div class="reply-content-box col-xs-8">
                         <input id="reply-input" type="text" name="content" class="form-control" required=""/>

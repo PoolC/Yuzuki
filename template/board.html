@@ -65,13 +65,13 @@
                         <tr>
                             <td class="subject">
                                 {% if article.reply_count %}
-                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject }}
+                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}
                                         [{{ article.reply_count }}]</a>
                                 {% else %}
-                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject }}</a>
+                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}</a>
                                 {% endif %}
                             </td>
-                            <td class="author">{{ article.user.nickname }}</td>
+                            <td class="author">{{ article.user.nickname | e }}</td>
                             <td class="timestamp">{{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
                         </tr>
                     {% endfor %}
