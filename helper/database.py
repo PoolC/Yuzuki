@@ -13,23 +13,24 @@ from model.board import Board
 from model.article import Article
 from model.reply import Reply
 from model.article_record import ArticleRecord
+from model.reply_record import ReplyRecord
 
 class DatabaseHelper(object):
     _engine = create_engine(DB_CONNECTION_STRING)
     _Session = sessionmaker(bind=_engine)
-    
+
     @classmethod
     def engine(cls):
         return cls._engine
-    
+
     @classmethod
     def session(cls):
         return cls._Session()
-    
+
     @classmethod
     def create_all(cls):
         Base.metadata.create_all(cls._engine)
-    
+
     @classmethod
     def drop_all(cls):
         Base.metadata.drop_all(cls._engine)
