@@ -27,8 +27,6 @@ class YuzukiRequest(Request):
         self._yzk_resource = resource
         self.logger = logging.getLogger(resource.__class__.__module__)
         self._initial_session = copy.deepcopy(self.yzk_session)
-        print self.session.uid
-        print self.session.yuzuki_session_data
 
     def finalize(self):
         """
