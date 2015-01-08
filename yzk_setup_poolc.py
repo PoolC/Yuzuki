@@ -41,7 +41,7 @@ for i, hakbeon in enumerate(hakbeons):
     hakbeon_group.important = True
     dbsession.add(hakbeon_group)
 
-    hakbeon_board = Board("y" + hakbeon, hakbeon + u"학번 게시판", hakbeon, anybody, "normal", i)
+    hakbeon_board = Board("y" + hakbeon, hakbeon + u"학번 게시판", hakbeon_group, anybody, "normal", i)
     dbsession.add(hakbeon_board)
 
 seminar_board = Board("seminar", u"학술부", anybody, anybody, "somoim", 1)
