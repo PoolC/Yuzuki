@@ -26,7 +26,7 @@ class Reply(Base):
         self.content = cgi.escape(content)
 
     def __repr__(self):
-        return "<Article uid=%s, content=%s>" % (self.uid, self.content)
+        return "<Reply uid=%s, content=%s>" % (self.uid, self.content)
 
     def to_dict(self):
         data = {
