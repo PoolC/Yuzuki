@@ -10,10 +10,10 @@ from model.base import Base
 class Reply(Base):
     __tablename__ = "reply"
     uid = Column(Integer(), primary_key=True)
-    article_id = Column(Integer(), ForeignKey("article.uid"))
+    article_id = Column(Integer(), ForeignKey("article.uid"), nullable=False)
     article = relationship("Article")
-    user_id = Column(Integer(), ForeignKey("user.uid"))
-    user = relationship("User")
+    user_id = Column(Integer(), ForeignKey("user.uid"), nullable=False)
+    user = relationship("User", foreign_keys=user_id)
     content = Column(Text())
     enabled = Column(Boolean, default=True)
     is_modified = Column(Boolean, default=False, onupdate=True)

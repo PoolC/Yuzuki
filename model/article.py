@@ -2,7 +2,6 @@ import cgi
 from datetime import datetime
 
 from sqlalchemy import Boolean, Column, Integer, String, Text, ForeignKey, DateTime
-
 from sqlalchemy.orm import relationship
 
 from model.base import Base
@@ -12,10 +11,10 @@ from helper.md_ext import markdown_convert
 class Article(Base):
     __tablename__ = "article"
     uid = Column(Integer(), primary_key=True)
-    board_id = Column(Integer(), ForeignKey("board.uid"))
+    board_id = Column(Integer(), ForeignKey("board.uid"), nullable=False)
     board = relationship("Board")
-    user_id = Column(Integer(), ForeignKey("user.uid"))
-    user = relationship("User")
+    user_id = Column(Integer(), ForeignKey("user.uid"), nullable=False)
+    user = relationship("User", foreign_keys=user_id)
     subject = Column(String(255))
     content = Column(Text())
     compiled_content = Column(Text())
