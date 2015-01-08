@@ -48,7 +48,9 @@ class YuzukiResource(Resource):
     def render_template(name, request, context=None):
         if context == None:
             context = dict()
+        is_anybody = request.user and any([group.name == "anybody" for group in request.user.groups])
         context["request"] = request
+        context["is_anybody"] = is_anybody
         return YuzukiResource.get_template(name).render(context)
 
     @staticmethod

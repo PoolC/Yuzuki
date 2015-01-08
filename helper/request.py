@@ -5,6 +5,7 @@ from urllib import quote
 from twisted.python.compat import intToBytes
 from twisted.web.http import INTERNAL_SERVER_ERROR, BAD_REQUEST
 from twisted.web.server import Request
+from sqlalchemy.orm import subqueryload
 
 from config import DEBUG
 from exception import DuplicateArgumentGiven, MissingArgument, YuzukiException
@@ -64,7 +65,7 @@ class YuzukiRequest(Request):
         if not user_id:
             return None
         else:
-            query = self.dbsession.query(User).filter(User.uid == user_id)
+            query = self.dbsession.query(User).filter(User.uid == user_id).options(subqueryload(User.groups))
             result = query.all()
             user = result[0]
             self._user = user
