@@ -36,7 +36,7 @@ class User(Base):
         self.pd_address = pd_address
         self.pd_phone = pd_phone
         self.pd_bunryu = pd_bunryu
-        self.pd_bio = markdown_convert(cgi.escape(pd_bio))
+        self.pd_bio = markdown_convert(cgi.escape(pd_bio)) if pd_bio else pd_bio
 
     def check_password(self, password):
         return pbkdf2_check(password, self.password)
