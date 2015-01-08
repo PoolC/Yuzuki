@@ -12,6 +12,7 @@ from model.association.user_group import UserGroupAssociation
 from model.board import Board
 from model.article import Article
 from model.reply import Reply
+from model.article_record import ArticleRecord
 
 class DatabaseHelper(object):
     _engine = create_engine(DB_CONNECTION_STRING)
