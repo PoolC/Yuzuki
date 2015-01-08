@@ -4,7 +4,6 @@ from resource.index import Index
 from resource.article import ArticleParent
 from resource.reply import ReplyParent
 from resource.about import About
-from resource.api import Api
 from resource.board import BoardView
 from resource.hello import Hello
 from resource.login import Login
@@ -18,7 +17,6 @@ ROUTE = {
     "article": ArticleParent(),
     "reply": ReplyParent(),
     "about": About(),
-    "api": Api(),
     "board": BoardView(),
     "login": Login(),
     "logout": Logout(),
