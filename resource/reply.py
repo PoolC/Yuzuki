@@ -103,7 +103,7 @@ class ReplyDelete(YuzukiResource):
         result = query.all()
         if not result:
             request.setResponseCode(NOT_FOUND)
-            return "repy not found"
+            return "reply not found"
         reply = result[0]
         if request.user and (request.user == reply.user or request.user.is_admin):
             reply.enabled = False
