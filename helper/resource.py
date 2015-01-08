@@ -34,7 +34,7 @@ class YuzukiResource(Resource):
 
     def render(self, request):
         request.initialize(self)
-        request.logger.info(request.path + " " + request.getClientIP())
+        request.logger.info(request.get_path_and_query() + " " + request.getClientIP())
         # TODO: auto login
         result = Resource.render(self, request)
         request.finalize()
