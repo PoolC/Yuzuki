@@ -79,6 +79,7 @@ class ReplyWrite(YuzukiResource):
             if content.strip():
                 reply = Reply(article, request.user, content)
                 request.dbsession.add(reply)
+                article.reply_count += 1
                 request.dbsession.commit()
                 page = request.get_argument("page", None)
                 redirect = "/article/view?id=%s" % article.uid
@@ -112,6 +113,7 @@ class ReplyDelete(YuzukiResource):
             reply.enabled = False
             reply.deleted_at = datetime.now()
             reply.deleted_user = request.user
+            reply.article.reply_count -= 1
             request.dbsession.commit()
             return "success"
         else:

@@ -32,6 +32,7 @@ class Article(Base):
         self.user = user
         self.subject = subject
         self.change_content(content)
+        self.reply_count = 0
 
     def __repr__(self):
         return "<Article uid=%s, subject=%s>" % (self.uid, self.subject)

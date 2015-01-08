@@ -64,7 +64,12 @@
                     {% for article in articles %}
                         <tr>
                             <td class="subject">
-                                <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject }}</a>
+                                {% if article.reply_count %}
+                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject }}
+                                        [{{ article.reply_count }}]</a>
+                                {% else %}
+                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject }}</a>
+                                {% endif %}
                             </td>
                             <td class="author">{{ article.user.nickname }}</td>
                             <td class="timestamp">{{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
