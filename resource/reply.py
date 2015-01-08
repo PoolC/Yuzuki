@@ -41,7 +41,7 @@ class ReplyView(YuzukiResource):
             return "article not found"
         article = result[0]
         if article.board.name == "notice" or (
-                    request.user and any([group.name == "anybody" for group in request.user])):
+                    request.user and any([group.name == "anybody" for group in request.user.groups])):
             query = request.dbsession.query(Reply) \
                 .filter(Reply.article == article) \
                 .filter(Reply.enabled == True) \
