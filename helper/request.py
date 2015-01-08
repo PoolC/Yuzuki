@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import logging
 from urllib import quote
 
@@ -25,6 +26,9 @@ class YuzukiRequest(Request):
         """
         self._yzk_resource = resource
         self.logger = logging.getLogger(resource.__class__.__module__)
+        self._initial_session = copy.deepcopy(self.yzk_session)
+        print self.session.uid
+        print self.session.yuzuki_session_data
 
     def finalize(self):
         """
@@ -33,6 +37,8 @@ class YuzukiRequest(Request):
         """
         if hasattr(self, "_dbsession"):
             self._dbsession.close()
+        if self._initial_session != self.yzk_session:
+            self.session.redis_sync()
 
     @property
     def dbsession(self):
