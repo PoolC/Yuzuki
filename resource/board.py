@@ -41,7 +41,7 @@ class BoardView(YuzukiResource):
             .order_by(Article.uid.desc()) \
             .options(subqueryload(Article.user))
         start_idx = self._ARTICLE_PER_PAGE * (page - 1)
-        end_idx = start_idx + self._ARTICLE_PER_PAGE - 1
+        end_idx = start_idx + self._ARTICLE_PER_PAGE
         articles = query[start_idx:end_idx]
         total_article_count = query.count()
         if total_article_count % self._ARTICLE_PER_PAGE == 0:

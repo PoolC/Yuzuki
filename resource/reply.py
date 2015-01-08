@@ -50,7 +50,7 @@ class ReplyView(YuzukiResource):
                 .order_by(Reply.uid.desc()) \
                 .options(subqueryload(Reply.user))
             start_idx = self._REPLY_PER_PAGE * (page - 1)
-            end_idx = start_idx + self._REPLY_PER_PAGE - 1
+            end_idx = start_idx + self._REPLY_PER_PAGE
             result = query[start_idx:end_idx]
             return json.dumps([reply.to_dict() for reply in result])
         else:
