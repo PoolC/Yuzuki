@@ -6,6 +6,7 @@ from helper.resource import YuzukiResource
 from model.article import Article
 from model.board import Board
 from model.reply import Reply
+from exception import BadArgument
 from config import REPLY_PER_PAGE
 
 
@@ -37,7 +38,8 @@ class ArticleView(YuzukiResource):
         article = result[0]
         if article.board.name == "notice" or (
                     request.user and any([group.name == "anybody" for group in request.user.groups])):
-            reply_count = self.dbsession.query(Reply).filter(Reply.enabled == True).filter(Reply.article == article).count()
+            reply_count = self.dbsession.query(Reply).filter(Reply.enabled == True).filter(
+                Reply.article == article).count()
             reply_page_total = reply_count / REPLY_PER_PAGE
             if reply_count % REPLY_PER_PAGE != 0:
                 reply_page_total += 1
@@ -92,11 +94,15 @@ class ArticleWrite(YuzukiResource):
             if request.user in board.write_group.users:
                 subject = request.get_argument("subject")
                 content = request.get_argument("content")
-                article = Article(board, request.user, subject, content)
-                request.dbsession.add(article)
-                request.dbsession.commit()
-                request.redirect("/article/view?id=%s" % article.uid)
-                return "article posted"
+                # no empty subject
+                if subject.stript():
+                    article = Article(board, request.user, subject, content)
+                    request.dbsession.add(article)
+                    request.dbsession.commit()
+                    request.redirect("/article/view?id=%s" % article.uid)
+                    return "article posted"
+                else:
+                    raise BadArgument("subject", "empty")
             else:
                 request.setResponseCode(UNAUTHORIZED)
                 return self.generate_error_message(request,

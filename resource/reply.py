@@ -2,10 +2,9 @@
 import json
 
 from twisted.web.http import NOT_FOUND, UNAUTHORIZED
-
 from sqlalchemy.orm import subqueryload
-from exception import BadArgument
 
+from exception import BadArgument
 from helper.resource import YuzukiResource
 from model.article import Article
 from model.reply import Reply
@@ -73,15 +72,19 @@ class ReplyWrite(YuzukiResource):
         article = result[0]
         if request.user and request.user in article.board.comment_group.users:
             content = request.get_argument("content")
-            reply = Reply(article, request.user, content)
-            request.dbsession.add(reply)
-            request.dbsession.commit()
-            page = request.get_argument("page", None)
-            redirect = "/article/view?id=%s" % article.uid
-            if page:
-                redirect += "&page=%s" % page
-            request.redirect(redirect)
-            return "success"
+            # no empty reply
+            if content.stript():
+                reply = Reply(article, request.user, content)
+                request.dbsession.add(reply)
+                request.dbsession.commit()
+                page = request.get_argument("page", None)
+                redirect = "/article/view?id=%s" % article.uid
+                if page:
+                    redirect += "&page=%s" % page
+                request.redirect(redirect)
+                return "success"
+            else:
+                raise BadArgument("content", "empty")
         else:
             request.setResponseCode(UNAUTHORIZED)
             return self.generate_error_message(request,
