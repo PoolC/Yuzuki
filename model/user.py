@@ -1,3 +1,4 @@
+import cgi
 from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, ForeignKey
@@ -5,6 +6,7 @@ from sqlalchemy.orm import relationship
 
 from model.base import Base
 from helper.pbkdf2 import pbkdf2, pbkdf2_check
+from helper.md_ext import markdown_convert
 
 
 class User(Base):
@@ -34,7 +36,7 @@ class User(Base):
         self.pd_address = pd_address
         self.pd_phone = pd_phone
         self.pd_bunryu = pd_bunryu
-        self.pd_bio = pd_bio
+        self.pd_bio = markdown_convert(cgi.escape(pd_bio))
 
     def check_password(self, password):
         return pbkdf2_check(password, self.password)

@@ -11,6 +11,7 @@ from resource.login import Login
 from resource.logout import Logout
 from resource.register import Register
 from resource.welcome import Welcome
+from resource.profile import Profile
 
 ROUTE = {
     "": Index(),
@@ -26,4 +27,5 @@ ROUTE = {
     "static": File("static"),
     "hello": Hello(),
     "welcome": Welcome(),
+    "profile": Profile(),
 }

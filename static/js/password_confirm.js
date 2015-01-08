@@ -20,10 +20,5 @@ var show_password_validity_sign = function () {
         }
     }
 };
-$("#register-form").submit(function (e) {
-    var password_hash = CryptoJS.SHA256($("#password").val()).toString();
-    $("#password-real").val(password_hash);
-    return true;
-});
-$("#password-confirm").on("input propertychange paste", show_password_validity_sign);
-$("#password").on("input propertychange paste", show_password_validity_sign);
+password_confirm.on("input propertychange paste", show_password_validity_sign);
+password.on("input propertychange paste", show_password_validity_sign);

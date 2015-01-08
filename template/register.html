@@ -81,5 +81,12 @@
 {% endblock %}
 {% block script %}
     <script src="/static/js/sha256.js"></script>
-    <script src="/static/js/register.js"></script>
+    <script src="/static/js/password_confirm.js"></script>
+    <script>
+        $("#register-form").submit(function (e) {
+            var password_hash = CryptoJS.SHA256($("#password").val()).toString();
+            $("#password-real").val(password_hash);
+            return true;
+        });
+    </script>
 {% endblock %}
