@@ -41,10 +41,8 @@ class ArticleView(YuzukiResource):
         article = result[0]
         if article.board.name == "notice" or (
                     request.user and any([group.name == "anybody" for group in request.user.groups])):
-            reply_count = self.dbsession.query(Reply).filter(Reply.enabled == True).filter(
-                Reply.article == article).count()
-            reply_page_total = reply_count / REPLY_PER_PAGE
-            if reply_count % REPLY_PER_PAGE != 0:
+            reply_page_total = article.reply_count / REPLY_PER_PAGE
+            if article.reply_count % REPLY_PER_PAGE != 0:
                 reply_page_total += 1
             context = {
                 "article": article,
