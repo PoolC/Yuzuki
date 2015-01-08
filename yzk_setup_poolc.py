@@ -24,6 +24,9 @@ dbsession.add(admin)
 notice = Board("notice", u"공지사항", admin, anybody)
 dbsession.add(notice)
 
+free = Board("free", u"자유게시판", anybody, anybody)
+dbsession.add(free)
+
 dbsession.commit()
 """
 BASIC REQUIREMENT TO HERE
@@ -35,13 +38,13 @@ FOR POOLC FROM HERE
 game_dev = Group(u"게임제작부")
 dbsession.add(game_dev)
 
-hakbeons = ["98", "99", "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]
+hakbeons = ["14", "13", "12", "11", "10", "09", "08", "07", "06", "05", "04", "03", "02", "01", "00", "99", "98"]
 for i, hakbeon in enumerate(hakbeons):
     hakbeon_group = Group(hakbeon + u"학번")
     hakbeon_group.important = True
     dbsession.add(hakbeon_group)
 
-    hakbeon_board = Board("y" + hakbeon, hakbeon + u"학번 게시판", hakbeon_group, anybody, "normal", i)
+    hakbeon_board = Board("y" + hakbeon, hakbeon + u"학번 게시판", hakbeon_group, anybody, "normal", i + 1)
     dbsession.add(hakbeon_board)
 
 seminar_board = Board("seminar", u"학술부", anybody, anybody, "somoim", 1)
