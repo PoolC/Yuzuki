@@ -9,21 +9,25 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12 article-subject">
             <h2>{{ article.subject }}</h2>
         </div>
     </div>
-    <div class="row meta">
-        <div class="col-xs-2">
-            <strong>글쓴이</strong> {{ article.user.nickname }}
-        </div>
-        <div class="col-xs-4">
-            <strong>작성시간</strong> {{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}
-        </div>
-        <div class="col-xs-4">
-            {% if article.is_modified %}
-                <strong>변경시간</strong> {{ article.last_modified.strftime("%y-%m-%d %H:%M:%S") }}
-            {% endif %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="meta row">
+                <div class="col-xs-2">
+                    <strong>글쓴이</strong> {{ article.user.nickname }}
+                </div>
+                <div class="col-xs-4">
+                    <strong>작성시간</strong> {{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}
+                </div>
+                <div class="col-xs-4">
+                    {% if article.is_modified %}
+                        <strong>변경시간</strong> {{ article.last_modified.strftime("%y-%m-%d %H:%M:%S") }}
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     <div class="row content">
@@ -32,30 +36,29 @@
         </div>
     </div>
     <div class="row replies">
-        <div class="col-xs-12">
-            <table id="reply-table" class="table">
-                <tfoot>
-                {% if request.user and request.user in article.board.comment_group.users %}
-                    <tr>
-                        <form method="post" action="/reply/write" class="col-xs-12 form-horizontal">
-                            <input type="hidden" name="article_id" value="{{ article.uid }}"/>
-                            <td class="reply-nickname">
-                                <label class="current-user-nickname"
-                                       for="reply-input">{{ request.user.nickname }}</label>
-                            </td>
-                            <td class="reply-content">
-                                <input id="reply-input" type="text" name="content" class="form-control" required=""/>
-                            </td>
-                            <td>
-                                {% if page %}
-                                    <input type="hidden" name="page" value="{{ page }}"/>
-                                {% endif %}
-                                <input type="submit" value="완료" class="btn btn-default"/>
-                            </td>
-                        </form>
-                    </tr>
-                {% endif %}
-                </tfoot>
+    <div class="col-xs-12">
+        <div id="reply-wrap">
+            <div id="reply-table" class="col-xs-12"></div>
+            {% if request.user and request.user in article.board.comment_group.users %}
+                <form method="post" action="/reply/write" class="col-xs-12 reply-row">
+                    <input type="hidden" name="article_id" value="{{ article.uid }}"/>
+
+                    <div class="reply-nickname col-xs-2">
+                        <label class="current-user-nickname"
+                               for="reply-input">{{ request.user.nickname }}</label>
+                    </div>
+                    <div class="reply-content-box col-xs-8">
+                        <input id="reply-input" type="text" name="content" class="form-control" required=""/>
+                    </div>
+                    <div class="reply-timestamp col-xs-2">
+                        {% if page %}
+                            <input type="hidden" name="page" value="{{ page }}"/>
+                        {% endif %}
+                        <input type="submit" value="완료" class="btn btn-default"/>
+                    </div>
+                </form>
+            {% endif %}
+            </tfoot>
             </table>
         </div>
 
@@ -109,18 +112,16 @@
 
         var current_page = 1;
         var render_reply = function (reply) {
-            var reply_el = $("<tr></tr>").attr("id", reply.uid);
-            var nickname = $("<td></td>").addClass("reply-nickname").text(reply.user_nickname);
-            var content = $("<td></td>").addClass("reply-content").text(reply.content);
+            var reply_el = $("<div></div>").attr("id", reply.uid).addClass("reply-row");
+            var nickname = $("<div></div>").addClass("reply-nickname").addClass("col-xs-2").text(reply.user_nickname);
+            var content = $("<div></div>").addClass("reply-content-box").addClass("col-xs-8").append("<span class=reply-content>" + reply.content + "</span>");
             {% if request.user and request.user.is_admin %}
-                content.append("<span class=\"reply-delete glyphicon glyphicon-remove pull-right\" style=\"margin-left: 10px;\"></span>");
-                var delete_button = $("<span class=\"glyphicon glyphicon-pencil pull-right\"></span>");
-                content.append(delete_button);
+                content.append("<span class=\"reply-delete glyphicon glyphicon-remove pull-right\"></span>");
+                content.append("<span class=\"reply-edit glyphicon glyphicon-pencil pull-right\"></span>");
             {% elif request.user %}
                 if (reply.user_id == {{ request.user.uid }}) {
-                    content.append("<span class=\"reply-delete glyphicon glyphicon-remove pull-right\" style=\"margin-left: 10px;\"></span>");
-                    var delete_button = $("<span class=\"glyphicon glyphicon-pencil pull-right\"></span>");
-                    content.append(delete_button);
+                    content.append("<span class=\"reply-delete glyphicon glyphicon-remove pull-right\"></span>");
+                    content.append("<span class=\"reply-edit glyphicon glyphicon-pencil pull-right\"></span>");
                 }
             {% endif %}
             var time_repr = null;
@@ -129,13 +130,13 @@
             } else {
                 time_repr = reply.created_at
             }
-            var timestamp = $("<td></td>").addClass("reply-timestamp").text(time_repr);
+            var timestamp = $("<div></div>").addClass("reply-timestamp").addClass("col-xs-2").text(time_repr);
             reply_el.append(nickname).append(content).append(timestamp);
             return reply_el;
         };
 
         var render_reply_table = function (data) {
-            $("#reply-table tbody").html("");
+            $("#reply-table").html("");
             for (var i = 0; i < data.length; i++) {
                 var reply_el = render_reply(data[i]);
                 $("#reply-table").append(reply_el);
@@ -159,6 +160,38 @@
                         }
                     });
                 }
+            });
+            $(".reply-edit").click(function () {
+                var content_box = $(this).parent();
+                var reply_content = content_box.find(".reply-content");
+                var text = reply_content.text();
+                content_box.find("span").hide();
+                content_box.append("<input class=\"reply-edit-input form-control\"type=\"text\"/>");
+                $(".reply-edit-input").keypress(function (e) {
+                    if (e.which === 13) {
+                        refresh_table_with_page(current_page);
+                        var $this = $(this);
+                        var reply_data = {
+                            id: $this.parent().parent().attr("id"),
+                            content: $this.val()
+                        };
+                        $.ajax("/reply/edit", {
+                            type: "POST",
+                            data: reply_data
+                        }).done(function () {
+                            alert("댓글을 수정하였습니다.");
+                            refresh_table_with_page(current_page);
+                        }).fail(function (xhr) {
+                            if (xhr.status === 401) {
+                                alert("댓글을 수정할 권한이 없습니다.");
+                            } else if (xhr.status === 404) {
+                                alert("댓글이 존재하지 않습니다.");
+                            } else {
+                                alert("댓글 수정에 실패하였습니다. 새로고침 후 다시 시도하세요.");
+                            }
+                        });
+                    }
+                });
             });
         };
 

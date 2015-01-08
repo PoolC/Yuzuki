@@ -1,21 +1,19 @@
+.article-subject {
+    padding: 10px 45px;
+}
 .meta {
-    padding: 10px;
-    border-top: #f0f0f0 1px solid;
-    border-bottom: #f0f0f0 1px solid;
+    padding: 10px 15px;
+    border-top: #ddd 1px solid;
+    border-bottom: #ddd 1px solid;
+    margin: 0;
 }
 
 .meta strong {
     color: #999;
 }
 
-.meta > div:first-child {
-    padding-left: 5px;
-}
-
 .content {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    border-bottom: #f0f0f0 1px solid;
+    padding: 20px 30px;
 }
 
 .buttons {
@@ -29,18 +27,7 @@
 
 #reply-table {
     font-size: 10pt;
-}
-
-#reply-table tr:last-child td {
-    border-bottom: 1px solid #ddd;
-}
-
-.reply-nickname {
-    width: 15%;
-}
-
-.reply-content {
-    width: 65%;
+    padding: 0;
 }
 
 .outer-wrap {
@@ -60,6 +47,21 @@
     clear: both;
 }
 
-.current-user-nickname {
-    margin-top: 7px;
+.reply-row {
+    border-top: 1px solid #ddd;
+    padding: 12px 15px;
+}
+
+.reply-row > div {
+    display: inline-block;
+    float: none;
+    vertical-align: middle;
+}
+
+.reply-row > div.reply-content-box {
+    width: 66%;
+}
+
+.reply-delete {
+    margin-left: 10px;
 }

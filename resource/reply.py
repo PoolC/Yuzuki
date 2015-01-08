@@ -129,11 +129,11 @@ class ReplyEdit(YuzukiResource):
             return "reply not found"
         reply = result[0]
         if request.user and request.user == reply.user:
-            content = self.get_argument("content")
-            if content.stript():
-                ReplyRecord(reply)
+            content = request.get_argument("content")
+            if content.strip():
+                reply_record = ReplyRecord(reply)
                 reply.content = content
-                request.dbsession.add(ReplyRecord)
+                request.dbsession.add(reply_record)
                 request.dbsession.commit()
                 return "reply edit success"
             else:
