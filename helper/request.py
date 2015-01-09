@@ -24,7 +24,6 @@ class YuzukiRequest(Request):
         if you need to do something just before or just after a request is initialized,
         write it here
         """
-        self._yzk_resource = resource
         self._initial_session = copy.deepcopy(self.yzk_session)
 
     def finalize(self):
