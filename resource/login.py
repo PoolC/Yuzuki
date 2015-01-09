@@ -2,6 +2,7 @@
 from twisted.web.http import UNAUTHORIZED
 
 from helper.resource import YuzukiResource
+from helper.template import render_template
 from model.user import User
 
 
@@ -24,7 +25,8 @@ class Login(YuzukiResource):
         if result:
             user = result[0]
             if user.is_blocked:
-                return self.render_template(request, self.BLOCKED_USER)
+                # FIXME
+                return render_template(request, self.BLOCKED_USER)
             if user.check_password(password):
                 request.log_user_in(user)
                 # TODO: remember me feature
@@ -45,4 +47,4 @@ class Login(YuzukiResource):
         }
         if err:
             context["err"] = err
-        return self.render_template("login.html", request, context)
+        return render_template("login.html", request, context)

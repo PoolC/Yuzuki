@@ -3,20 +3,21 @@ from helper.database import DatabaseHelper
 from helper.resource import YuzukiResource
 from model.user import User
 from model.group import Group
+from helper.template import render_template
 
 
 class Register(YuzukiResource):
     def __init__(self):
         YuzukiResource.__init__(self)
         dbsession = DatabaseHelper.session()
-        query = dbsession.query(Group).filter(Group.important == True)
+        query = dbsession.query(Group).filter(Group.important)
         result = query.all()
         self.bunryu_groups = [(group.uid, group.name) for group in result]
         dbsession.close()
 
     def render_GET(self, request):
         context = {"group_meta": self.bunryu_groups}
-        return self.render_template("register.html", request, context)
+        return render_template("register.html", request, context)
 
     def render_POST(self, request):
         username = request.get_argument("username") or None
@@ -30,7 +31,7 @@ class Register(YuzukiResource):
         pd_bio = request.get_argument("pd_bio") or None
         new_user = User(username, nickname, password, pd_realname, pd_email, pd_address, pd_phone, pd_bunryu, pd_bio)
         err = self.check_user_data_valid(request, new_user)
-        if err == None:
+        if not err:
             request.dbsession.add(new_user)
             request.dbsession.commit()
             request.redirect("/welcome")
@@ -40,19 +41,19 @@ class Register(YuzukiResource):
                 "group_meta": self.bunryu_groups,
                 "err": err,
             }
-            return self.render_template("register.html", request, context)
+            return render_template("register.html", request, context)
 
     def check_user_data_valid(self, request, new_user):
         # empty value check
-        if new_user.username == None:
+        if not new_user.username:
             return u"ID는 비어있을 수 없습니다."
-        if new_user.nickname == None:
+        if not new_user.nickname:
             return u"별명은 비어있을 수 없습니다."
-        if new_user.password == None:
+        if not new_user.password:
             return u"비밀번호는 비어있을 수 없습니다."
-        if new_user.pd_realname == None:
+        if not new_user.pd_realname:
             return u"실명은 비어있을 수 없습니다."
-        if new_user.pd_bunryu == None:
+        if not new_user.pd_bunryu:
             return u"분류는 비어있을 수 없습니다."
 
         # duplicate value check

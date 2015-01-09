@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import copy
-import logging
 from urllib import quote
 
 from twisted.python.compat import intToBytes
@@ -11,6 +10,7 @@ from sqlalchemy.orm import subqueryload
 from config import DEBUG
 from exception import DuplicateArgumentGiven, MissingArgument, YuzukiException
 from helper.database import DatabaseHelper
+from helper.template import generate_error_message
 from model.user import User
 
 
@@ -107,17 +107,11 @@ class YuzukiRequest(Request):
             if issubclass(reason.type, YuzukiException):
                 self.logger.warning(reason)
                 self.setResponseCode(BAD_REQUEST)
-                body = self._yzk_resource.generate_error_message(self,
-                                                                 BAD_REQUEST,
-                                                                 "Bad Request",
-                                                                 u"올바르지 않은 요청입니다.")
+                body = generate_error_message(self, BAD_REQUEST, u"올바르지 않은 요청입니다.")
             else:
                 self.logger.error(reason)
                 self.setResponseCode(INTERNAL_SERVER_ERROR)
-                body = self._yzk_resource.generate_error_message(self,
-                                                                 INTERNAL_SERVER_ERROR,
-                                                                 "Internal Server Error",
-                                                                 u"서버 에러가 발생하였습니다.")
+                body = generate_error_message(self, INTERNAL_SERVER_ERROR, u"서버 에러가 발생하였습니다.")
             body = body.encode("UTF-8")
             self.setHeader(b'content-type', b"text/html")
             self.setHeader(b'content-length', intToBytes(len(body)))

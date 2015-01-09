@@ -5,12 +5,13 @@ from twisted.web.http import NOT_FOUND, UNAUTHORIZED
 from sqlalchemy.orm import subqueryload
 
 from helper.resource import YuzukiResource
+from helper.template import render_template, generate_error_message
 from model.article import Article
 from model.article_record import ArticleRecord
 from model.board import Board
-from model.reply import Reply
 from exception import BadArgument
 from config import REPLY_PER_PAGE
+
 
 class ArticleParent(YuzukiResource):
     isLeaf = False
@@ -34,10 +35,7 @@ class ArticleView(YuzukiResource):
         result = query.all()
         if not result:
             request.setResponseCode(NOT_FOUND)
-            return self.generate_error_message(request,
-                                               NOT_FOUND,
-                                               "Not Found",
-                                               u"게시글이 존재하지 않습니다.")
+            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
         article = result[0]
         if article.board.name == "notice" or (
                     request.user and any([group.name == "anybody" for group in request.user.groups])):
@@ -49,13 +47,10 @@ class ArticleView(YuzukiResource):
                 "page": page,
                 "reply_page_total": reply_page_total,
             }
-            return self.render_template("article_view.html", request, context)
+            return render_template("article_view.html", request, context)
         else:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"게시글을 볼 권한이 없습니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"게시글을 볼 권한이 없습니다.")
 
 
 class ArticleWrite(YuzukiResource):
@@ -66,19 +61,13 @@ class ArticleWrite(YuzukiResource):
             result = query.all()
             if not result:
                 request.setResponseCode(NOT_FOUND)
-                return self.generate_error_message(request,
-                                                   UNAUTHORIZED,
-                                                   "Unauthorized",
-                                                   u"게시판이 존재하지 않습니다.")
+                return generate_error_message(request, UNAUTHORIZED, u"게시판이 존재하지 않습니다.")
             board = result[0]
             context = {"board": board}
-            return self.render_template("article_write.html", request, context)
+            return render_template("article_write.html", request, context)
         else:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"회원만 게시글을 쓸 수 있습니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"회원만 게시글을 쓸 수 있습니다.")
 
     def render_POST(self, request):
         if request.user:
@@ -87,10 +76,7 @@ class ArticleWrite(YuzukiResource):
             result = query.all()
             if not result:
                 request.setResponseCode(NOT_FOUND)
-                return self.generate_error_message(request,
-                                                   NOT_FOUND,
-                                                   "Not Found",
-                                                   u"게시판이 존재하지 않습니다.")
+                return generate_error_message(request, NOT_FOUND, u"게시판이 존재하지 않습니다.")
             board = result[0]
             if request.user in board.write_group.users:
                 subject = request.get_argument("subject")
@@ -106,16 +92,10 @@ class ArticleWrite(YuzukiResource):
                     raise BadArgument("subject", "empty")
             else:
                 request.setResponseCode(UNAUTHORIZED)
-                return self.generate_error_message(request,
-                                                   UNAUTHORIZED,
-                                                   "Unauthorized",
-                                                   u"글쓰기 권한이 없습니다.")
+                return generate_error_message(request, UNAUTHORIZED, u"글쓰기 권한이 없습니다.")
         else:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"회원만 게시글을 쓸 수 있습니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"회원만 게시글을 쓸 수 있습니다.")
 
 
 class ArticleDelete(YuzukiResource):
@@ -151,20 +131,14 @@ class ArticleEdit(YuzukiResource):
         result = query.all()
         if not result:
             request.setResponseCode(NOT_FOUND)
-            return self.generate_error_message(request,
-                                               NOT_FOUND,
-                                               "Not Found",
-                                               u"게시글이 존재하지 않습니다.")
+            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
         article = result[0]
         if request.user and request.user == article.user:
             context = {"article": article}
-            return self.render_template("article_edit.html", request, context)
+            return render_template("article_edit.html", request, context)
         else:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"게시글을 수정할 권한이 없습니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"게시글을 수정할 권한이 없습니다.")
 
     def render_POST(self, request):
         article_id = request.get_argument("id")
@@ -175,10 +149,7 @@ class ArticleEdit(YuzukiResource):
         result = query.all()
         if not result:
             request.setResponseCode(NOT_FOUND)
-            return self.generate_error_message(request,
-                                               NOT_FOUND,
-                                               "Not Found",
-                                               u"게시글이 존재하지 않습니다.")
+            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
         article = result[0]
         if request.user and request.user == article.user:
             subject = request.get_argument("subject")
@@ -196,7 +167,4 @@ class ArticleEdit(YuzukiResource):
                 raise BadArgument("subject", "empty")
         else:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"게시글을 수정할 권한이 없습니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"게시글을 수정할 권한이 없습니다.")

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import cgi
+
 from twisted.web.http import UNAUTHORIZED
 
 from helper.resource import YuzukiResource
 from helper.pbkdf2 import pbkdf2
 from helper.md_ext import markdown_convert
+from helper.template import render_template, generate_error_message
 from model.user import User
 
 
@@ -21,33 +23,24 @@ class ProfileView(YuzukiResource):
     def render_GET(self, request):
         if not request.user:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Bad Request",
-                                               u"로그인이 필요합니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"로그인이 필요합니다.")
         else:
             context = {"user": request.user}
-            return self.render_template("profile_view.html", request, context)
+            return render_template("profile_view.html", request, context)
 
 
 class ProfileEdit(YuzukiResource):
     def render_GET(self, request):
         if not request.user:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"로그인이 필요합니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"로그인이 필요합니다.")
         else:
-            return self.render_template("profile_edit.html", request)
+            return render_template("profile_edit.html", request)
 
     def render_POST(self, request):
         if not request.user:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"로그인이 필요합니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"로그인이 필요합니다.")
         else:
             nickname = request.get_argument("nickname") or None
             password = request.get_argument("password") or None
@@ -61,7 +54,7 @@ class ProfileEdit(YuzukiResource):
             if request.dbsession.query(query.exists()).scalar():
                 err = u"이미 사용되고 있는 별명입니다."
                 context = {"err": err}
-                return self.render_template("profile_edit.html", request, context)
+                return render_template("profile_edit.html", request, context)
             else:
                 if nickname:
                     request.user.nickname = nickname

@@ -2,6 +2,7 @@
 from twisted.web.http import NOT_FOUND, UNAUTHORIZED
 from sqlalchemy.orm import subqueryload
 
+from helper.template import render_template, generate_error_message
 from helper.resource import YuzukiResource
 from model.board import Board
 from model.article import Article
@@ -18,10 +19,7 @@ class BoardView(YuzukiResource):
         if name != "notice" and (
                     not request.user or not any([group.name == "anybody" for group in request.user.groups])):
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"회원만 게시판을 열람할 수 있습니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"회원만 게시판을 열람할 수 있습니다.")
         try:
             page = int(request.get_argument("page", "1"))
         except ValueError:
@@ -30,10 +28,7 @@ class BoardView(YuzukiResource):
         result = query.all()
         if not result:
             request.setResponseCode(NOT_FOUND)
-            return self.generate_error_message(request,
-                                               NOT_FOUND,
-                                               "Not Found",
-                                               u"게시판 이름이 잘못되었습니다.")
+            return generate_error_message(request, NOT_FOUND, u"게시판 이름이 잘못되었습니다.")
         board = result[0]
         query = request.dbsession.query(Article) \
             .filter(Article.enabled == True) \
@@ -56,4 +51,4 @@ class BoardView(YuzukiResource):
             "page_total": page_total,
             "can_write": can_write,
         }
-        return self.render_template("board.html", request, context)
+        return render_template("board.html", request, context)

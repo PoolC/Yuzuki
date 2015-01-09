@@ -11,6 +11,7 @@ from model.article import Article
 from model.reply import Reply
 from model.reply_record import ReplyRecord
 from config import REPLY_PER_PAGE
+from helper.template import generate_error_message
 
 
 class ReplyParent(YuzukiResource):
@@ -68,10 +69,7 @@ class ReplyWrite(YuzukiResource):
         result = query.all()
         if not result:
             request.setResponseCode(NOT_FOUND)
-            return self.generate_error_message(request,
-                                               NOT_FOUND,
-                                               "Not Found",
-                                               u"게시글이 존재하지 않습니다.")
+            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
         article = result[0]
         if request.user and request.user in article.board.comment_group.users:
             content = request.get_argument("content")
@@ -91,10 +89,7 @@ class ReplyWrite(YuzukiResource):
                 raise BadArgument("content", "empty")
         else:
             request.setResponseCode(UNAUTHORIZED)
-            return self.generate_error_message(request,
-                                               UNAUTHORIZED,
-                                               "Unauthorized",
-                                               u"댓글을 쓸 권한이 없습니다.")
+            return generate_error_message(request, UNAUTHORIZED, u"댓글을 쓸 권한이 없습니다.")
 
 
 class ReplyDelete(YuzukiResource):
