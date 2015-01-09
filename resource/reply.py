@@ -2,6 +2,7 @@
 import json
 from datetime import datetime
 
+from bleach import linkify
 from sqlalchemy.orm import subqueryload
 from twisted.web.http import NOT_FOUND, UNAUTHORIZED
 
@@ -132,7 +133,7 @@ class ReplyEdit(YuzukiResource):
             content = request.get_argument("content")
             if content.strip():
                 reply_record = ReplyRecord(reply)
-                reply.content = content
+                reply.content = linkify(content, parse_email=True)
                 request.dbsession.add(reply_record)
                 request.dbsession.commit()
                 return "reply edit success"

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import cgi
-
+from bleach import linkify
 from twisted.web.http import UNAUTHORIZED
 
 from helper.md_ext import markdown_convert
@@ -69,7 +68,7 @@ class ProfileEdit(YuzukiResource):
                 if pd_phone:
                     request.user.pd_phone = pd_phone
                 if pd_bio:
-                    request.user.pd_bio = markdown_convert(cgi.escape(pd_bio))
+                    request.user.pd_bio = linkify(markdown_convert(pd_bio), parse_email=True)
                 request.dbsession.commit()
                 request.redirect("/profile/view")
                 return "profile edit success"

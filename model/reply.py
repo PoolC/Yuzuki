@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import cgi
 from datetime import datetime
 
+from bleach import linkify
 from sqlalchemy import Boolean, Column, Integer, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
@@ -27,7 +27,7 @@ class Reply(Base):
     def __init__(self, article, user, content):
         self.article = article
         self.user = user
-        self.content = cgi.escape(content)
+        self.content = linkify(content, parse_email=True)
 
     def __repr__(self):
         return "<Reply uid=%s, content=%s>" % (self.uid, self.content)

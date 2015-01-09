@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import cgi
 from datetime import datetime
 from hashlib import sha256
 
+from bleach import linkify
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -38,7 +38,7 @@ class User(Base):
         self.pd_address = pd_address
         self.pd_phone = pd_phone
         self.pd_bunryu = pd_bunryu
-        self.pd_bio = markdown_convert(cgi.escape(pd_bio)) if pd_bio else pd_bio
+        self.pd_bio = linkify(markdown_convert(pd_bio), parse_email=True) if pd_bio else pd_bio
 
     def check_password(self, password):
         return pbkdf2_check(password, self.password)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import cgi
 from datetime import datetime
 
+from bleach import linkify
 from sqlalchemy import Boolean, Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
@@ -41,4 +41,4 @@ class Article(Base):
 
     def change_content(self, content):
         self.content = content
-        self.compiled_content = markdown_convert(cgi.escape(content))
+        self.compiled_content = linkify(markdown_convert(content), parse_email=True)
