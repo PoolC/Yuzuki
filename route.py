@@ -1,16 +1,16 @@
 from twisted.web.static import File
 
-from resource.index import Index
-from resource.article import ArticleParent
-from resource.reply import ReplyParent
 from resource.about import About
+from resource.article import ArticleParent
 from resource.board import BoardView
 from resource.hello import Hello
+from resource.index import Index
 from resource.login import Login
 from resource.logout import Logout
-from resource.register import Register
-from resource.welcome import Welcome
 from resource.profile import Profile
+from resource.register import Register
+from resource.reply import ReplyParent
+from resource.welcome import Welcome
 
 ROUTE = {
     "": Index(),

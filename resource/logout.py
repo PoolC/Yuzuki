@@ -2,9 +2,6 @@ from helper.resource import YuzukiResource
 
 
 class Logout(YuzukiResource):
-    def __init__(self):
-        YuzukiResource.__init__(self)
-
     def render_GET(self, request):
         return self.logout(request)
 

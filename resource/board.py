@@ -2,12 +2,12 @@
 from twisted.web.http import NOT_FOUND, UNAUTHORIZED
 from sqlalchemy.orm import subqueryload
 
+from config import ARTICLE_PER_PAGE
+from exception import BadArgument
 from helper.template import render_template, generate_error_message
 from helper.resource import YuzukiResource
 from model.board import Board
 from model.article import Article
-from exception import BadArgument
-from config import ARTICLE_PER_PAGE
 
 
 class BoardView(YuzukiResource):

@@ -1,13 +1,11 @@
 from datetime import datetime
 
+from jinja2 import Environment, FileSystemLoader
 from twisted.web.http import RESPONSES
 
-from jinja2 import Environment, FileSystemLoader
-
+from config import SITE_NAME
 from helper.database import DatabaseHelper
 from model.board import Board
-
-from config import SITE_NAME
 
 dbsession = DatabaseHelper.session()
 board_meta = dict()

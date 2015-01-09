@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from helper.database import DatabaseHelper
 from helper.resource import YuzukiResource
-from model.user import User
-from model.group import Group
 from helper.template import render_template
+from model.group import Group
+from model.user import User
 
 
 class Register(YuzukiResource):

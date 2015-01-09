@@ -6,14 +6,14 @@ from config import DB_CONNECTION_STRING
 from model.base import Base
 
 # import all models you defined here
-from model.user import User
-from model.group import Group
 from model.association.user_group import UserGroupAssociation
-from model.board import Board
 from model.article import Article
-from model.reply import Reply
 from model.article_record import ArticleRecord
+from model.board import Board
+from model.group import Group
+from model.reply import Reply
 from model.reply_record import ReplyRecord
+from model.user import User
 
 class DatabaseHelper(object):
     _engine = create_engine(DB_CONNECTION_STRING)

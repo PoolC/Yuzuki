@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlalchemy import Boolean, Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
-from model.base import Base
 from helper.md_ext import markdown_convert
+from model.base import Base
 
 
 class Article(Base):

@@ -2,11 +2,10 @@
 import json
 
 import redis
-
 from twisted.web.server import Site, Session
 
-from helper.request import YuzukiRequest
 from config import REDIS_CONNECT_ARGS
+from helper.request import YuzukiRequest
 
 r = redis.StrictRedis(**REDIS_CONNECT_ARGS)
 

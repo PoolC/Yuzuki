@@ -10,9 +10,6 @@ class Login(YuzukiResource):
     INVALID_CREDENTIAL = u"ID나 비밀번호가 잘못되었습니다."
     BLOCKED_USER = u"차단된 계정입니다."
 
-    def __init__(self):
-        YuzukiResource.__init__(self)
-
     def render_GET(self, request):
         return self.render_login_page(request, False)
 
@@ -25,8 +22,7 @@ class Login(YuzukiResource):
         if result:
             user = result[0]
             if user.is_blocked:
-                # FIXME
-                return render_template(request, self.BLOCKED_USER)
+                return self.render_login_page(request, self.BLOCKED_USER)
             if user.check_password(password):
                 request.log_user_in(user)
                 # TODO: remember me feature

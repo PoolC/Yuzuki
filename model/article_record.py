@@ -1,11 +1,9 @@
-import cgi
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from model.base import Base
-from helper.md_ext import markdown_convert
 
 
 class ArticleRecord(Base):

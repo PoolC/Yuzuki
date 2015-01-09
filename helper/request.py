@@ -2,10 +2,10 @@
 import copy
 from urllib import quote
 
+from sqlalchemy.orm import subqueryload
 from twisted.python.compat import intToBytes
 from twisted.web.http import INTERNAL_SERVER_ERROR, BAD_REQUEST
 from twisted.web.server import Request
-from sqlalchemy.orm import subqueryload
 
 from config import DEBUG
 from exception import DuplicateArgumentGiven, MissingArgument, YuzukiException

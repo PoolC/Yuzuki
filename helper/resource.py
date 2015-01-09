@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from twisted.web.resource import Resource
 from twisted.web.http import FORBIDDEN
+from twisted.web.resource import Resource
 
 from helper.template import generate_error_message
 

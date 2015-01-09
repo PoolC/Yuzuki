@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from helper.database import DatabaseHelper
-from model.user import User
-from model.group import Group
 from model.board import Board
+from model.group import Group
+from model.user import User
 
 DatabaseHelper.create_all()
 dbsession = DatabaseHelper.session()
