@@ -58,6 +58,12 @@
     vertical-align: middle;
 }
 
+form .reply-content-box {
+    margin-left: -18px;
+    margin-right: 8px;
+    padding-right: 0;
+}
+
 .reply-row > div.reply-content-box {
     width: 66%;
 }

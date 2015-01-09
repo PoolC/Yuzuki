@@ -115,7 +115,7 @@ body {
 }
 
 html * {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Meiryo, "Malgun Gothic", AppleSDGothicNeo, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .menu-toggle {
