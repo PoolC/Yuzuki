@@ -5,7 +5,6 @@ from jinja2 import Environment, FileSystemLoader
 from twisted.web.resource import Resource
 from twisted.web.http import FORBIDDEN
 
-from helper.md_ext import MarkdownExtension
 from helper.database import DatabaseHelper
 from model.board import Board
 from config import SITE_NAME
@@ -20,12 +19,8 @@ class YuzukiResource(Resource):
     board_meta["normal"] = [(board.name, board.repr) for board in query.all()]
     dbsession.close()
 
-    jinja2_ext = [
-        MarkdownExtension,
-    ]
     jinja2_env = Environment(loader=FileSystemLoader("template",
-                                                     encoding="utf-8"),
-                             extensions=jinja2_ext)
+                                                     encoding="utf-8"))
     jinja2_env.globals = {
         "site_name": SITE_NAME,
         "datetime": datetime,

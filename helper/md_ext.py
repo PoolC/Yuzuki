@@ -16,20 +16,3 @@ md = Markdown(extensions=markdown_extension_list)
 
 def markdown_convert(source):
     return md.convert(source)
-
-class MarkdownExtension(Extension):
-    # a set of names that trigger the extension.
-    tags = set(['markdown'])
-    
-    def parse(self, parser):
-        lineno = parser.stream.next().lineno
-        #no args for this extension
-        args = tuple()
-        body = parser.parse_statements(['name:endmarkdown'], drop_needle=True)
-        call = self.call_method('_markdown_support', args)
-        return nodes.CallBlock(call, list(), list(), body).set_lineno(lineno)
-    
-    def _markdown_support(self, caller=None):
-        body = Markup(caller()).unescape()
-        result = markdown_convert(body)
-        return result
