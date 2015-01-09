@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from helper.database import DatabaseHelper
 
 dbsession = DatabaseHelper.session()
