@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from twisted.web.static import File
 
 from resource.about import About

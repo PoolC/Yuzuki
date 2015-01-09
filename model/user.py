@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import cgi
 from datetime import datetime
 from hashlib import sha256

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from helper.resource import YuzukiResource
 from helper.template import render_template
 
