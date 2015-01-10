@@ -11,20 +11,22 @@ from resource.logout import Logout
 from resource.profile import Profile
 from resource.register import Register
 from resource.reply import ReplyParent
+from resource.search import Search
 from resource.welcome import Welcome
 
 ROUTE = {
     "": Index(),
-    "article": ArticleParent(),
-    "reply": ReplyParent(),
     "about": About(),
+    "article": ArticleParent(),
     "board": BoardView(),
+    "hello": Hello(),
     "login": Login(),
     "logout": Logout(),
-    "register": Register(),
     "favicon.ico": File("static/img/favicon.ico"),
-    "static": File("static"),
-    "hello": Hello(),
-    "welcome": Welcome(),
     "profile": Profile(),
+    "register": Register(),
+    "reply": ReplyParent(),
+    "static": File("static"),
+    "search": Search(),
+    "welcome": Welcome(),
 }
