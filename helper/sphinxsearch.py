@@ -15,9 +15,7 @@ def _search(indices, query, board):
     sphinx_query = Search(indexes=indices, config=SphinxitConfig)
     sphinx_query = sphinx_query.match(query)
     if board:
-        sphinx_filter = dict()
-        sphinx_filter[board + "__eq"] = board.uid
-        sphinx_query.filter(sphinx_filter)
+        sphinx_query.filter(board_id__eq=board.uid)
     result = sphinx_query.ask()
     items = sorted(result["result"]["items"], key=lambda x: x["weight"], reverse=True)
     item_ids = [item["id"] for item in items]
