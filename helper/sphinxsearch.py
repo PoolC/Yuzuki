@@ -13,13 +13,13 @@ class SphinxitConfig(BaseSearchConfig):
 
 def _search(indices, query, board):
     sphinx_query = Search(indexes=indices, config=SphinxitConfig)
-    sphinx_query = sphinx_query.match(query).order_by("weight", "desc")
+    sphinx_query = sphinx_query.match(query)
     if board:
         sphinx_filter = dict()
         sphinx_filter[board + "__eq"] = board.uid
         sphinx_query.filter(sphinx_filter)
     result = sphinx_query.ask()
-    items = result["result"]["items"]
+    items = sorted(result["result"]["items"], lambda item: item["weight"], reverse=True)
     item_ids = [item["id"] for item in items]
     return item_ids
 
