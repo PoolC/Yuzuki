@@ -26,15 +26,15 @@ class Article(Base):
     deleted_at = Column(DateTime)
     deleted_user_id = Column(Integer(), ForeignKey("user.uid"))
     deleted_user = relationship("User", foreign_keys=deleted_user_id)
-    reply_count = Column(Integer())
+    reply_count = Column(Integer(), default=0)
     replies = relationship("Reply")
 
     def __init__(self, board, user, subject, content):
         self.board = board
+        board.article_count += 1
         self.user = user
         self.subject = subject
         self.change_content(content)
-        self.reply_count = 0
 
     def __repr__(self):
         return "<Article uid=%s, subject=%s>" % (self.uid, self.subject)

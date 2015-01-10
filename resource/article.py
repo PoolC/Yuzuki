@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-
-from sqlalchemy.orm import subqueryload
-from twisted.web.http import NOT_FOUND, UNAUTHORIZED
-
 from config import REPLY_PER_PAGE
-from exception import BadArgument
-from helper.resource import YuzukiResource
-from helper.template import render_template, generate_error_message
-from model.article import Article
-from model.article_record import ArticleRecord
-from model.board import Board
+from exception import BadRequest, Unauthorized, Forbidden
+from helper.model_control import get_board, get_article, delete_article, edit_article, create_article
+from helper.permission import can_write, is_anybody, is_author, is_author_or_admin
+from helper.resource import YuzukiResource, need_anybody_permission
+from helper.template import render_template
 
 
 class ArticleParent(YuzukiResource):
@@ -27,18 +21,9 @@ class ArticleParent(YuzukiResource):
 class ArticleView(YuzukiResource):
     def render_GET(self, request):
         article_id = request.get_argument("id")
+        article = get_article(request, article_id)
         page = request.get_argument("page", None)
-        query = request.dbsession.query(Article). \
-            filter(Article.uid == article_id). \
-            filter(Article.enabled == True). \
-            options(subqueryload(Article.board))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
-        article = result[0]
-        if article.board.name == "notice" or (
-                    request.user and any([group.name == "anybody" for group in request.user.groups])):
+        if article.board.name == "notice" or is_anybody(request):
             reply_page_total = article.reply_count / REPLY_PER_PAGE
             if article.reply_count % REPLY_PER_PAGE != 0:
                 reply_page_total += 1
@@ -49,122 +34,76 @@ class ArticleView(YuzukiResource):
             }
             return render_template("article_view.html", request, context)
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return generate_error_message(request, UNAUTHORIZED, u"게시글을 볼 권한이 없습니다.")
+            raise Unauthorized()
 
 
 class ArticleWrite(YuzukiResource):
+    @need_anybody_permission
     def render_GET(self, request):
-        if request.user and any([group.name == "anybody" for group in request.user.groups]):
-            board_name = request.get_argument("name")
-            query = request.dbsession.query(Board).filter(Board.name == board_name)
-            result = query.all()
-            if not result:
-                request.setResponseCode(NOT_FOUND)
-                return generate_error_message(request, UNAUTHORIZED, u"게시판이 존재하지 않습니다.")
-            board = result[0]
-            context = {"board": board}
-            return render_template("article_write.html", request, context)
-        else:
-            request.setResponseCode(UNAUTHORIZED)
-            return generate_error_message(request, UNAUTHORIZED, u"회원만 게시글을 쓸 수 있습니다.")
+        board_name = request.get_argument("name")
+        board = get_board(request, board_name)
+        if not can_write(request, board):
+            raise Forbidden()
+        context = {"board": board}
+        return render_template("article_write.html", request, context)
 
+    @need_anybody_permission
     def render_POST(self, request):
-        if request.user:
-            board_name = request.get_argument("name")
-            query = request.dbsession.query(Board).filter(Board.name == board_name)
-            result = query.all()
-            if not result:
-                request.setResponseCode(NOT_FOUND)
-                return generate_error_message(request, NOT_FOUND, u"게시판이 존재하지 않습니다.")
-            board = result[0]
-            if request.user in board.write_group.users:
-                subject = request.get_argument("subject")
-                content = request.get_argument("content")
-                # no empty subject
-                if subject.strip():
-                    article = Article(board, request.user, subject, content)
-                    request.dbsession.add(article)
-                    request.dbsession.commit()
-                    request.redirect("/article/view?id=%s" % article.uid)
-                    return "article posted"
-                else:
-                    raise BadArgument()
-            else:
-                request.setResponseCode(UNAUTHORIZED)
-                return generate_error_message(request, UNAUTHORIZED, u"글쓰기 권한이 없습니다.")
+        board_name = request.get_argument("name")
+        board = get_board(request, board_name)
+        if not can_write(request, board):
+            raise Forbidden()
+        subject = request.get_argument("subject")
+        content = request.get_argument("content")
+        # no empty subject
+        if subject.strip():
+            article = create_article(request, board, subject, content)
+            request.dbsession.add(article)
+            request.dbsession.commit()
+            request.redirect("/article/view?id=%s" % article.uid)
+            return "article posted"
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return generate_error_message(request, UNAUTHORIZED, u"회원만 게시글을 쓸 수 있습니다.")
+            raise BadRequest()
 
 
 class ArticleDelete(YuzukiResource):
+    @need_anybody_permission
     def render_DELETE(self, request):
         article_id = request.get_argument("id")
-        query = request.dbsession.query(Article). \
-            filter(Article.uid == article_id). \
-            filter(Article.enabled == True). \
-            options(subqueryload(Article.board))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return "article not found"
-        article = result[0]
-        if request.user and (request.user == article.user or request.user.is_admin):
-            article.enabled = False
-            article.deleted_at = datetime.now()
-            article.deleted_user = request.user
+        article = get_article(request, article_id)
+        if is_author_or_admin(request, article):
+            delete_article(request, article)
             request.dbsession.commit()
             return "delete success"
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return "unauthorized user"
+            raise Forbidden()
 
 
 class ArticleEdit(YuzukiResource):
+    @need_anybody_permission
     def render_GET(self, request):
         article_id = request.get_argument("id")
-        query = request.dbsession.query(Article). \
-            filter(Article.uid == article_id). \
-            filter(Article.enabled == True). \
-            options(subqueryload(Article.board))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
-        article = result[0]
-        if request.user and request.user == article.user:
+        article = get_article(request, article_id)
+        if is_author(request, article):
             context = {"article": article}
             return render_template("article_edit.html", request, context)
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return generate_error_message(request, UNAUTHORIZED, u"게시글을 수정할 권한이 없습니다.")
+            raise Forbidden()
 
+    @need_anybody_permission
     def render_POST(self, request):
         article_id = request.get_argument("id")
-        query = request.dbsession.query(Article). \
-            filter(Article.uid == article_id). \
-            filter(Article.enabled == True). \
-            options(subqueryload(Article.board))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
-        article = result[0]
-        if request.user and request.user == article.user:
+        article = get_article(request, article_id)
+        if is_author(request, article):
             subject = request.get_argument("subject")
             content = request.get_argument("content")
             # no empty subject
             if subject.strip():
-                article_record = ArticleRecord(article)
-                article.subject = subject
-                article.change_content(content)
-                request.dbsession.add(article_record)
+                edit_article(request, article, subject, content)
                 request.dbsession.commit()
                 request.redirect("/article/view?id=%s" % article.uid)
                 return "article edit success"
             else:
-                raise BadArgument()
+                raise BadRequest()
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return generate_error_message(request, UNAUTHORIZED, u"게시글을 수정할 권한이 없습니다.")
+            raise Forbidden()

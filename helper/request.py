@@ -4,11 +4,11 @@ from urllib import quote
 
 from sqlalchemy.orm import subqueryload
 from twisted.python.compat import intToBytes
-from twisted.web.http import INTERNAL_SERVER_ERROR, BAD_REQUEST
+from twisted.web.http import INTERNAL_SERVER_ERROR
 from twisted.web.server import Request
 
 from config import DEBUG
-from exception import DuplicateArgumentGiven, MissingArgument, YuzukiException
+from exception import YuzukiException, BadRequest
 from helper.database import DatabaseHelper
 from helper.template import generate_error_message
 from model.user import User
@@ -77,14 +77,24 @@ class YuzukiRequest(Request):
         args = self.args.get(key, None)
         if not args:
             if default == NoArgument:
-                raise MissingArgument()
+                raise BadRequest()
             else:
                 return default
         else:
             if len(args) == 1:
                 return unicode(args[0], "utf8")
             else:
-                raise DuplicateArgumentGiven()
+                raise BadRequest()
+
+    def get_argument_int(self, key, default=NoArgument):
+        try:
+            value = self.get_argument(key, default)
+            return int(value)
+        except ValueError:
+            if default != NoArgument:
+                return default
+            else:
+                raise BadRequest()
 
     def get_path_and_query(self):
         result = self.path

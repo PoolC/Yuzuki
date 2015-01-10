@@ -2,38 +2,29 @@
 from sqlalchemy.orm import subqueryload
 
 from config import ARTICLE_PER_PAGE, REPLY_PER_PAGE
-from exception import BadArgument
-from helper.resource import YuzukiResource
+from exception import BadRequest
+from helper.model_control import get_board
+from helper.resource import YuzukiResource, need_anybody_permission
 from helper.sphinxsearch import search_article, search_reply
 from helper.template import render_template
 from model.article import Article
-from model.board import Board
 from model.reply import Reply
 from model.user import User
 
 
 class Search(YuzukiResource):
+    @need_anybody_permission
     def render_GET(self, request):
         query_string = request.get_argument("query")
         search_type = request.get_argument("type", "content")
         target = request.get_argument("target", "article")
         if search_type not in ["user", "content"] or target not in ["article", "reply"]:
-            raise BadArgument()
+            raise BadRequest()
 
         board_name = request.get_argument("board", None)
-        if board_name:
-            query = request.dbsession.query(Board).filter(Board.name == board_name)
-            result = query.all()
-            if not result:
-                raise BadArgument()
-            board = result[0]
-        else:
-            board = None
+        board = get_board(request, board_name) if board_name else None
 
-        try:
-            page = int(request.get_argument("page", "1"))
-        except ValueError:
-            raise BadArgument()
+        page = request.get_argument_int("page", 1)
 
         if search_type == "content":
             if target == "article":

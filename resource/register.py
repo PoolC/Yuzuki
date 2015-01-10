@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from twisted.web.http import BAD_REQUEST
+
 from helper.database import DatabaseHelper
 from helper.resource import YuzukiResource
 from helper.template import render_template
@@ -37,6 +39,7 @@ class Register(YuzukiResource):
             request.redirect("/welcome")
             return "registered successfully"
         else:
+            request.setResponseCode(BAD_REQUEST)
             context = {
                 "group_meta": self.bunryu_groups,
                 "err": err,

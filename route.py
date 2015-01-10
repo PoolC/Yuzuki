@@ -3,7 +3,7 @@ from twisted.web.static import File
 
 from resource.about import About
 from resource.article import ArticleParent
-from resource.board import BoardView
+from resource.board import Board
 from resource.hello import Hello
 from resource.index import Index
 from resource.login import Login
@@ -18,7 +18,7 @@ ROUTE = {
     "": Index(),
     "about": About(),
     "article": ArticleParent(),
-    "board": BoardView(),
+    "board": Board(),
     "hello": Hello(),
     "login": Login(),
     "logout": Logout(),
@@ -26,6 +26,7 @@ ROUTE = {
     "profile": Profile(),
     "register": Register(),
     "reply": ReplyParent(),
+    "robots.txt": File("static/etc/robots.txt"),
     "static": File("static"),
     "search": Search(),
     "welcome": Welcome(),

@@ -26,6 +26,7 @@ class Reply(Base):
 
     def __init__(self, article, user, content):
         self.article = article
+        article.reply_count += 1
         self.user = user
         self.content = linkify(content, parse_email=True)
 

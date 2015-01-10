@@ -1,18 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
-from datetime import datetime
 
-from bleach import linkify
-from sqlalchemy.orm import subqueryload
-from twisted.web.http import NOT_FOUND, UNAUTHORIZED
-
-from config import REPLY_PER_PAGE
-from exception import BadArgument
-from helper.resource import YuzukiResource
-from helper.template import generate_error_message
-from model.article import Article
+from exception import BadRequest, Unauthorized, Forbidden
+from helper.model_control import get_article, get_reply_page, get_reply, delete_reply, edit_reply, create_reply
+from helper.permission import is_anybody, can_comment, is_author_or_admin, is_author
+from helper.resource import YuzukiResource, need_anybody_permission
 from model.reply import Reply
-from model.reply_record import ReplyRecord
 
 
 class ReplyParent(YuzukiResource):
@@ -27,118 +20,65 @@ class ReplyParent(YuzukiResource):
 
 
 class ReplyView(YuzukiResource):
-    _REPLY_PER_PAGE = REPLY_PER_PAGE
-
     def render_GET(self, request):
         article_id = request.get_argument("article_id")
-        try:
-            page = int(request.get_argument("page", "1"))
-        except ValueError:
-            raise BadArgument()
-        query = request.dbsession.query(Article) \
-            .filter(Article.uid == article_id) \
-            .filter(Article.enabled == True) \
-            .options(subqueryload(Article.board))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return "article not found"
-        article = result[0]
-        if article.board.name == "notice" or (
-                    request.user and any([group.name == "anybody" for group in request.user.groups])):
-            query = request.dbsession.query(Reply) \
-                .filter(Reply.article == article) \
-                .filter(Reply.enabled == True) \
-                .order_by(Reply.uid.desc()) \
-                .options(subqueryload(Reply.user))
-            start_idx = self._REPLY_PER_PAGE * (page - 1)
-            end_idx = start_idx + self._REPLY_PER_PAGE
-            result = query[start_idx:end_idx]
-            return json.dumps([reply.to_dict() for reply in result])
+        page = request.get_argument_int("page", 1)
+        article = get_article(request, article_id)
+        if article.board.name == "notice" or (is_anybody(request)):
+            replies = get_reply_page(request, article, page)
+            return json.dumps([reply.to_dict() for reply in replies])
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return "unauthorized"
+            raise Unauthorized()
 
 
 class ReplyWrite(YuzukiResource):
+    @need_anybody_permission
     def render_POST(self, request):
         article_id = request.get_argument("article_id")
-        query = request.dbsession.query(Article) \
-            .filter(Article.uid == article_id) \
-            .filter(Article.enabled == True) \
-            .options(subqueryload(Article.board))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return generate_error_message(request, NOT_FOUND, u"게시글이 존재하지 않습니다.")
-        article = result[0]
-        if request.user and request.user in article.board.comment_group.users:
-            content = request.get_argument("content")
-            # no empty reply
-            if content.strip():
-                reply = Reply(article, request.user, content)
-                request.dbsession.add(reply)
-                article.reply_count += 1
-                request.dbsession.commit()
-                page = request.get_argument("page", None)
-                redirect = "/article/view?id=%s" % article.uid
-                if page:
-                    redirect += "&page=%s" % page
-                request.redirect(redirect)
-                return "success"
-            else:
-                raise BadArgument()
+        article = get_article(request, article_id)
+        if not can_comment(request, article.board):
+            raise Forbidden()
+        content = request.get_argument("content")
+        # no empty reply
+        if content.strip():
+            reply = create_reply(request, article, content)
+            request.dbsession.add(reply)
+            request.dbsession.commit()
+            page = request.get_argument("page", None)
+            redirect = "/article/view?id=%s" % article.uid
+            if page:
+                redirect += "&page=%s" % page
+            request.redirect(redirect)
+            return "success"
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return generate_error_message(request, UNAUTHORIZED, u"댓글을 쓸 권한이 없습니다.")
+            raise BadRequest()
 
 
 class ReplyDelete(YuzukiResource):
+    @need_anybody_permission
     def render_DELETE(self, request):
         reply_id = request.get_argument("id")
-        query = request.dbsession.query(Reply) \
-            .filter(Reply.uid == reply_id) \
-            .filter(Reply.enabled == True) \
-            .options(subqueryload(Reply.user))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return "reply not found"
-        reply = result[0]
-        if request.user and (request.user == reply.user or request.user.is_admin):
-            reply.enabled = False
-            reply.deleted_at = datetime.now()
-            reply.deleted_user = request.user
-            reply.article.reply_count -= 1
+        reply = get_reply(request, reply_id)
+        if is_author_or_admin(request, reply):
+            delete_reply(request, reply)
             request.dbsession.commit()
             return "success"
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return "unauthorized"
+            raise Forbidden()
 
 
 class ReplyEdit(YuzukiResource):
+    @need_anybody_permission
     def render_POST(self, request):
         reply_id = request.get_argument("id")
-        query = request.dbsession.query(Reply) \
-            .filter(Reply.uid == reply_id) \
-            .filter(Reply.enabled == True) \
-            .options(subqueryload(Reply.user))
-        result = query.all()
-        if not result:
-            request.setResponseCode(NOT_FOUND)
-            return "reply not found"
-        reply = result[0]
-        if request.user and request.user == reply.user:
+        reply = get_reply(request, reply_id)
+        if is_author(request, reply):
             content = request.get_argument("content")
             if content.strip():
-                reply_record = ReplyRecord(reply)
-                reply.content = linkify(content, parse_email=True)
-                request.dbsession.add(reply_record)
+                edit_reply(request, reply, content)
                 request.dbsession.commit()
                 return "reply edit success"
             else:
-                raise BadArgument()
+                raise BadRequest()
         else:
-            request.setResponseCode(UNAUTHORIZED)
-            return "unauthorized"
+            raise Forbidden()

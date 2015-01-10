@@ -10,9 +10,9 @@ from model.board import Board
 
 dbsession = DatabaseHelper.session()
 board_meta = dict()
-query = dbsession.query(Board).filter(Board.classification == "somoim").order_by(Board.order.asc())
+query = dbsession.query(Board).filter(Board.classification == "somoim").order_by(Board.repr_order.asc())
 board_meta["somoim"] = [(board.name, board.repr) for board in query.all()]
-query = dbsession.query(Board).filter(Board.classification == "normal").order_by(Board.order.asc())
+query = dbsession.query(Board).filter(Board.classification == "normal").order_by(Board.repr_order.asc())
 board_meta["normal"] = [(board.name, board.repr) for board in query.all()]
 dbsession.close()
 

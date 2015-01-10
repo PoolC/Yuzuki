@@ -1,24 +1,19 @@
 # -*- coding: utf-8 -*-
-from twisted.web.http import NOT_FOUND
-
+from exception import PageNotFound as PageNotFoundException
 from helper.resource import YuzukiResource
-from helper.template import generate_error_message
 
 
 class PageNotFound(YuzukiResource):
     isLeaf = False
 
     def render_GET(self, request):
-        request.setResponseCode(NOT_FOUND)
-        return generate_error_message(request, NOT_FOUND, u"페이지를 찾을 수 없습니다")
+        raise PageNotFoundException()
 
     def render_POST(self, request):
-        request.setResponseCode(NOT_FOUND)
-        return generate_error_message(request, NOT_FOUND, u"페이지를 찾을 수 없습니다")
+        raise PageNotFoundException()
 
     def render_DELETE(self, request):
-        request.setResponseCode(NOT_FOUND)
-        return generate_error_message(request, NOT_FOUND, u"페이지를 찾을 수 없습니다")
+        raise PageNotFoundException()
 
     def getChildWithDefault(self, path, request):
         return self
