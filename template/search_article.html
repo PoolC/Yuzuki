@@ -30,10 +30,8 @@
 {% endblock %}
 {% block pag_href %}
     {% if board %}
-        bootpag_setting.href = "/search?query={{ query }}&type={{ type }}&target={{ target }}&board={{ name }}&page=
-        {{ "{{" }}number{{ "}}" }}";
+        bootpag_setting.href = "/search?query={{ query }}&type={{ type }}&target={{ target }}&board={{ name }}&page={{ "{{" }}number{{ "}}" }}";
     {% else %}
-        bootpag_setting.href = "/search?query={{ query }}&type={{ type }}&target={{ target }}&page={{ "{{" }}number
-        {{ "}}" }}";
+        bootpag_setting.href = "/search?query={{ query }}&type={{ type }}&target={{ target }}&page={{ "{{" }}number{{ "}}" }}";
     {% endif %}
 {% endblock %}
