@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    {% for reply in items %}
+        <p>{{ reply.article.board.name }}<br/>{{ reply.article.subject }}<br/>{{ reply.user.name }}<br/>{{ reply.content }}</p>
+    {% endfor %}
+</body>
+</html>
