@@ -1,49 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-    <style>
-        .subject {
-            width: 50%;
-        }
-
-        .author {
-            width: 20%;
-        }
-
-        .timestamp {
-            width: 30%;
-        }
-
-        @media (min-width: 768px) {
-            .subject {
-                width: 60%;
-            }
-
-            .author {
-                width: 20%;
-            }
-
-            .timestamp {
-                width: 20%;
-            }
-        }
-
-        .outer-wrap {
-            float: left;
-            position: relative;
-            left: 50%;
-            padding-top: 10px;
-        }
-
-        #pagination {
-            float: left;
-            left: -50%;
-            position: relative;
-        }
-
-        .clear {
-            clear: both;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/board.css"/>
 {% endblock %}
 {% block body %}
     <div class="row">

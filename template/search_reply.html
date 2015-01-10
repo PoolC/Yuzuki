@@ -1,12 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-    {% for reply in items %}
-        <p>{{ reply.article.board.name }}<br/>{{ reply.article.subject }}<br/>{{ reply.user.name }}<br/>{{ reply.content }}</p>
-    {% endfor %}
-</body>
-</html>
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="/static/css/board.css"/>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            {% if board %}
+                <h1>{{ board.name }} 검색결과</h1>
+            {% else %}
+                <h1>검색결과</h1>
+            {% endif %}
+        </div>
+        {% if items %}
+            <div class="col-xs-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="subject">내용</th>
+                        <th class="author">작성자</th>
+                        <th class="timestamp">작성시간</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for reply in items %}
+                        <tr>
+                            <td class="subject">
+                                <a href="/article/view?id={{ reply.article.uid }}">{{ reply.content }}</a>
+                            </td>
+                            <td class="author">{{ reply.user.nickname | e }}</td>
+                            <td class="timestamp">{{ reply.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="outer-wrap">
+                    <div id="pagination"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-xs-12 alert alert-warning">검색결과가 존재하지 않습니다.</div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="/static/js/jquery.bootpag.js"></script>
+    <script>
+        // pagination
+        var bootpag_setting = {
+            total: {{ page_total }},
+            page: {{ page }},
+            maxVisible: 10,
+            leaps: false
+        };
+        {% if board %}
+            bootpag_setting.href = "/search?query={{ query }}&type={{ type }}&target={{ target }}&board={{ name }}&page={{ "{{" }}number{{ "}}" }}";
+        {% else %}
+            bootpag_setting.href = "/search?query={{ query }}&type={{ type }}&target={{ target }}&page={{ "{{" }}number{{ "}}" }}";
+        {% endif %}
+        $("#pagination").bootpag(bootpag_setting);
+
+        {% if board %}
+            // activate sidebar menu
+            if ("{{ board.name }}" === "notice") {
+                var notice_li = $("#notice");
+                notice_li.addClass("active");
+                notice_li.append("<span class=\"sr-only\">현재 선택됨</span>");
+            } else {
+                var board_li = $("#{{ board.name }}");
+                board_li.parent().addClass("in");
+                board_li.addClass("active");
+                board_li.append("<span class=\"sr-only\">현재 선택됨</span>");
+            }
+        {% endif %}
+    </script>
+{% endblock %}
