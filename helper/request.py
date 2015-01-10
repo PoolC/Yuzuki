@@ -104,9 +104,10 @@ class YuzukiRequest(Request):
             return Request.processingFailed(self, reason)
         else:
             if issubclass(reason.type, YuzukiException):
+                exc = reason.value
                 self.logger.warning(reason)
-                self.setResponseCode(BAD_REQUEST)
-                body = generate_error_message(self, BAD_REQUEST, u"올바르지 않은 요청입니다.")
+                self.setResponseCode(exc.status)
+                body = generate_error_message(self, exc.status, exc.message)
             else:
                 self.logger.error(reason)
                 self.setResponseCode(INTERNAL_SERVER_ERROR)
