@@ -19,7 +19,7 @@ def _search(indices, query, board):
         sphinx_filter[board + "__eq"] = board.uid
         sphinx_query.filter(sphinx_filter)
     result = sphinx_query.ask()
-    items = sorted(result["result"]["items"], lambda item: item["weight"], reverse=True)
+    items = sorted(result["result"]["items"], lambda x: x["weight"], reverse=True)
     item_ids = [item["id"] for item in items]
     return item_ids
 
