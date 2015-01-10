@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from MySQLdb import escape_string
 from sphinxit.core.helpers import BaseSearchConfig
 from sphinxit.core.processor import Search
 
@@ -13,7 +12,6 @@ class SphinxitConfig(BaseSearchConfig):
 
 
 def _search(indices, query, board):
-    query = escape_string(query.encode("utf-8")).decode("utf-8")
     sphinx_query = Search(indexes=indices, config=SphinxitConfig)
     sphinx_query = sphinx_query.match(query).limit(0, 100)
     if board:
