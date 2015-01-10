@@ -41,7 +41,7 @@ class Search(YuzukiResource):
                     subqueryload(Article.board)).options(subqueryload(Article.user))
             else:
                 query = search_reply(request.dbsession, query_string, board).options(
-                    subqueryload(Reply.article).subqueryload(Article.board)).options(Reply.user)
+                    subqueryload(Reply.article).subqueryload(Article.board)).options(subqueryload(Reply.user))
         else:
             query = self.request.dbsession.query(User).filter(User.nickname == query_string)
             result = query.all()
