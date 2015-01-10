@@ -20,7 +20,7 @@ class Board(YuzukiResource):
         if total_article_count % ARTICLE_PER_PAGE != 0:
             page_total = total_article_count / ARTICLE_PER_PAGE + 1
         context = {
-            "articles": articles,
+            "items": articles,
             "board": board,
             "page": page,
             "page_total": page_total,
