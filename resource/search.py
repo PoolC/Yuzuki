@@ -37,28 +37,38 @@ class Search(YuzukiResource):
 
         if search_type == "content":
             if target == "article":
-                query = search_article(request.dbsession, query_string, board).options(subqueryload(Article.board))
+                query = search_article(request.dbsession, query_string, board).options(
+                    subqueryload(Article.board)).options(subqueryload(Article.user))
             else:
                 query = search_reply(request.dbsession, query_string, board).options(
-                    subqueryload(Reply.article).subqueryload(Article.board))
+                    subqueryload(Reply.article).subqueryload(Article.board)).options(Reply.user)
         else:
             query = self.request.dbsession.query(User).filter(User.nickname == query_string)
             result = query.all()
-            if not result:
-                query = []
+            target_user = result[0] if result else None
+            if target == "article":
+                query = self.request.dbsession.query(Article).filter(Article.user == target_user).options(
+                    subqueryload(Article.board)).options(subqueryload(Article.user))
             else:
-                target_user = result[0]
-                if target == "article":
-                    query = self.request.dbsession.query(Article).filter(Article.user == target_user).options(
-                        subqueryload(Article.board))
-                else:
-                    query = self.request.dbsession.query(Reply).filter(Reply.user == target_user).options(
-                        subqueryload(Reply.article).subqueryload(Article.board))
+                query = self.request.dbsession.query(Reply).filter(Reply.user == target_user).options(
+                    subqueryload(Reply.article).subqueryload(Article.board))
 
         item_per_page = ARTICLE_PER_PAGE if target == "article" else REPLY_PER_PAGE
         start_idx = item_per_page * (page - 1)
         end_idx = item_per_page * page
         items = query[start_idx:end_idx]
+        total_item_count = query.count()
+        page_total = total_item_count / item_per_page
+        if total_item_count % item_per_page != 0:
+            total_item_count += 1
         render_page = "search_article.html" if target == "article" else "search_reply.html"
-        context = {"items": items}
+        context = {
+            "query": query_string,
+            "type": search_type,
+            "target": target,
+            "board": board,
+            "page": page,
+            "page_total": page_total,
+            "items": items,
+        }
         return render_template(render_page, request, context)
