@@ -51,7 +51,7 @@ class Search(YuzukiResource):
         total_item_count = query.count()
         page_total = total_item_count / item_per_page
         if total_item_count % item_per_page != 0:
-            total_item_count += 1
+            page_total += 1
         render_page = "search_article.html" if target == "article" else "search_reply.html"
         context = {
             "query": query_string,
