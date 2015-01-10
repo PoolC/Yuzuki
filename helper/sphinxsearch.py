@@ -13,7 +13,7 @@ class SphinxitConfig(BaseSearchConfig):
 
 
 def _search(indices, query, board):
-    query = escape_string(query)
+    query = escape_string(query.encode("utf-8"))
     sphinx_query = Search(indexes=indices, config=SphinxitConfig)
     sphinx_query = sphinx_query.match(query).limit(0, 100)
     if board:
