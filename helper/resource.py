@@ -20,6 +20,6 @@ def need_admin_permission(f):
             return f(resource, request)
         else:
             request.setResponseCode(FORBIDDEN)
-            return generate_error_message(request, FORBIDDEN, u"관리자만 볼 수 있는 페이지입니다")
+            return generate_error_message(request, FORBIDDEN, u"관리자만 볼 수 있는 페이지입니다.")
 
     return _render_wrapper
