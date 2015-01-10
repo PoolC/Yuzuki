@@ -41,8 +41,10 @@
                 {% endif %}
                 <li><a href="/register">가입신청</a></li>
             </ul>
-            <form class="navbar-form navbar-right">
-                <!--input type="text" class="form-control" placeholder="Search..."-->
+            <form class="navbar-form navbar-right" action="/search" method="get">
+                {% if is_anybody %}
+                    <input type="text" name="query" class="form-control" placeholder="검색...">
+                {% endif %}
             </form>
         </div>
     </div>

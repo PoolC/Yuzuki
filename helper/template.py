@@ -6,6 +6,7 @@ from twisted.web.http import RESPONSES
 
 from config import SITE_NAME
 from helper.database import DatabaseHelper
+from helper.permission import is_anybody
 from model.board import Board
 
 dbsession = DatabaseHelper.session()
@@ -32,9 +33,8 @@ def get_template(name, parent=None, glob=None):
 def render_template(name, request, context=None):
     if context == None:
         context = dict()
-    is_anybody = request.user and any([group.name == "anybody" for group in request.user.groups])
     context["request"] = request
-    context["is_anybody"] = is_anybody
+    context["is_anybody"] = is_anybody(request)
     return get_template(name).render(context)
 
 
