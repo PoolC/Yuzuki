@@ -13,7 +13,7 @@ class SphinxitConfig(BaseSearchConfig):
 
 def _search(indices, query, board):
     sphinx_query = Search(indexes=indices, config=SphinxitConfig)
-    sphinx_query = sphinx_query.match(query).limit(0, 100)
+    sphinx_query = sphinx_query.match(query).order_by("weight", "desc")
     if board:
         sphinx_filter = dict()
         sphinx_filter[board + "__eq"] = board.uid
@@ -26,11 +26,11 @@ def _search(indices, query, board):
 
 def search_article(dbsession, query, board=None):
     article_ids = _search(["article_main", "article_delta"], query, board)
-    db_query = dbsession.query(Article).filter(Article.uid.in_(article_ids)).order_by(Article.uid.desc())
+    db_query = dbsession.query(Article).filter(Article.uid.in_(article_ids))
     return db_query
 
 
 def search_reply(dbsession, query, board=None):
     reply_ids = _search(["reply_main", "reply_delta"], query, board)
-    db_query = dbsession.query(Reply).filter(Reply.uid.in_(reply_ids)).order_by(Reply.uid.desc())
+    db_query = dbsession.query(Reply).filter(Reply.uid.in_(reply_ids))
     return db_query
