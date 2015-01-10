@@ -11,6 +11,7 @@ from model.article import Article
 from model.article_record import ArticleRecord
 from model.board import Board
 from model.group import Group
+from model.metadata import MetaData
 from model.reply import Reply
 from model.reply_record import ReplyRecord
 from model.user import User
