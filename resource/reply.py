@@ -34,7 +34,7 @@ class ReplyView(YuzukiResource):
         try:
             page = int(request.get_argument("page", "1"))
         except ValueError:
-            raise BadArgument("page", request.get_argument("page"))
+            raise BadArgument()
         query = request.dbsession.query(Article) \
             .filter(Article.uid == article_id) \
             .filter(Article.enabled == True) \
@@ -87,7 +87,7 @@ class ReplyWrite(YuzukiResource):
                 request.redirect(redirect)
                 return "success"
             else:
-                raise BadArgument("content", "empty")
+                raise BadArgument()
         else:
             request.setResponseCode(UNAUTHORIZED)
             return generate_error_message(request, UNAUTHORIZED, u"댓글을 쓸 권한이 없습니다.")
@@ -138,7 +138,7 @@ class ReplyEdit(YuzukiResource):
                 request.dbsession.commit()
                 return "reply edit success"
             else:
-                raise BadArgument("content", "empty")
+                raise BadArgument()
         else:
             request.setResponseCode(UNAUTHORIZED)
             return "unauthorized"

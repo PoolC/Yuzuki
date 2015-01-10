@@ -89,7 +89,7 @@ class ArticleWrite(YuzukiResource):
                     request.redirect("/article/view?id=%s" % article.uid)
                     return "article posted"
                 else:
-                    raise BadArgument("subject", "empty")
+                    raise BadArgument()
             else:
                 request.setResponseCode(UNAUTHORIZED)
                 return generate_error_message(request, UNAUTHORIZED, u"글쓰기 권한이 없습니다.")
@@ -164,7 +164,7 @@ class ArticleEdit(YuzukiResource):
                 request.redirect("/article/view?id=%s" % article.uid)
                 return "article edit success"
             else:
-                raise BadArgument("subject", "empty")
+                raise BadArgument()
         else:
             request.setResponseCode(UNAUTHORIZED)
             return generate_error_message(request, UNAUTHORIZED, u"게시글을 수정할 권한이 없습니다.")

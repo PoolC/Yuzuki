@@ -18,14 +18,14 @@ class Search(YuzukiResource):
         search_type = request.get_argument("type", "content")
         target = request.get_argument("target", "article")
         if search_type not in ["user", "content"] or target not in ["article", "reply"]:
-            raise BadArgument("type", search_type)
+            raise BadArgument()
 
         board_name = request.get_argument("board", None)
         if board_name:
             query = request.dbsession.query(Board).filter(Board.name == board_name)
             result = query.all()
             if not result:
-                raise BadArgument("board", board_name)
+                raise BadArgument()
             board = result[0]
         else:
             board = None
@@ -33,7 +33,7 @@ class Search(YuzukiResource):
         try:
             page = int(request.get_argument("page", "1"))
         except ValueError:
-            raise BadArgument("page", request.get_argument("page"))
+            raise BadArgument()
 
         if search_type == "content":
             if target == "article":

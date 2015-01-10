@@ -77,14 +77,14 @@ class YuzukiRequest(Request):
         args = self.args.get(key, None)
         if not args:
             if default == NoArgument:
-                raise MissingArgument(key)
+                raise MissingArgument()
             else:
                 return default
         else:
             if len(args) == 1:
                 return unicode(args[0], "utf8")
             else:
-                raise DuplicateArgumentGiven(key)
+                raise DuplicateArgumentGiven()
 
     def get_path_and_query(self):
         result = self.path

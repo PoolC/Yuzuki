@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from twisted.web.http import BAD_REQUEST, UNAUTHORIZED, NOT_FOUND, RESPONSES
+from twisted.web.http import BAD_REQUEST, UNAUTHORIZED, NOT_FOUND
 
 
 class YuzukiException(Exception):
@@ -15,29 +15,22 @@ class BadRequest(YuzukiException):
 
 
 class MissingArgument(BadRequest):
-    def __init__(self, key):
-        self.log = u"Missing argument key is \"%s\"." % key
+    pass
 
 
 class DuplicateArgumentGiven(BadRequest):
-    def __init__(self, key):
-        self.log = u"Duplicate key \"%s\" is given as argument" % key
+    pass
 
 
 class BadArgument(BadRequest):
-    def __init__(self, key, value):
-        self.log = u"Bad Argument \"%s=%s\"" % (key, value)
+    pass
 
 
 class Unauthorized(YuzukiException):
     status = UNAUTHORIZED
     message = u"접근할 권한이 없습니다."
 
-    def __init__(self, log=None):
-        self.log = log if log else RESPONSES[self.status]
-
 
 class PageNotFound(YuzukiException):
     status = NOT_FOUND
     message = u"페이지를 찾을 수 없습니다."
-    log = RESPONSES[NOT_FOUND]

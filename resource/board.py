@@ -23,7 +23,7 @@ class BoardView(YuzukiResource):
         try:
             page = int(request.get_argument("page", "1"))
         except ValueError:
-            raise BadArgument("page", request.get_argument("page"))
+            raise BadArgument()
         query = request.dbsession.query(Board).filter(Board.name == name)
         result = query.all()
         if not result:
