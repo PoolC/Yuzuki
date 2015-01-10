@@ -11,8 +11,8 @@ class SphinxitConfig(BaseSearchConfig):
     WITH_META = False
 
 
-def _search(index, query, board):
-    sphinx_query = Search(indexes=[index], config=SphinxitConfig)
+def _search(indices, query, board):
+    sphinx_query = Search(indexes=indices, config=SphinxitConfig)
     sphinx_query = sphinx_query.match(query).limit(0, 100)
     if board:
         sphinx_filter = dict()
@@ -25,14 +25,14 @@ def _search(index, query, board):
 
 
 def search_article(dbsession, query, board=None):
-    article_ids = _search("article", query, board)
+    article_ids = _search(["article_main", "article_delta"], query, board)
     db_query = dbsession.query(Article).filter(Article.uid.in_(article_ids)).order_by(Article.uid.desc())
     result = db_query.all()
     return result
 
 
 def search_reply(dbsession, query, board=None):
-    reply_ids = _search("reply", query, board)
+    reply_ids = _search(["reply_main", "reply_delta"], query, board)
     db_query = dbsession.query(Reply).filter(Reply.uid.in_(reply_ids)).order_by(Reply.uid.desc())
     result = db_query.all()
     return result
