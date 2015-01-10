@@ -34,14 +34,14 @@ class Search(YuzukiResource):
                 query = search_reply(request.dbsession, query_string, board).options(
                     subqueryload(Reply.article).subqueryload(Article.board)).options(subqueryload(Reply.user))
         else:
-            query = self.request.dbsession.query(User).filter(User.nickname == query_string)
+            query = request.dbsession.query(User).filter(User.nickname == query_string)
             result = query.all()
             target_user = result[0] if result else None
             if target == "article":
-                query = self.request.dbsession.query(Article).filter(Article.user == target_user).options(
+                query = request.dbsession.query(Article).filter(Article.user == target_user).options(
                     subqueryload(Article.board)).options(subqueryload(Article.user))
             else:
-                query = self.request.dbsession.query(Reply).filter(Reply.user == target_user).options(
+                query = request.dbsession.query(Reply).filter(Reply.user == target_user).options(
                     subqueryload(Reply.article).subqueryload(Article.board))
 
         item_per_page = ARTICLE_PER_PAGE if target == "article" else REPLY_PER_PAGE

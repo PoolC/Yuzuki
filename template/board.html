@@ -25,20 +25,20 @@
                     </thead>
                     <tbody>
                     {% block board_content %}
-                    {% for article in items %}
-                        <tr>
-                            <td class="subject">
-                                {% if article.reply_count %}
-                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}
-                                        [{{ article.reply_count }}]</a>
-                                {% else %}
-                                    <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}</a>
-                                {% endif %}
-                            </td>
-                            <td class="author">{{ article.user.nickname | e }}</td>
-                            <td class="timestamp">{{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
-                        </tr>
-                    {% endfor %}
+                        {% for article in items %}
+                            <tr>
+                                <td class="subject">
+                                    {% if article.reply_count %}
+                                        <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}
+                                            [{{ article.reply_count }}]</a>
+                                    {% else %}
+                                        <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}</a>
+                                    {% endif %}
+                                </td>
+                                <td class="author">{{ article.user.nickname | e }}</td>
+                                <td class="timestamp">{{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
+                            </tr>
+                        {% endfor %}
                     {% endblock %}
                     </tbody>
                 </table>
@@ -51,8 +51,29 @@
                 {% endblock %}
                 <div class="outer-wrap">
                     <div id="pagination"></div>
-                    <div class="clear"></div>
+
                 </div>
+                <div class="clear"></div>
+                {% block search_box %}
+                    <div class="outer-wrap">
+                        <div class="search-form form-inline">
+                            <form action="/search" method="get">
+                                <input type="hidden" name="board" value="{{ board.name }}">
+                                <select name="target" class="form-control">
+                                    <option value="article">글</option>
+                                    <option value="reply">댓글</option>
+                                </select>
+                                <select name="type" class="form-control">
+                                    <option value="content">제목 + 내용</option>
+                                    <option value="user">작성자</option>
+                                </select>
+                                <input class="form-control" name="query" type="text" required/>
+                                <input class="btn btn-default" type="submit" value="검색"/>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                {% endblock %}
             </div>
         {% else %}
             {% block no_result %}

@@ -37,6 +37,12 @@
     position: relative;
 }
 
+.search-form {
+    float: left;
+    left: -50%;
+    position: relative;
+}
+
 .clear {
     clear: both;
 }
