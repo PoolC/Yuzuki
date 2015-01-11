@@ -89,6 +89,7 @@
 {% block script %}
     <script src="/static/js/jquery.bootpag.js"></script>
     <script>
+        prompted_error = false;
         $("#pagination").bootpag({
             total: {{ page_total }},
             page: {{ page if page else 1 }},
