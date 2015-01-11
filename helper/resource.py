@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from twisted.web.resource import Resource
+from twisted.web.server import NOT_DONE_YET
 
 from exception import Unauthorized, Forbidden
 from helper.permission import is_anybody
@@ -10,6 +11,8 @@ class YuzukiResource(Resource):
         request.initialize(self)
         # TODO: auto login
         result = Resource.render(self, request)
+        if result == NOT_DONE_YET:
+            return result
         request.finalize()
         return result.encode("UTF-8")
 

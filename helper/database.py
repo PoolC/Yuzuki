@@ -10,6 +10,7 @@ from model.association.user_group import UserGroupAssociation
 from model.article import Article
 from model.article_record import ArticleRecord
 from model.board import Board
+from model.chat import Chat
 from model.group import Group
 from model.metadata import MetaData
 from model.reply import Reply

@@ -2,15 +2,14 @@
 from datetime import datetime
 
 from bleach import linkify
-
 from sqlalchemy.orm import subqueryload
 
-from config import ARTICLE_PER_PAGE, REPLY_PER_PAGE
-
+from config import ARTICLE_PER_PAGE, REPLY_PER_PAGE, CHAT_PER_PAGE
 from exception import PageNotFound
 from model.article import Article
 from model.article_record import ArticleRecord
 from model.board import Board
+from model.chat import Chat
 from model.reply import Reply
 from model.reply_record import ReplyRecord
 
@@ -63,10 +62,8 @@ def get_reply_page(request, article, page):
 
 
 def get_reply(request, reply_id):
-    query = request.dbsession.query(Reply) \
-        .filter(Reply.uid == reply_id) \
-        .filter(Reply.enabled == True) \
-        .options(subqueryload(Reply.user))
+    query = request.dbsession.query(Reply).filter(Reply.uid == reply_id).filter(Reply.enabled == True).options(
+        subqueryload(Reply.user))
     result = query.all()
     if not result:
         raise PageNotFound()
@@ -92,3 +89,20 @@ def create_article(request, board, subject, content):
 
 def create_reply(request, article, content):
     return Reply(article, request.user, content)
+
+
+def create_chat(request, content):
+    return Chat(request.user, content)
+
+
+def get_chat_page(request, page):
+    query = request.dbsession.query(Chat).order_by(Chat.uid.desc()).options(subqueryload(Chat.user))
+    start_idx = CHAT_PER_PAGE * (page - 1)
+    end_idx = CHAT_PER_PAGE + start_idx
+    return query[start_idx:end_idx]
+
+
+def get_chat_newer_than(request, chat_id):
+    query = request.dbsession.query(Chat).filter(Chat.uid > chat_id).order_by(Chat.uid.desc()).options(
+        subqueryload(Chat.user))
+    return query[0:CHAT_PER_PAGE]

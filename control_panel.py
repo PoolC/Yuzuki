@@ -7,6 +7,7 @@ from model.article import Article
 from model.article_record import ArticleRecord
 from model.association.user_group import UserGroupAssociation
 from model.board import Board
+from model.chat import Chat
 from model.group import Group
 from model.reply import Reply
 from model.reply_record import ReplyRecord
