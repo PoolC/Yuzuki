@@ -20,7 +20,7 @@ ROUTE = {
     "about": About(),
     "article": ArticleParent(),
     "board": Board(),
-    "chat": Chat(),
+    #"chat": Chat(),
     "hello": Hello(),
     "login": Login(),
     "logout": Logout(),
