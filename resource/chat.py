@@ -128,8 +128,9 @@ class ChatUserStream(YuzukiResource):
 
     def notify_all(self):
         for req in self.request_pool:
-            req.write("refresh")
-            req.finish()
+            if not req.finished:
+                req.write("refresh")
+                req.finish()
         self.request_pool = list()
 
     def send_refresh_signal(self, request):
