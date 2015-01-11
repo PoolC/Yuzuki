@@ -144,9 +144,7 @@ class ChatUserStream(YuzukiResource):
         call.cancel()
         if request in self.request_pool:
             self.request_pool.remove(request)
-        if not request.finished:
-            request.write("refresh")
-            request.finish()
+        request._dbsession.close()
         self.notify_all()
 
     @need_anybody_permission
