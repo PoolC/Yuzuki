@@ -19,6 +19,8 @@ class NoArgument:
 
 
 class YuzukiRequest(Request):
+    dbsession = DatabaseHelper.session()
+
     def initialize(self, resource):
         """
         if you need to do something just before or just after a request is initialized,
@@ -31,16 +33,8 @@ class YuzukiRequest(Request):
         if you need to do something just before or just after a request is finished,
         write it here
         """
-        if hasattr(self, "_dbsession"):
-            self._dbsession.close()
         if self._initial_session != self.yzk_session:
             self.session.redis_sync()
-
-    @property
-    def dbsession(self):
-        if not hasattr(self, "_dbsession"):
-            self._dbsession = DatabaseHelper.session()
-        return self._dbsession
 
     @property
     def yzk_session(self):

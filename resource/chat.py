@@ -3,18 +3,13 @@ import json
 from datetime import datetime
 
 from twisted.internet import reactor
-
 from twisted.web.server import NOT_DONE_YET
 
 from config import CHAT_PER_PAGE, CHAT_CONNECTION_INTERVAL
-
 from exception import BadRequest
-from helper.database import DatabaseHelper
 from helper.model_control import get_chat_newer_than, get_chat_page, create_chat
-
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
-from model.user import User
 from model.chat import Chat as ChatModel
 
 
@@ -62,8 +57,8 @@ class ChatUser(YuzukiResource):
         YuzukiResource.__init__(self)
         stream = ChatUserStream()
         self.putChild("data", ChatUserData(stream))
-        self.putChild("stream", stream)
         self.putChild("out", ChatUserOut(stream))
+        self.putChild("stream", stream)
 
 
 class ChatMessage(YuzukiResource):
@@ -124,7 +119,6 @@ class ChatUserStream(YuzukiResource):
         YuzukiResource.__init__(self)
         self.request_pool = list()
         self.user_pool = dict()
-        self.dbsession = DatabaseHelper.session()
 
     def notify_all(self):
         for req in self.request_pool:
@@ -144,7 +138,6 @@ class ChatUserStream(YuzukiResource):
         call.cancel()
         if request in self.request_pool:
             self.request_pool.remove(request)
-        request._dbsession.close()
         self.notify_all()
 
     @need_anybody_permission
@@ -152,11 +145,10 @@ class ChatUserStream(YuzukiResource):
         self.request_pool.append(request)
         call = reactor.callLater(CHAT_CONNECTION_INTERVAL - 5, self.send_refresh_signal, request)
         request.notifyFinish().addErrback(self.response_failed, request, call)
-        current_user = self.get_user(request)
         refresh_flag = False
-        if current_user not in self.user_pool:
+        if request.user not in self.user_pool:
             refresh_flag = True
-        self.user_pool[current_user] = datetime.now()
+        self.user_pool[request.user] = datetime.now()
         new_user_pool = dict()
         for user, connection_time in self.user_pool.iteritems():
             if (datetime.now() - connection_time).seconds <= CHAT_CONNECTION_INTERVAL:
@@ -170,12 +162,6 @@ class ChatUserStream(YuzukiResource):
             return "refresh"
         else:
             return NOT_DONE_YET
-
-    def get_user(self, request):
-        user_id = request.yzk_session["login_user"]
-        query = self.dbsession.query(User).filter(User.uid == user_id)
-        result = query.all()
-        return result[0]
 
 
 class ChatUserData(YuzukiResource):
@@ -203,7 +189,7 @@ class ChatUserOut(YuzukiResource):
 
     @need_anybody_permission
     def render_GET(self, request):
-        user = self.stream.get_user(request)
-        del(self.stream.user_pool[user])
-        self.stream.notify_all()
+        if request.user in self.stream.user_pool:
+            del (self.stream.user_pool[request.user])
+            self.stream.notify_all()
         return "out"

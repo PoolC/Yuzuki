@@ -33,6 +33,8 @@ setTimeout(function () {
 }, 100);
 wait_for_user_stream();
 
-$(window).unload(function () {
-    $.ajax("/chat/user/out");
+$(window).on("pagehide unload", function () {
+    $.ajax("/chat/user/out", {
+        async: false
+    });
 });
