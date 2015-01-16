@@ -84,6 +84,7 @@
 {% block script %}
     <script src="/static/js/jquery.bootpag.js"></script>
     <script>
+        var editing = false;
         if ("{{ article.board.name }}" === "notice") {
             var notice_li = $("#notice");
             notice_li.addClass("active");
@@ -167,6 +168,7 @@
                 var text = reply_content.text();
                 content_box.find("span").hide();
                 content_box.append("<input class=\"reply-edit-input form-control\"type=\"text\"/>");
+                editing = true;
                 $(".reply-edit-input").keypress(function (e) {
                     if (e.which === 13) {
                         refresh_table_with_page(current_page);
@@ -196,6 +198,7 @@
         };
 
         var refresh_table_with_page = function (num) {
+            editing = false;
             current_page = num;
             $.ajax("/reply/view?article_id={{ article.uid }}&page=" + num, {
                 dataType: "json"
@@ -213,5 +216,12 @@
             refresh_table_with_page(num);
         });
         refresh_table_with_page(1);
+        $(document).keyup(function (e) {
+            if (e.keyCode == 27) {
+                if (editing) {
+                    refresh_table_with_page(current_page);
+                }
+            }
+        });
     </script>
 {% endblock %}

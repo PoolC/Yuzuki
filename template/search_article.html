@@ -1,7 +1,7 @@
 {% extends "board.html" %}
 {% block board_header %}
     {% if board %}
-        <h1>{{ board.name }} 검색결과</h1>
+        <h1>{{ board.repr }} 검색결과</h1>
     {% else %}
         <h1>검색결과</h1>
     {% endif %}

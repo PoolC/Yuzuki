@@ -58,7 +58,9 @@ def get_reply_page(request, article, page):
         Reply.uid.desc()).options(subqueryload(Reply.user))
     start_idx = REPLY_PER_PAGE * (page - 1)
     end_idx = REPLY_PER_PAGE + start_idx
-    return query[start_idx:end_idx]
+    replies = query[start_idx:end_idx]
+    replies = sorted(replies, key=lambda r: r.uid)
+    return replies
 
 
 def get_reply(request, reply_id):
