@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from twisted.web.static import File
 
+from localization import SITE_FAVICON
 from resource.about import About
 from resource.article import ArticleParent
 from resource.board import Board
@@ -24,7 +25,7 @@ ROUTE = {
     "hello": Hello(),
     "login": Login(),
     "logout": Logout(),
-    "favicon.ico": File("static/img/favicon.ico"),
+    "favicon.ico": File(SITE_FAVICON),
     "profile": Profile(),
     "register": Register(),
     "reply": ReplyParent(),
