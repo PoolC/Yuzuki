@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from bleach import clean
 from jinja2 import escape
 from sqlalchemy.orm import subqueryload
 
@@ -30,7 +31,7 @@ def pack_reply(reply):
     item = dict()
     item["article_id"] = reply.article_id
     item["type"] = u"댓"
-    item["content"] = reply.content
+    item["content"] = clean(reply.content, strip=True)
     item["user"] = reply.user
     item["created_at"] = reply.created_at
     return item
