@@ -25,7 +25,8 @@ class Login(YuzukiResource):
                 return self.render_login_page(request, self.BLOCKED_USER)
             if user.check_password(password):
                 request.log_user_in(user)
-                # TODO: remember me feature
+                if remember_me:
+                    request.set_auto_login(username, password)
                 redirect = request.get_argument("redirect", "/")
                 request.redirect(redirect)
                 return "logged in"

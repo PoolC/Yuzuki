@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+from datetime import datetime, timedelta
 from urllib import quote
 
 from sqlalchemy.orm import subqueryload
@@ -27,6 +28,41 @@ class YuzukiRequest(Request):
         write it here
         """
         self._initial_session = copy.deepcopy(self.yzk_session)
+        auto_login = "auto_id" in self.received_cookies and "auto_pw" in self.received_cookies
+        if auto_login:
+            username = self.getCookie("auto_id")
+            password = self.getCookie("auto_pw")
+            if self.user == None:
+                query = self.dbsession.query(User).filter(User.username == username)
+                result = query.all()
+                if result:
+                    user = result[0]
+                    if user.check_password(password):
+                        self.log_user_in(user)
+                    else:
+                        self.remove_auto_login_cookie()
+                else:
+                    self.remove_auto_login_cookie()
+            else:
+                username = self.getCookie("auto_id")
+                password = self.getCookie("auto_pw")
+                if self.user.username == username and self.user.check_password(password):
+                    # refresh auto login cookie expire time
+                    self.set_auto_login(username, password)
+
+    def remove_auto_login_cookie(self):
+        expires_date = datetime.now() - timedelta(days=2)
+        expires = expires_date.strftime("%a, %d-%b-%Y %H:%M:%S GMT")
+        self.addCookie("auto_id", "", expires=expires, path="/")
+        self.addCookie("auto_pw", "", expires=expires, path="/")
+
+    def set_auto_login(self, username, password):
+        username = username.encode("utf-8")
+        password = password.encode("utf-8")
+        expires_date = datetime.now() + timedelta(days=2)
+        expires = expires_date.strftime("%a, %d-%b-%Y %H:%M:%S GMT")
+        self.addCookie("auto_id", username, expires=expires, path="/")
+        self.addCookie("auto_pw", password, expires=expires, path="/")
 
     def finalize(self):
         """

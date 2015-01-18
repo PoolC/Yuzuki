@@ -9,7 +9,6 @@ from helper.permission import is_anybody
 class YuzukiResource(Resource):
     def render(self, request):
         request.initialize(self)
-        # TODO: auto login
         result = Resource.render(self, request)
         if result == NOT_DONE_YET:
             return result

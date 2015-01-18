@@ -11,6 +11,6 @@ class Logout(YuzukiResource):
 
     def logout(self, request):
         request.log_user_out()
-        # TODO: reset auto login status
+        request.remove_auto_login_cookie()
         request.redirect("/")
         return "logged out"
