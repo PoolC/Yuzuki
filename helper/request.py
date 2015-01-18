@@ -163,3 +163,10 @@ class YuzukiRequest(Request):
         if isinstance(url, unicode):
             url = url.encode("UTF-8")
         Request.redirect(self, url)
+
+    def getClientIP(self):
+        real_ip = self.getHeader("X-Real-IP")
+        if real_ip:
+            return real_ip
+        else:
+            Request.getClientIP(self)
