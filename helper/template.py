@@ -4,9 +4,9 @@ from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from twisted.web.http import RESPONSES
 
-from config import SITE_NAME
 from helper.database import DatabaseHelper
 from helper.permission import is_anybody
+from localization import SITE_NAME
 from model.board import Board
 
 dbsession = DatabaseHelper.session()
