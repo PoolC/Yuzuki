@@ -9,7 +9,7 @@ CHAT_PER_PAGE = 20
 CHAT_CONNECTION_INTERVAL = 30
 DEBUG = False
 SITE_NAME = "PoolC"
-DB_CONNECTION_STRING = 'sqlite:///sqlite.db'
+DB_CONNECTION_STRING = "sqlite:///sqlite.db"
 REDIS_CONNECT_ARGS = {
     "host": "localhost",
     "port": 6379,
