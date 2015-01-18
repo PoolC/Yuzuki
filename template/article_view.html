@@ -48,7 +48,7 @@
                                for="reply-input">{{ request.user.nickname | e }}</label>
                     </div>
                     <div class="reply-content-box col-xs-8">
-                        <input id="reply-input" type="text" name="content" class="form-control" required=""/>
+                        <input id="reply-input" type="text" name="content" class="form-control" required/>
                     </div>
                     <div class="reply-timestamp col-xs-2">
                         {% if page %}
@@ -58,8 +58,6 @@
                     </div>
                 </form>
             {% endif %}
-            </tfoot>
-            </table>
         </div>
 
         <div class="outer-wrap">
