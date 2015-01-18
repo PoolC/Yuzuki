@@ -31,7 +31,7 @@ def pack_reply(reply):
     item = dict()
     item["article_id"] = reply.article_id
     item["type"] = u"댓"
-    item["content"] = clean(reply.content, strip=True)
+    item["content"] = clean(reply.content, tags=list(), strip=True)
     item["user"] = reply.user
     item["created_at"] = reply.created_at
     return item
