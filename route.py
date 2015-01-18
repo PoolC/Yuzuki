@@ -10,6 +10,7 @@ from resource.hello import Hello
 from resource.index import Index
 from resource.login import Login
 from resource.logout import Logout
+from resource.new import New
 from resource.profile import Profile
 from resource.register import Register
 from resource.reply import ReplyParent
@@ -26,6 +27,7 @@ ROUTE = {
     "login": Login(),
     "logout": Logout(),
     "favicon.ico": File(SITE_FAVICON),
+    "new": New(),
     "profile": Profile(),
     "register": Register(),
     "reply": ReplyParent(),

@@ -1,0 +1,20 @@
+{% extends "search_article.html" %}
+{% block board_header %}
+    <h1>새 글</h1>
+{% endblock %}
+{% block caption %}
+    <th class="subject">내용</th>
+    <th class="author">작성자</th>
+    <th class="timestamp">작성시간</th>
+{% endblock %}
+{% block board_content %}
+    {% for item in items %}
+        <tr>
+            <td class="subject">
+                <a href="/article/view?id={{ item["article_id"] }}">[{{ item["type"] }}] {{ item["content"] }}</a>
+            </td>
+            <td class="author">{{ item["user"].nickname | e }}</td>
+            <td class="timestamp">{{ item["created_at"].strftime("%y-%m-%d %H:%M:%S") }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
