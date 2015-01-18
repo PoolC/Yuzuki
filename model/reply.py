@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from bleach import linkify
+from bleach import clean, linkify
 from sqlalchemy import Boolean, Column, Integer, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
@@ -46,3 +46,6 @@ class Reply(Base):
         if self.is_modified:
             data["last_modified"] = self.last_modified.strftime("%y-%m-%d %H:%M:%S")
         return data
+
+    def get_cleaned_content(self):
+        return clean(self.content, tags=[], strip=True)

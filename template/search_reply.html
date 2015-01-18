@@ -8,7 +8,7 @@
     {% for reply in items %}
         <tr>
             <td class="subject">
-                <a href="/article/view?id={{ reply.article.uid }}">{{ reply.content }}</a>
+                <a href="/article/view?id={{ reply.article.uid }}">{{ reply.get_cleaned_content() }}</a>
             </td>
             <td class="author">{{ reply.user.nickname | e }}</td>
             <td class="timestamp">{{ reply.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
