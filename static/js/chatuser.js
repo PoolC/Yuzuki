@@ -23,15 +23,22 @@ var wait_for_user_stream = function () {
         refresh_chat_user();
         wait_for_user_stream();
     }).fail(function (xhr) {
-        if (xhr.status == 401 && !prompted_error) {
+        if (xhr.status === 401 && !prompted_error) {
             prompted_error = true;
             alert("로그인 해야 합니다.");
             window.location.href = "/login?redirect=/chat";
         }
-        setTimeout(function () {
+        if (xhr.status === 504) {
+            // gateway timeout
             refresh_chat_user();
             wait_for_user_stream();
-        }, 10000);
+        } else {
+            // any other error
+            setTimeout(function () {
+                refresh_chat_user();
+                wait_for_user_stream();
+            }, 10000);
+        }
     });
 };
 
