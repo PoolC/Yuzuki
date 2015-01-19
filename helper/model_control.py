@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from bleach import linkify
+from bleach import clean, linkify
 from sqlalchemy.orm import subqueryload
 
 from config import ARTICLE_PER_PAGE, REPLY_PER_PAGE, CHAT_PER_PAGE
@@ -81,7 +81,7 @@ def delete_reply(request, reply):
 
 def edit_reply(request, reply, content):
     reply_record = ReplyRecord(reply)
-    reply.content = linkify(content, parse_email=True)
+    reply.content = linkify(clean(content, tags=list()), parse_email=True)
     request.dbsession.add(reply_record)
 
 

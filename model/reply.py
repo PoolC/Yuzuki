@@ -28,7 +28,7 @@ class Reply(Base):
         self.article = article
         article.reply_count += 1
         self.user = user
-        self.content = linkify(content, parse_email=True)
+        self.content = linkify(clean(content, tags=list()), parse_email=True)
 
     def __repr__(self):
         return "<Reply uid=%s, content=%s>" % (self.uid, self.content)

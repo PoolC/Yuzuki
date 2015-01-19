@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from bleach import linkify
+from bleach import clean, linkify
 
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
@@ -19,7 +19,7 @@ class Chat(Base):
 
     def __init__(self, user, content):
         self.user = user
-        self.content = linkify(content, parse_email=True)
+        self.content = linkify(clean(content, tags=list()), parse_email=True)
 
     def to_dict(self):
         return {
