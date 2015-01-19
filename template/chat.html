@@ -53,6 +53,10 @@
             font-weight: bold;
             color: #428bca;
         }
+
+        .noti-button {
+            margin-bottom: 15px;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -79,6 +83,8 @@
             </div>
         </div>
         <div class="col-xs-2">
+            <div id="notification">
+            </div>
             <div id="chat-user">
                 <div id="user-count">몇 명?</div>
                 <ul id="chat-user-ul" class="list-unstyled"></ul>
@@ -87,6 +93,13 @@
     </div>
 {% endblock %}
 {% block script %}
+    <script>
+        // enable noti
+        var noti_button = "<button class=\"noti-button btn btn-default\" onclick=\"Notification.requestPermission()\">알림 사용</button>";
+        if (Notification.permission === "default") {
+            $("#notification").append(noti_button);
+        }
+    </script>
     <script src="/static/js/jquery.bootpag.js"></script>
     <script>
         prompted_error = false;
