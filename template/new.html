@@ -21,3 +21,11 @@
 {% block pag_href %}
     bootpag_setting.href = "/new?&page={{ "{{" }}number{{ "}}" }}";
 {% endblock %}
+{% block board_script %}
+    <script>
+        var new_li = $("#new");
+        new_li.parent().addClass("in");
+        new_li.addClass("active");
+        new_li.append("<span class=\"sr-only\">현재 선택됨</span>");
+    </script>
+{% endblock %}
