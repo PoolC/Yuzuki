@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy.orm import subqueryload
 
-from config import ARTICLE_PER_PAGE, REPLY_PER_PAGE
+from config import ARTICLE_PER_PAGE
 from exception import BadRequest
 from helper.model_control import get_board
 from helper.resource import YuzukiResource, need_anybody_permission
@@ -44,7 +44,7 @@ class Search(YuzukiResource):
                 query = request.dbsession.query(Reply).filter(Reply.user == target_user).options(
                     subqueryload(Reply.article).subqueryload(Article.board))
 
-        item_per_page = ARTICLE_PER_PAGE if target == "article" else REPLY_PER_PAGE
+        item_per_page = ARTICLE_PER_PAGE
         start_idx = item_per_page * (page - 1)
         end_idx = item_per_page * page
         items = query[start_idx:end_idx]
