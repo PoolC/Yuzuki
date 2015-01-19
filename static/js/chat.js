@@ -26,11 +26,12 @@ process_chat_items = function (data, enable_noti) {
             }
             if (enable_noti === true && Notification.permission === "granted") {
                 var contain_noti = chat_item.content.split(" ").some(function (content) {
-                    return content === "@" + user_nickname;
+                    return content === "@" + user_nickname || content === "@전체";
                 });
                 if (contain_noti) {
+                    var strip_content = $(document.createElement("div")).html(chat_item.content).text();
                     var options = {
-                        body: chat_item.content,
+                        body: strip_content,
                         icon: "/favicon.ico"
                     };
                     var notification = new Notification(chat_item.user_nickname, options);
