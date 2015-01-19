@@ -93,7 +93,9 @@
     </div>
 {% endblock %}
 {% block script %}
+    <script src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
     <script>
+        user_nickname = "{{ request.user.nickname }}";
         // enable noti
         var noti_button = "<button class=\"noti-button btn btn-default\" onclick=\"Notification.requestPermission()\">알림 사용</button>";
         if (Notification.permission === "default") {
@@ -116,7 +118,7 @@
     <script src="/static/js/chat.js"></script>
     {% if not page or page == "1" %}
         <script>
-            get_newer_chat();
+            get_newer_chat(false);
             wait_for_chat_stream();
         </script>
     {% else %}
