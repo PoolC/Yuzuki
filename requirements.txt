@@ -4,5 +4,5 @@ SQLAlchemy==0.9.8
 Twisted==14.0.2
 redis
 Markdown==2.5.2
-bleach==1.4.1
+git+https://github.com/TintypeMolly/bleach@124-parse-email-fix
 sphinxit==0.3.2
