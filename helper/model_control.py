@@ -55,11 +55,10 @@ def get_article_page(request, board, page):
 
 def get_reply_page(request, article, page):
     query = request.dbsession.query(Reply).filter(Reply.enabled == True).filter(Reply.article == article).order_by(
-        Reply.uid.desc()).options(subqueryload(Reply.user))
+        Reply.uid.asc()).options(subqueryload(Reply.user))
     start_idx = REPLY_PER_PAGE * (page - 1)
     end_idx = REPLY_PER_PAGE + start_idx
     replies = query[start_idx:end_idx]
-    replies = sorted(replies, key=lambda r: r.uid)
     return replies
 
 
