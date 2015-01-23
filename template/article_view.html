@@ -111,8 +111,8 @@
 
         var current_page = 1;
         var render_reply = function (reply) {
-            var reply_el = $("<div></div>").attr("id", reply.uid).addClass("reply-row");
-            var nickname = $("<div></div>").addClass("reply-nickname").addClass("col-xs-2").text(reply.user_nickname);
+            var reply_el = $("<div></div>").attr("id", "reply-" + reply.uid).addClass("reply-row");
+            var nickname = $("<div></div>").attr("id", "user-" + reply.user_id).addClass("reply-nickname").addClass("col-xs-2").text(reply.user_nickname);
             var content = $("<div></div>").addClass("reply-content-box").addClass("col-xs-8").append("<span class=reply-content>" + reply.content + "</span>");
             {% if request.user and request.user.is_admin %}
                 content.append("<span class=\"reply-delete glyphicon glyphicon-remove pull-right\"></span>");
@@ -143,7 +143,7 @@
             $(".reply-delete").click(function () {
                 var delete_ok = confirm("댓글을 정말로 삭제하시겠습니까?");
                 if (delete_ok) {
-                    var reply_uid = $(this).parent().parent().attr("id");
+                    var reply_uid = $(this).parent().parent().attr("id").split("-")[1];
                     $.ajax("/reply/delete?id=" + reply_uid, {
                         type: "DELETE"
                     }).done(function () {
