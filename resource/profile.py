@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import re
+
 from bleach import linkify
+from twisted.web.http import BAD_REQUEST
 
 from exception import Unauthorized
 from helper.md_ext import markdown_convert
@@ -43,26 +46,33 @@ class ProfileEdit(YuzukiResource):
         pd_phone = request.get_argument("pd_phone") or None
         pd_bio = request.get_argument("pd_bio") or None
 
+        # error check
+        err = None
         query = request.dbsession.query(User).filter(User.nickname == nickname)
         if request.dbsession.query(query.exists()).scalar():
             err = u"이미 사용되고 있는 별명입니다."
+        elif re.match(r"^[-_a-zA-Z가-힣\d\(\)]{1,}$", nickname):
+            err = u"별명은 영문, 한글, 숫자, 붙임표(-), 밑줄(_)과 괄호만 사용할 수 있습니다."
+
+        if err:
             context = {"err": err}
+            request.setResponseCode(BAD_REQUEST)
             return render_template("profile_edit.html", request, context)
-        else:
-            if nickname:
-                request.user.nickname = nickname
-            if password:
-                request.user.password = pbkdf2(password)
-            if pd_realname:
-                request.user.pd_realname = pd_realname
-            if pd_email:
-                request.user.pd_email = pd_email
-            if pd_address:
-                request.user.pd_address = pd_address
-            if pd_phone:
-                request.user.pd_phone = pd_phone
-            if pd_bio:
-                request.user.pd_bio = linkify(markdown_convert(pd_bio), parse_email=True)
-            request.dbsession.commit()
-            request.redirect("/profile/view")
-            return "profile edit success"
+
+        if nickname:
+            request.user.nickname = nickname
+        if password:
+            request.user.password = pbkdf2(password)
+        if pd_realname:
+            request.user.pd_realname = pd_realname
+        if pd_email:
+            request.user.pd_email = pd_email
+        if pd_address:
+            request.user.pd_address = pd_address
+        if pd_phone:
+            request.user.pd_phone = pd_phone
+        if pd_bio:
+            request.user.pd_bio = linkify(markdown_convert(pd_bio), parse_email=True)
+        request.dbsession.commit()
+        request.redirect("/profile/view")
+        return "profile edit success"

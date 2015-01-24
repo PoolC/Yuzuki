@@ -19,11 +19,13 @@
     <form id="register-form" action="/register" method="post">
         <div class="form-group col-md-12">
             <label for="username">ID(*)</label>
-            <input id="username" name="username" class="form-control" type="text" placeholder="로그인에 사용할 ID" required/>
+            <input id="username" name="username" class="form-control" type="text" placeholder="로그인에 사용할 ID"
+                   pattern="^[-_a-zA-Z가-힣\d\(\)]{1,}$" title="영문, 한글, 숫자, 붙임표(-), 밑줄(_)과 괄호만 사용할 수 있습니다" required/>
         </div>
         <div class="form-group col-md-12">
             <label for="nickname">별명(*)</label>
-            <input id="nickname" name="nickname" class="form-control" type="text" placeholder="커뮤니티에서 사용할 별명" required/>
+            <input id="nickname" name="nickname" class="form-control" type="text" placeholder="커뮤니티에서 사용할 별명"
+                   pattern="^[-_a-zA-Z가-힣\d\(\)]{1,}$" title="영문, 한글, 숫자, 붙임표(-), 밑줄(_)과 괄호만 사용할 수 있습니다" required/>
         </div>
         <div class="form-group col-md-6">
             <label for="password">비밀번호(*)</label>
