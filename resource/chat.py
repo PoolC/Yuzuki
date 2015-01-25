@@ -3,10 +3,12 @@ import json
 from datetime import datetime
 
 from twisted.internet import reactor
+from twisted.web.http import BAD_REQUEST
 from twisted.web.server import NOT_DONE_YET
 
 from config import CHAT_PER_PAGE, CHAT_CONNECTION_INTERVAL
 from exception import BadRequest
+from helper.chat_cmd import process_cmd
 from helper.model_control import get_chat_newer_than, get_chat_page, create_chat
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
@@ -83,7 +85,13 @@ class ChatMessageStream(YuzukiResource):
     @need_anybody_permission
     def render_POST(self, request):
         content = request.get_argument("content")
-        chat = create_chat(request, content)
+        if content.startswith("/"):
+            chat, err = process_cmd(request.user, content)
+            if err:
+                request.setResponseCode(BAD_REQUEST)
+                return err
+        else:
+            chat = create_chat(request, content)
         request.dbsession.add(chat)
         request.dbsession.commit()
         for req in self.request_pool:

@@ -1,24 +1,49 @@
 var submit_lock = false;
 var chat_input = $("#chat-input");
+var message_ul = $("#chat-message-ul");
+var latest_uid = 1;
+
 $("#chat-form").submit(function (e) {
     if (!submit_lock) {
         submit_lock = true;
         $.post("/chat/message/stream", $(this).serialize()).done(function () {
             chat_input.val("");
             submit_lock = false;
+        }).fail(function (xhr) {
+            var template = '<li class="chat-item row" class="chat-system"><div class="chat-item-user-nickname col-xs-2">system</div><div class="chat-content-datetime col-xs-10"><span class="chat-content">{{content}}</span><span class="chat-datetime">{{created_at}}</div></li>';
+            var now = new Date();
+            var year = now.getFullYear() % 1000;
+            var month = now.getMonth();
+            month += 1;
+            month = month < 10 ? "0" + month : month;
+            var date = now.getDate();
+            date = date < 10 ? "0" + date : date;
+            var hour = now.getHours();
+            hour = hour < 10 ? "0" + hour : hour;
+            var minute = now.getMinutes();
+            minute = minute < 10 ? "0" + minute : minute;
+            var second = now.getSeconds();
+            second = second < 10 ? "0" + second : second;
+            var created_at = year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+            var system_message = {
+                content: xhr.responseText,
+                created_at: created_at
+            };
+            var rendered = Mark.up(template, system_message);
+            message_ul.append(rendered);
+            chat_input.val("");
+            submit_lock = false;
         });
     }
     return false;
 });
-var message_ul = $("#chat-message-ul");
-var latest_uid = 1;
 
 process_chat_items = function (data, enable_noti) {
     for (var i = 0; i < data.length; i++) {
         (function () {
             latest_uid = Math.max(latest_uid, data[i].uid);
             var chat_item = data[i];
-            var template = '<li class="chat-item row" id="chat-{{uid}}"><div id="user-{{user_id}}" class="chat-item-user-nickname col-xs-2">{{user_nickname}}</div><div class="chat-content-datetime col-xs-10"><span class="chat-content">{{content}}</span><span class="chat-datetime">{{created_at}}</div></li>';
+            var template = '<li class="chat-item row" style="color: #{{user_chat_color}};" id="chat-{{uid}}"><div id="user-{{user_id}}" class="chat-item-user-nickname col-xs-2">{{user_nickname}}</div><div class="chat-content-datetime col-xs-10"><span class="chat-content">{{content}}</span><span class="chat-datetime">{{created_at}}</div></li>';
             var rendered = Mark.up(template, chat_item);
             message_ul.append(rendered);
             if (message_ul.children().length > chat_per_page) {

@@ -28,4 +28,5 @@ class Chat(Base):
             "user_nickname": self.user.nickname,
             "content": self.content,
             "created_at": self.created_at.strftime("%y-%m-%d %H:%M:%S"),
+            "user_chat_color": self.user.chat_color,
         }
