@@ -3,7 +3,7 @@ from datetime import datetime
 from hashlib import sha256
 
 from bleach import linkify
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, ForeignKey
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, ForeignKey, CHAR
 from sqlalchemy.orm import relationship
 
 from helper.md_ext import markdown_convert
@@ -28,6 +28,7 @@ class User(Base):
     created_at = Column(DateTime(), default=datetime.now)
     is_admin = Column(Boolean, default=False)
     is_blocked = Column(Boolean, default=False)
+    chat_color = Column(CHAR(6), default="000000")
 
     def __init__(self, username, nickname, password, pd_realname, pd_email, pd_address, pd_phone, pd_bunryu, pd_bio):
         self.username = username
