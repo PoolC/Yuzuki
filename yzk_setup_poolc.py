@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from hashlib import sha256
+
 from helper.database import DatabaseHelper
 from model.board import Board
 from model.group import Group
@@ -28,6 +30,26 @@ free = Board("free", u"자유게시판", anybody, anybody)
 dbsession.add(free)
 
 dbsession.commit()
+
+"""
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!                                                                                                 !!!
+!!!                                         VERY IMPORTANT                                          !!!
+!!!                                CHANGE ADMIN PASSWORD BEFORE INSTALL                             !!!
+!!!                                                                                                 !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"""
+admin_user = User("admin", u"webmaster", sha256("asdf1234").hexdigest(), u"웹마스터", None, None, None, admin.uid, None)
+admin_user.is_admin = True
+admin.users.append(admin_user)
+anybody.users.append(admin_user)
+dbsession.add(admin_user)
+
+chat_user = User("chat_system", "system", "asdf", "system", None, None, None, admin.uid, None)
+chat_user.password = ""
+dbsession.add(chat_user)
+
+dbsession.commit()
 """
 BASIC REQUIREMENT TO HERE
 """
@@ -52,23 +74,6 @@ dbsession.add(seminar_board)
 
 game_dev_board = Board("game_dev", u"게임제작부", game_dev, game_dev, "somoim", 2)
 dbsession.add(game_dev_board)
-
-from hashlib import sha256
-
-"""
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!                                                                                                 !!!
-!!!                                         VERY IMPORTANT                                          !!!
-!!!                                CHANGE ADMIN PASSWORD BEFORE INSTALL                             !!!
-!!!                                                                                                 !!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-"""
-
-admin_user = User("admin", u"웹마스터", sha256("asdf1234").hexdigest(), u"웹마스터", None, None, None, admin.uid, None)
-admin_user.is_admin = True
-admin.users.append(admin_user)
-anybody.users.append(admin_user)
-dbsession.add(admin_user)
 
 dbsession.commit()
 
