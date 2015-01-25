@@ -44,21 +44,20 @@ process_chat_items = function (data, enable_noti) {
             latest_uid = Math.max(latest_uid, data[i].uid);
             var chat_item = data[i];
             var template = '<li class="chat-item row" style="color: #{{user_chat_color}};" id="chat-{{uid}}"><div id="user-{{user_id}}" class="chat-item-user-nickname col-xs-2">{{user_nickname}}</div><div class="chat-content-datetime col-xs-10"><span class="chat-content">{{content}}</span><span class="chat-datetime">{{created_at}}</div></li>';
-            var rendered = Mark.up(template, chat_item);
-            message_ul.append(rendered);
-            if (message_ul.children().length > chat_per_page) {
-                message_ul.children().first().remove();
-            }
-            if (enable_noti === true && Notification.permission === "granted") {
-                var contain_noti = chat_item.content.split(" ").some(function (content) {
-                    return content === "@" + user_nickname || content === "@전체";
-                });
-                if (contain_noti) {
-                    var strip_content = $(document.createElement("div")).html(chat_item.content).text();
-                    var options = {
-                        body: strip_content,
-                        icon: "/favicon.ico"
-                    };
+            var rendered = $(Mark.up(template, chat_item));
+
+
+            var contain_noti = chat_item.content.split(" ").some(function (content) {
+                return content === "@" + user_nickname || content === "@전체";
+            });
+            if (contain_noti) {
+                rendered.addClass("chat-noti");
+                var strip_content = $(document.createElement("div")).html(chat_item.content).text();
+                var options = {
+                    body: strip_content,
+                    icon: "/favicon.ico"
+                };
+                if (enable_noti === true && Notification.permission === "granted") {
                     var notification = new Notification(chat_item.user_nickname, options);
                     notification.onclick = function () {
                         window.focus();
@@ -66,6 +65,11 @@ process_chat_items = function (data, enable_noti) {
                         $(chat_selector).effect("highlight", 1500);
                     };
                 }
+            }
+
+            message_ul.append(rendered);
+            if (message_ul.children().length > chat_per_page) {
+                message_ul.children().first().remove();
             }
         })();
     }
