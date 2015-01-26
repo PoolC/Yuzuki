@@ -47,6 +47,7 @@ _chat_cmd_map = {
 _man_proc = _man(_chat_cmd_map)
 _chat_cmd_map["man"] = _man_proc
 
+
 def process_cmd(user, content):
     cmd_parts = content.split(" ")
     cmd_name = cmd_parts[0][1:]
