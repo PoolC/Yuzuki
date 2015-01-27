@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from bleach import clean, linkify
+from bleach import clean
 from sqlalchemy import Boolean, Column, Integer, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
@@ -23,12 +23,6 @@ class Reply(Base):
     deleted_at = Column(DateTime)
     deleted_user_id = Column(Integer(), ForeignKey("user.uid"))
     deleted_user = relationship("User", foreign_keys=deleted_user_id)
-
-    def __init__(self, article, user, content):
-        self.article = article
-        article.reply_count += 1
-        self.user = user
-        self.content = linkify(clean(content, tags=list()), parse_email=True)
 
     def __repr__(self):
         return "<Reply uid=%s, content=%s>" % (self.uid, self.content)

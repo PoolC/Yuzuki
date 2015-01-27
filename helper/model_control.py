@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from bleach import clean, linkify
+from bleach import clean, linkify, callbacks
 from sqlalchemy.orm import subqueryload
 
 from config import ARTICLE_PER_PAGE, REPLY_PER_PAGE, CHAT_PER_PAGE
@@ -80,20 +80,37 @@ def delete_reply(request, reply):
 
 def edit_reply(request, reply, content):
     reply_record = ReplyRecord(reply)
-    reply.content = linkify(clean(content, tags=list()), parse_email=True)
+    reply.content = linkify(clean(content, tags=list()), parse_email=True,
+                            callbacks=[callbacks.nofollow, callbacks.target_blank])
     request.dbsession.add(reply_record)
 
 
 def create_article(request, board, subject, content):
-    return Article(board, request.user, subject, content)
+    article = Article()
+    article.board = board
+    board.article_count += 1
+    article.user = request.user
+    article.subject = subject
+    article.change_content(content)
+    return article
 
 
 def create_reply(request, article, content):
-    return Reply(article, request.user, content)
+    reply = Reply()
+    reply.article = article
+    article.reply_count += 1
+    reply.user = request.user
+    reply.content = linkify(clean(content, tags=list()), parse_email=True,
+                            callbacks=[callbacks.nofollow, callbacks.target_blank])
+    return reply
 
 
 def create_chat(request, content):
-    return Chat(request.user, content)
+    chat = Chat()
+    chat.user = request.user
+    chat.content = linkify(clean(content, tags=list()), parse_email=True,
+                           callbacks=[callbacks.nofollow, callbacks.target_blank])
+    return chat
 
 
 def get_chat_page(request, page):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from bleach import linkify
+from bleach import linkify, callbacks
 from sqlalchemy import Boolean, Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
@@ -29,16 +29,10 @@ class Article(Base):
     reply_count = Column(Integer(), default=0)
     replies = relationship("Reply")
 
-    def __init__(self, board, user, subject, content):
-        self.board = board
-        board.article_count += 1
-        self.user = user
-        self.subject = subject
-        self.change_content(content)
-
     def __repr__(self):
         return "<Article uid=%s, subject=%s>" % (self.uid, self.subject)
 
     def change_content(self, content):
         self.content = content
-        self.compiled_content = linkify(markdown_convert(content), parse_email=True)
+        self.compiled_content = linkify(markdown_convert(content), parse_email=True,
+                                        callbacks=[callbacks.nofollow, callbacks.target_blank])

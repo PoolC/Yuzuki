@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
-from bleach import linkify
+from bleach import linkify, callbacks
 from twisted.web.http import BAD_REQUEST
 
 from exception import Unauthorized
@@ -72,7 +72,8 @@ class ProfileEdit(YuzukiResource):
         if pd_phone:
             request.user.pd_phone = pd_phone
         if pd_bio:
-            request.user.pd_bio = linkify(markdown_convert(pd_bio), parse_email=True)
+            request.user.pd_bio = linkify(markdown_convert(pd_bio), parse_email=True,
+                                          callbacks=[callbacks.nofollow, callbacks.target_blank])
         request.dbsession.commit()
         request.redirect("/profile/view")
         return "profile edit success"
