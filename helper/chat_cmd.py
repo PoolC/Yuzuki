@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 
-from model.chat import Chat
 from model.user import User
 from helper.request import YuzukiRequest
+from helper.model_control import create_chat
 
 dbsession = YuzukiRequest.dbsession
 query = dbsession.query(User).filter(User.username == "chat_system")
@@ -48,15 +48,16 @@ _man_proc = _man(_chat_cmd_map)
 _chat_cmd_map["man"] = _man_proc
 
 
-def process_cmd(user, content):
+def process_cmd(request, content):
     cmd_parts = content.split(" ")
     cmd_name = cmd_parts[0][1:]
     cmd_args = cmd_parts[1:]
     processor = _chat_cmd_map[cmd_name] if cmd_name in _chat_cmd_map else None
     if not processor:
         return None, u"그런 명령어는 존재하지 않습니다. /man 을 참조하세요."
-    speaker, message, err = processor.process(user, cmd_args)
+    speaker, message, err = processor.process(request.user, cmd_args)
     if not err:
-        return Chat(speaker, message), None
+        chat = create_chat(request, message)
+        return chat, None
     else:
         return None, err

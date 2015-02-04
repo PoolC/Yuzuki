@@ -86,7 +86,7 @@ class ChatMessageStream(YuzukiResource):
     def render_POST(self, request):
         content = request.get_argument("content")
         if content.startswith("/"):
-            chat, err = process_cmd(request.user, content)
+            chat, err = process_cmd(request, content)
             if err:
                 request.setResponseCode(BAD_REQUEST)
                 return err
