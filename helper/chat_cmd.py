@@ -22,6 +22,8 @@ class _man():
             return None, None, u"인자의 수가 올바르지 않습니다. " + self.usage
         if len(cmd_args) == 0:
             return None, None, self.man
+        if cmd_args[0] not in self.processor_map:
+            return None, None, u"그런 명령어는 존재하지 않습니다. /man 을 참조하세요."
         processor = self.processor_map[cmd_args[0]]
         return None, None, processor.man
 
