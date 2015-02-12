@@ -119,6 +119,7 @@ class ChatMessageData(YuzukiResource):
             chats = get_chat_page(request, page)
         data = [chat.to_dict() for chat in chats]
         data = sorted(data, key=lambda c: c["uid"])
+        request.setNoCache()
         return json.dumps(data)
 
 
@@ -187,6 +188,7 @@ class ChatUserData(YuzukiResource):
             }
             user_data_list.append(user_data)
         user_data_list = sorted(user_data_list, key=lambda u: u["user_id"])
+        request.setNoCache()
         return json.dumps(user_data_list)
 
 

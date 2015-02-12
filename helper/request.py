@@ -173,3 +173,8 @@ class YuzukiRequest(Request):
             return real_ip
         else:
             Request.getClientIP(self)
+
+    def setNoCache(self):
+        self.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")
+        self.setHeader("Pragma", "no-cache")
+        self.setHeader("Expires", "0")
