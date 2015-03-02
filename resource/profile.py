@@ -48,11 +48,12 @@ class ProfileEdit(YuzukiResource):
 
         # error check
         err = None
-        query = request.dbsession.query(User).filter(User.nickname == nickname)
-        if request.dbsession.query(query.exists()).scalar():
-            err = u"이미 사용되고 있는 별명입니다."
-        elif re.match(r"^[-_a-zA-Z가-힣\d\(\)]{1,}$", nickname):
-            err = u"별명은 영문, 한글, 숫자, 붙임표(-), 밑줄(_)과 괄호만 사용할 수 있습니다."
+        if nickname:
+            query = request.dbsession.query(User).filter(User.nickname == nickname)
+            if request.dbsession.query(query.exists()).scalar():
+                err = u"이미 사용되고 있는 별명입니다."
+            elif re.match(u"^[-_a-zA-Z가-힣\\d\\(\\)]{1,}$", nickname):
+                err = u"별명은 영문, 한글, 숫자, 붙임표(-), 밑줄(_)과 괄호만 사용할 수 있습니다."
 
         if err:
             context = {"err": err}
