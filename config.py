@@ -2,7 +2,6 @@
 import logging
 from logging.config import fileConfig
 
-
 ARTICLE_PER_PAGE = 15
 REPLY_PER_PAGE = 15
 CHAT_PER_PAGE = 20

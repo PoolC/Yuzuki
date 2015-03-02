@@ -18,5 +18,6 @@ def can_comment(request, board):
 def is_author(request, item):
     return request.user and request.user == item.user
 
+
 def is_author_or_admin(request, item):
     return is_author(request, item) or is_admin(request)
