@@ -22,3 +22,7 @@ $(".menu-toggle").click(function () {
         mobileVisible = true;
     }
 });
+
+var open_user_popup = function (user_id) {
+    window.open("/profile/popup?user_id=" + user_id, "_blank", "fullscreen=no,titlebar=no,toolbar=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=800");
+};

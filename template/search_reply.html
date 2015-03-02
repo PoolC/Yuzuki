@@ -10,7 +10,7 @@
             <td class="subject">
                 <a href="/article/view?id={{ reply.article.uid }}">{{ reply.get_cleaned_content() }}</a>
             </td>
-            <td class="author">{{ reply.user.nickname | e }}</td>
+            <td class="author"><a onclick="open_user_popup({{ reply.user.uid }})">{{ reply.user.nickname | e }}</a></td>
             <td class="timestamp">{{ reply.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
         </tr>
     {% endfor %}

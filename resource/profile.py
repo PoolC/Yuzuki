@@ -4,10 +4,10 @@ import re
 from bleach import linkify, callbacks
 from twisted.web.http import BAD_REQUEST
 
-from exception import Unauthorized
+from exception import Unauthorized, BadRequest
 from helper.md_ext import markdown_convert
 from helper.pbkdf2 import pbkdf2
-from helper.resource import YuzukiResource
+from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
 from model.user import User
 
@@ -19,6 +19,7 @@ class Profile(YuzukiResource):
         YuzukiResource.__init__(self)
         self.putChild("view", ProfileView())
         self.putChild("edit", ProfileEdit())
+        self.putChild("popup", ProfilePopup())
 
 
 class ProfileView(YuzukiResource):
@@ -77,3 +78,15 @@ class ProfileEdit(YuzukiResource):
         request.dbsession.commit()
         request.redirect("/profile/view")
         return "profile edit success"
+
+class ProfilePopup(YuzukiResource):
+    @need_anybody_permission
+    def render_GET(self, request):
+        user_id = request.get_argument("user_id")
+        query = request.dbsession.query(User).filter(User.uid == user_id)
+        result = query.all()
+        if not result:
+            raise BadRequest()
+        user = result[0]
+        context = {"user": user}
+        return render_template("profile_popup.html", request, context)

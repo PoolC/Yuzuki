@@ -13,7 +13,7 @@
             <td class="subject">
                 <a href="/article/view?id={{ item["article_id"] }}">[{{ item["type"] }}] {{ item["content"] }}</a>
             </td>
-            <td class="author">{{ item["user"].nickname | e }}</td>
+            <td class="author"><a onclick="open_user_popup({{ item["user"].uid }})">{{ item["user"].nickname | e }}</a></td>
             <td class="timestamp">{{ item["created_at"].strftime("%y-%m-%d %H:%M:%S") }}</td>
         </tr>
     {% endfor %}
