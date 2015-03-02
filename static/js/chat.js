@@ -38,7 +38,7 @@ $("#chat-form").submit(function (e) {
     return false;
 });
 
-process_chat_items = function (data, enable_noti) {
+var process_chat_items = function (data, enable_noti) {
     for (var i = 0; i < data.length; i++) {
         (function () {
             latest_uid = Math.max(latest_uid, data[i].uid);
@@ -75,7 +75,7 @@ process_chat_items = function (data, enable_noti) {
     }
 };
 
-get_newer_chat = function (enable_noti) {
+var get_newer_chat = function (enable_noti) {
     return $.ajax("/chat/message/data?id=" + latest_uid, {
         dataType: "json"
     }).done(function (data) {
@@ -83,7 +83,7 @@ get_newer_chat = function (enable_noti) {
     });
 };
 
-wait_for_chat_stream = function () {
+var wait_for_chat_stream = function () {
     $.ajax("/chat/message/stream").done(function () {
         get_newer_chat(true);
         wait_for_chat_stream();
