@@ -62,9 +62,9 @@ class Register(YuzukiResource):
             return u"분류는 비어있을 수 없습니다."
 
         # nickname username regex validity check
-        if not re.match(r"^[-_a-zA-Z가-힣\d\(\)]{1,}$", new_user.username):
+        if not re.match(u"^[-_a-zA-Z가-힣\\d\\(\\)]{1,}$", new_user.username):
             return u"ID는 영문, 한글, 숫자, 붙임표(-), 밑줄(_)과 괄호만 사용할 수 있습니다."
-        if not re.match(r"^[-_a-zA-Z가-힣\d\(\)]{1,}$", new_user.nickname):
+        if not re.match(u"^[-_a-zA-Z가-힣\\d\\(\\)]{1,}$", new_user.nickname):
             return u"별명은 영문, 한글, 숫자, 붙임표(-), 밑줄(_)과 괄호만 사용할 수 있습니다."
 
         # duplicate value check
