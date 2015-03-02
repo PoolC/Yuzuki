@@ -25,8 +25,7 @@ class ProfileView(YuzukiResource):
     def render_GET(self, request):
         if not request.user:
             raise Unauthorized()
-        context = {"user": request.user}
-        return render_template("profile_view.html", request, context)
+        return render_template("profile_view.html", request)
 
 
 class ProfileEdit(YuzukiResource):
