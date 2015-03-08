@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>승인대기</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>username</th>
+            <th>nickname</th>
+            <th>realname</th>
+            <th>address</th>
+            <th>phone</th>
+            <th>bunryu</th>
+            <th>add</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.nickname }}</td>
+                <td>{{ user.pd_realname }}</td>
+                <td>{{ user.pd_address }}</td>
+                <td>{{ user.pd_phone }}</td>
+                <td>{{ user.bunryu.name }}</td>
+                <td>
+                    <form method="post">
+                        <input type="hidden" name="user_id" value="{{ user.uid }}">
+                        <input type="submit" value="add">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

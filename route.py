@@ -3,6 +3,7 @@ from twisted.web.static import File
 
 from localization import SITE_FAVICON
 from resource.about import About
+from resource.admin import Admin
 from resource.article import ArticleParent
 from resource.board import Board
 from resource.chat import Chat
@@ -20,6 +21,7 @@ from resource.welcome import Welcome
 ROUTE = {
     "": Index(),
     "about": About(),
+    "admin": Admin(),
     "article": ArticleParent(),
     "board": Board(),
     "chat": Chat(),

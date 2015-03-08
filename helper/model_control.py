@@ -10,8 +10,11 @@ from model.article import Article
 from model.article_record import ArticleRecord
 from model.board import Board
 from model.chat import Chat
+from model.group import Group
 from model.reply import Reply
 from model.reply_record import ReplyRecord
+from model.user import User
+from model.association.user_group import UserGroupAssociation
 
 
 def get_board(request, board_name):
@@ -124,3 +127,11 @@ def get_chat_newer_than(request, chat_id):
     query = request.dbsession.query(Chat).filter(Chat.uid > chat_id).order_by(Chat.uid.desc()).options(
         subqueryload(Chat.user))
     return query[0:CHAT_PER_PAGE]
+
+
+def get_not_anybody_user(request):
+    anybody_query = request.dbsession.query(Group.uid).filter(Group.name == "anybody").subquery()
+    assoc_query = request.dbsession.query(UserGroupAssociation.user_id).filter(
+        UserGroupAssociation.group_id == anybody_query).subquery()
+    query = request.dbsession.query(User).filter(User.uid.notin_(assoc_query)).options(subqueryload(User.bunryu))
+    return query.all()
