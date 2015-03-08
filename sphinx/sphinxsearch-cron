@@ -1,3 +1,0 @@
-*/5 * * * * root indexer --rotate --quiet article_delta reply_delta
-@midnight root indexer --rotate --quiet article_main reply_main && indexer --rotate --quiet article_delta reply_delta
-@reboot root searchd

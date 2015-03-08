@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy.orm import subqueryload
+from sqlalchemy import or_
 
 from config import ARTICLE_PER_PAGE
 from exception import BadRequest
 from helper.model_control import get_board
 from helper.resource import YuzukiResource, need_anybody_permission
-from helper.sphinxsearch import search_article, search_reply
 from helper.template import render_template
 from model.article import Article
 from model.reply import Reply
@@ -27,12 +27,18 @@ class Search(YuzukiResource):
         page = request.get_argument_int("page", 1)
 
         if search_type == "content":
+            query_words = ["%" + word + "%" for word in query_string.split(" ")]
+            expr_list = list()
             if target == "article":
-                query = search_article(request.dbsession, query_string, board).options(
-                    subqueryload(Article.board)).options(subqueryload(Article.user))
+                for word in query_words:
+                    expr_list.append(Article.subject.like(word))
+                    expr_list.append(Article.content.like(word))
+                query = request.dbsession.query(Article).filter(or_(*expr_list)).options(
+                    subqueryload(Article.user)).options(subqueryload(Article.board))
             else:
-                query = search_reply(request.dbsession, query_string, board).options(
-                    subqueryload(Reply.article).subqueryload(Article.board)).options(subqueryload(Reply.user))
+                for word in query_words:
+                    expr_list.append(Reply.content.like(word))
+                query = request.dbsession.query(Reply).filter(or_(*expr_list)).options(subqueryload(Reply.user))
         else:
             query = request.dbsession.query(User).filter(User.nickname == query_string)
             result = query.all()
