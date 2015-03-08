@@ -5,4 +5,3 @@ Twisted==14.0.2
 redis
 Markdown==2.5.2
 git+https://github.com/TintypeMolly/bleach@124-parse-email-fix
-sphinxit==0.3.2
