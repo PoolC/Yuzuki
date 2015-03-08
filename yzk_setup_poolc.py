@@ -47,6 +47,7 @@ dbsession.add(admin_user)
 
 chat_user = User("chat_system", "system", "asdf", "system", None, None, None, admin.uid, None)
 chat_user.password = ""
+anybody.users.append(chat_user)
 dbsession.add(chat_user)
 
 dbsession.commit()
