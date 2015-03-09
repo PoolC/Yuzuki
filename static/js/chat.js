@@ -84,7 +84,9 @@ var get_newer_chat = function (enable_noti) {
 };
 
 var wait_for_chat_stream = function () {
-    $.ajax("/chat/message/stream").done(function () {
+    $.ajax("/chat/message/stream", {
+        cache: false
+    }).done(function () {
         get_newer_chat(true);
         wait_for_chat_stream();
     }).fail(function (xhr) {
