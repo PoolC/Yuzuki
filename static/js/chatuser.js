@@ -19,7 +19,9 @@ var refresh_chat_user = function () {
 };
 
 var wait_for_user_stream = function () {
-    return $.ajax("/chat/user/stream").done(function () {
+    return $.ajax("/chat/user/stream", {
+        cache: false
+    }).done(function () {
         refresh_chat_user();
         wait_for_user_stream();
     }).fail(function (xhr) {
