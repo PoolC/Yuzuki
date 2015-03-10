@@ -5,7 +5,7 @@ var process_user_items = function (data) {
     chat_user_ul.empty();
     for (var i = 0; i < data.length; i++) {
         var chat_item = data[i];
-        var template = '<li class="chat-user row" id="list-user-{{user_id}}"><div class="chat-user-nickname col-xs-12"><a onclick="open_user_popup({{ user_id }})">{{user_nickname}}</a></div></li>';
+        var template = '<li class="chat-user row" id="list-user-{{user_id}}"><div class="chat-user-nickname col-xs-12"><a href="#" onclick="open_user_popup({{ user_id }})">{{user_nickname}}</a></div></li>';
         var rendered = Mark.up(template, chat_item);
         chat_user_ul.append(rendered);
     }
