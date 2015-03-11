@@ -17,7 +17,8 @@
         <div class="col-xs-12">
             <div class="meta row">
                 <div class="col-xs-2">
-                    <strong>글쓴이</strong> <a onclick="open_user_popup({{ article.user.uid }})">{{ article.user.nickname | e }}</a>
+                    <strong>글쓴이</strong>
+                    <a onclick="open_user_popup({{ article.user.uid }})">{{ article.user.nickname | e }}</a>
                 </div>
                 <div class="col-xs-4">
                     <strong>작성시간</strong> {{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}
@@ -68,13 +69,15 @@
     <div class="row buttons">
         <div class="col-xs-12">
             {% if page %}
-                <a class="btn btn-default pull-left" href="/board?name={{ article.board.name }}&page={{ page }}">목차</a>
+                <a class="btn btn-default pull-left"
+                   href="/board?name={{ article.board.name }}&page={{ page }}">목차</a>
             {% else %}
                 <a class="btn btn-default pull-left" href="/board?name={{ article.board.name }}">목차</a>
             {% endif %}
             {% if request.user == article.user or request.user.is_admin %}
                 <span id="article-delete" class="btn btn-default pull-right">삭제</span>
-                <a href="/article/edit?id={{ article.uid }}" id="article-edit" class="btn btn-default pull-right">수정</a>
+                <a class="btn btn-default pull-right"
+                   href="/article/edit?id={{ article.uid }}" id="article-edit">수정</a>
             {% endif %}
         </div>
     </div>
@@ -116,7 +119,8 @@
                     .addClass("reply-nickname").addClass("col-xs-2")
                     .attr("onclick", "open_user_popup(" + reply.user_id + ")")
                     .text(reply.user_nickname);
-            var content = $("<div></div>").addClass("reply-content-box").addClass("col-xs-8").append("<span class=reply-content>" + reply.content + "</span>");
+            var content = $("<div></div>").addClass("reply-content-box").
+                    addClass("col-xs-8").append("<span class=reply-content>" + reply.content + "</span>");
             {% if request.user and request.user.is_admin %}
                 content.append("<span class=\"reply-delete glyphicon glyphicon-remove pull-right\"></span>");
                 content.append("<span class=\"reply-edit glyphicon glyphicon-pencil pull-right\"></span>");

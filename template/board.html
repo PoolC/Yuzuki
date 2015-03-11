@@ -35,7 +35,9 @@
                                         <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}</a>
                                     {% endif %}
                                 </td>
-                                <td class="author"><a onclick="open_user_popup({{ article.user.uid }})">{{ article.user.nickname | e }}</a></td>
+                                <td class="author"><a
+                                        onclick="open_user_popup({{ article.user.uid }})">{{ article.user.nickname | e }}</a>
+                                </td>
                                 <td class="timestamp">{{ article.created_at.strftime("%y-%m-%d %H:%M:%S") }}</td>
                             </tr>
                         {% endfor %}

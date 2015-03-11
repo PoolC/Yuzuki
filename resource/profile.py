@@ -79,6 +79,7 @@ class ProfileEdit(YuzukiResource):
         request.redirect("/profile/view")
         return "profile edit success"
 
+
 class ProfilePopup(YuzukiResource):
     @need_anybody_permission
     def render_GET(self, request):
