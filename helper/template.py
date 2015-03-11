@@ -17,8 +17,8 @@ query = dbsession.query(Board).filter(Board.classification == "normal").order_by
 board_meta["normal"] = [(board.name, board.repr) for board in query.all()]
 dbsession.close()
 
-jinja2_env = Environment(loader=FileSystemLoader("template",
-                                                 encoding="utf-8"))
+jinja2_env = Environment(loader=FileSystemLoader("template", encoding="utf-8"),
+                            extensions=['jinja2.ext.with_'])
 jinja2_env.globals = {
     "site_name": SITE_NAME,
     "datetime": datetime,
