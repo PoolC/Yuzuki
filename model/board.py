@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from model.base import Base
@@ -18,6 +18,7 @@ class Board(Base):
     comment_group = relationship("Group", foreign_keys=comment_group_uid)
     description = Column(String(255))
     article_count = Column(Integer(), default=0)
+    enabled = Column(Boolean(), default=True)
     articles = relationship("Article")
 
     def __init__(self, name, repr, write_group, comment_group, classification=None, order=None):

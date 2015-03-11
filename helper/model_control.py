@@ -22,7 +22,10 @@ def get_board(request, board_name):
     result = query.all()
     if not result:
         raise PageNotFound()
-    return result[0]
+    board = result[0]
+    if not board.enabled:
+        raise PageNotFound()
+    return board
 
 
 def get_article(request, article_id):
@@ -31,7 +34,10 @@ def get_article(request, article_id):
     result = query.all()
     if not result:
         raise PageNotFound()
-    return result[0]
+    article = result[0]
+    if not article.board.enabled:
+        raise PageNotFound()
+    return article
 
 
 def delete_article(request, article):
@@ -67,11 +73,14 @@ def get_reply_page(request, article, page):
 
 def get_reply(request, reply_id):
     query = request.dbsession.query(Reply).filter(Reply.uid == reply_id).filter(Reply.enabled == True).options(
-        subqueryload(Reply.user))
+        subqueryload(Reply.user)).options(subqueryload(Reply.article).subqueryload(Article.board))
     result = query.all()
     if not result:
         raise PageNotFound()
-    return result[0]
+    reply = result[0]
+    if not reply.article.enabled or not reply.article.board.enabled:
+        raise PageNotFound()
+    return reply
 
 
 def delete_reply(request, reply):
