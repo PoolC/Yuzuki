@@ -13,6 +13,7 @@ from helper.model_control import get_chat_newer_than, get_chat_page, create_chat
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
 from model.chat import Chat as ChatModel
+from model.user import User as UserModel
 
 
 def yuzuki_convert_int(num_str):
@@ -36,12 +37,16 @@ class Chat(YuzukiResource):
         page = request.get_argument("page", None)
         chat_total_count = request.dbsession.query(ChatModel).count()
         page_total = chat_total_count / CHAT_PER_PAGE
+        user_nicknames = request.dbsession.query(UserModel.nickname).all()
+        plucked_user_nicknames = [nickname for (nickname, ) in user_nicknames]
+
         if page_total % CHAT_PER_PAGE != 0:
             page_total += 1
         context = {
             "CHAT_PER_PAGE": CHAT_PER_PAGE,
             "page": page,
             "page_total": page_total,
+            "user_nicknames": json.dumps(plucked_user_nicknames)
         }
         return render_template("chat.html", request, context)
 

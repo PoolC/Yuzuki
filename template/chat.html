@@ -1,72 +1,7 @@
 {% extends "base.html" %}
 {% block head %}
-    <style>
-        .chat-noti .chat-content {
-            background-color: #000;
-            color: #ff0;
-        }
-
-        .chat-item-user-nickname {
-            text-align: center;
-        }
-
-        .chat-item-user-nickname a {
-            color: inherit;
-        }
-
-        .chat-datetime {
-            color: #999;
-            padding: 10px;
-            font-size: x-small;
-        }
-
-        .chat-item {
-            padding: 0;
-            border-top: 1px #ddd solid;
-            border-left: 1px #ddd solid;
-        }
-
-        .chat-item > * {
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-
-        .chat-item:last-child {
-            border-bottom: 1px #ddd solid;
-        }
-
-        .chat-content-datetime {
-            word-break: break-all;
-            border-left: 1px #ddd solid;
-            border-right: 1px #ddd solid;
-        }
-
-        .outer-wrap {
-            float: left;
-            position: relative;
-            left: 50%;
-            padding-top: 10px;
-        }
-
-        #pagination {
-            float: left;
-            left: -50%;
-            position: relative;
-        }
-
-        .clear {
-            clear: both;
-        }
-
-        #user-count {
-            font-weight: bold;
-            color: #428bca;
-        }
-
-        .noti-button {
-            margin-bottom: 15px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/static/css/chat.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.textcomplete.css" />
 {% endblock %}
 {% block body %}
     <div class="row">
@@ -77,11 +12,16 @@
             {% if not page or page == "1" %}
                 <div id="chat-input row">
                     <form id="chat-form" action="/chat/message/stream" method="post">
-                        <div class="col-xs-10">
-                            <input id="chat-input" type="text" class="form-control"
-                                    name="content" autocomplete="off" required/>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="input-group">
+                                    <textarea id="chat-input" class="form-control" rows="1" name="content"required></textarea>
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-default">입력</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-xs-2"><input type="submit" class="btn btn-default" value="입력"/></div>
                     </form>
                 </div>
             {% endif %}
@@ -113,6 +53,7 @@
         }
     </script>
     <script src="/static/js/jquery.bootpag.js"></script>
+    <script src="/static/js/jquery.textcomplete.min.js"></script>
     <script>
         prompted_error = false;
         $("#pagination").bootpag({
@@ -130,6 +71,9 @@
         <script>
             get_newer_chat(false);
             wait_for_chat_stream();
+            chat_input_handler.init({
+                mentionable_users: {{ user_nicknames }}
+            });
             $("#chat-input").focus();
         </script>
     {% else %}
