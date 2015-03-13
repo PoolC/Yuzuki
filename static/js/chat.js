@@ -123,7 +123,9 @@ var process_chat_items = function (data, enable_noti) {
                     body: strip_content,
                     icon: "/favicon.ico"
                 };
-                if (enable_noti === true && Notification.permission === "granted") {
+                if (enable_noti === true &&
+                    Notification.permission === "granted" &&
+                    chat_item.user_nickname !== user_nickname) {
                     var notification = new Notification(chat_item.user_nickname, options);
                     notification.onclick = function () {
                         window.focus();
