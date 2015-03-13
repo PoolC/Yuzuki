@@ -3,7 +3,7 @@ import re
 
 from model.user import User
 from helper.request import YuzukiRequest
-from helper.model_control import create_chat, get_chat_kv, set_chat_kv
+from helper.model_control import create_chat, get_chat_kv, set_chat_kv, search_chat_kv_by_key, search_chat_kv_by_value
 
 dbsession = YuzukiRequest.dbsession
 query = dbsession.query(User).filter(User.username == "chat_system")
@@ -75,12 +75,52 @@ class Set:
         return chat_system, message, None
 
 
+class KeySearch:
+    def __init__(self):
+        self.usage = u"(사용법: /ks search word)"
+        self.man = u"저장한 key-value 값을 key에 대해 주어진 검색어로 검색합니다. " + self.usage
+
+    def process(self, request, cmd_args):
+        search_word = cmd_args.strip()
+        if not search_word:
+            return None, None, u"인자의 수가 올바르지 않습니다. " + self.usage
+        kv_list = search_chat_kv_by_key(request, search_word)
+        if not kv_list:
+            message = u"%s님의 key에 대한 '%s' 검색 결과가 존재하지 않습니다." % (request.user.nickname, search_word)
+            return chat_system, message, None
+        else:
+            search_result = ", ".join([kv.key for kv in kv_list])
+            message = u"%s님의 key에 대한 '%s' 검색 결과: [%s]" % (request.user.nickname, search_word, search_result)
+            return chat_system, message, None
+
+
+class ValueSearch:
+    def __init__(self):
+        self.usage = u"(사용법: /vs search word)"
+        self.man = u"저장한 key-value 값을 value에 대해 주어진 검색어로 검색합니다. " + self.usage
+
+    def process(self, request, cmd_args):
+        search_word = cmd_args.strip()
+        if not search_word:
+            return None, None, u"인자의 수가 올바르지 않습니다. " + self.usage
+        kv_list = search_chat_kv_by_value(request, search_word)
+        if not kv_list:
+            message = u"%s님의 value에 대한 '%s' 검색 결과가 존재하지 않습니다." % (request.user.nickname, search_word)
+            return chat_system, message, None
+        else:
+            search_result = ", ".join([kv.key for kv in kv_list])
+            message = u"%s님의 value에 대한 '%s' 검색 결과: [%s]" % (request.user.nickname, search_word, search_result)
+            return chat_system, message, None
+
+
 class ChatCmdManager:
     def __init__(self):
         self.chat_cmd_map = {
             "color": ChangeColor(),
             "get": Get(),
             "set": Set(),
+            "ks": KeySearch(),
+            "vs": ValueSearch(),
         }
         man = Man(self.chat_cmd_map)
         self.chat_cmd_map["man"] = man

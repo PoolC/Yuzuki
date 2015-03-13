@@ -169,3 +169,13 @@ def set_chat_kv(request, key, value):
                        callbacks=[callbacks.nofollow, callbacks.target_blank])
     kv.user = request.user
     return kv
+
+
+def search_chat_kv_by_key(request, search_word):
+    query = request.dbsession.query(ChatKV).filter(ChatKV.key.like("%" + search_word + "%"))
+    return query.all()
+
+
+def search_chat_kv_by_value(request, search_word):
+    query = request.dbsession.query(ChatKV).filter(ChatKV.value.like("%" + search_word + "%"))
+    return query.all()
