@@ -14,17 +14,16 @@ class Man:
     def __init__(self, processor_map):
         self.processor_map = processor_map
         self.usage = u"(사용법 /man [" + ", ".join(processor_map.keys()) + "])"
-        self.man = u"명령어의 사용법을 알려줍니다. " + self.usage
+        self.man = u"[man] 명령어의 사용법을 알려줍니다. " + self.usage
 
     def process(self, request, cmd_args):
-        if len(cmd_args) > 1:
-            return None, None, u"인자의 수가 올바르지 않습니다. " + self.usage
-        if len(cmd_args) == 0:
+        target = cmd_args.strip()
+        if not target:
             return None, None, self.man
-        if cmd_args[0] not in self.processor_map:
-            return None, None, u"그런 명령어는 존재하지 않습니다. /man 을 참조하세요."
-        processor = self.processor_map[cmd_args[0]]
-        return None, None, processor.man
+        if target not in self.processor_map:
+            return None, None, u"[man] 그런 명령어는 존재하지 않습니다. /man 을 참조하세요."
+        processor = self.processor_map[target]
+        return None, None, u"[man] '%s': %s" % (target,processor.man)
 
 
 class ChangeColor:
