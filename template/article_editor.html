@@ -6,8 +6,14 @@
             border: 1px solid transparent;
             box-shadow: none;
         }
+        .CodeMirror {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
     </style>
-    <link rel="stylesheet" href="/static/css/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/codemirror.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/mode/markdown/markdown.min.js"></script>
 {% endblock %}
 {% block body %}
     <div class="row">
@@ -46,5 +52,17 @@
             board_li.addClass("active");
             board_li.append("<span class=\"sr-only\">현재 선택됨</span>");
         }
+      var editor = CodeMirror.fromTextArea($('textarea[name=content]')[0], {
+        lineNumbers: true,
+        mode: 'text/x-markdown',
+        styleActiveLine: true,
+        lineWrapping: true
+      });
+      $('input[type=submit]').click(
+        function() {
+          $('textarea[name=content]')
+            .val(editor.getValue());
+        }
+      )
     </script>
 {% endblock %}
