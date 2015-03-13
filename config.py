@@ -8,6 +8,7 @@ CHAT_PER_PAGE = 20
 CHAT_CONNECTION_INTERVAL = 30
 DEBUG = False
 DB_CONNECTION_STRING = "sqlite:///sqlite.db"
+USE_REDIS = False
 REDIS_CONNECT_ARGS = {
     "host": "localhost",
     "port": 6379,
