@@ -23,7 +23,7 @@ class Man:
         if target not in self.processor_map:
             return None, None, u"[man] 그런 명령어는 존재하지 않습니다. /man 을 참조하세요."
         processor = self.processor_map[target]
-        return None, None, u"[man] '%s': %s" % (target,processor.man)
+        return None, None, u"[man] '%s': %s" % (target, processor.man)
 
 
 class ChangeColor:
