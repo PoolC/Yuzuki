@@ -56,7 +56,7 @@ var chat_pagination_handler = {
     },
     load_chat_items: function (e, page) {
         $.ajax("/chat/message/data", {
-            data: { page: page },
+            data: {page: page},
             dataType: "json"
         }).done(function (data) {
             this.change_page(page);
@@ -109,7 +109,16 @@ var process_chat_items = function (data, enable_noti) {
         (function () {
             latest_uid = Math.max(latest_uid, data[i].uid);
             var chat_item = data[i];
-            var template = '<li class="chat-item row" style="color: #{{user_chat_color}};" id="chat-{{uid}}"><div class="chat-item-user-nickname col-xs-2"><a onclick="open_user_popup({{ user_id }})">{{user_nickname}}</a></div><div class="chat-content-datetime col-xs-10"><span class="chat-content">{{content}}</span><span class="chat-datetime">{{created_at}}</div></li>';
+            var template =
+                '<li class="chat-item row" style="color: #{{ user_chat_color }};" id="chat-{{ uid }}">' +
+                '<div class="chat-item-user-nickname col-xs-2">' +
+                '<a onclick="open_user_popup({{ user_id }})">{{ user_nickname }}</a>' +
+                '</div>' +
+                '<div class="chat-content-datetime col-xs-10">' +
+                '<span class="chat-content">{{ content }}</span>' +
+                '<span class="chat-datetime">{{ created_at }}</span>' +
+                '</div>' +
+                '</li>';
             var rendered = $(Mark.up(template, chat_item));
 
 
