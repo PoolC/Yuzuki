@@ -95,6 +95,7 @@ from operator import xor
 from os import urandom
 from struct import Struct
 
+
 def pbkdf2_bin(data, salt, iterations=1000, keylen=24, hashfunc=None):
     """Returns a binary digest for the PBKDF2 hash algorithm of `data`
     with the given `salt`.  It iterates `iterations` time and produces a
@@ -109,6 +110,7 @@ def pbkdf2_bin(data, salt, iterations=1000, keylen=24, hashfunc=None):
         h = mac.copy()
         h.update(x)
         return map(ord, h.digest())
+
     buf = []
     for block in xrange(1, -(-keylen // mac.digest_size) + 1):
         rv = u = _pseudorandom(salt + _pack_int(block))
@@ -127,6 +129,7 @@ HASH_FUNCTION = "sha256"  # Must be in hashlib.
 # python -m timeit -s "import passwords as p" "p.make_hash("something")"
 COST_FACTOR = 1000
 
+
 def pbkdf2(password):
     """Generate a random salt and return a new hash for the password."""
     if isinstance(password, unicode):
@@ -138,6 +141,7 @@ def pbkdf2(password):
         salt,
         b64encode(pbkdf2_bin(password, salt, COST_FACTOR, KEY_LENGTH,
                              getattr(hashlib, HASH_FUNCTION))))
+
 
 def pbkdf2_check(raw_password, encrypted_passwd):
     """Check a password against an existing hash."""
