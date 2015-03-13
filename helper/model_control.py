@@ -10,6 +10,7 @@ from model.article import Article
 from model.article_record import ArticleRecord
 from model.board import Board
 from model.chat import Chat
+from model.chat_kv import ChatKV
 from model.group import Group
 from model.reply import Reply
 from model.reply_record import ReplyRecord
@@ -144,3 +145,21 @@ def get_not_anybody_user(request):
         UserGroupAssociation.group_id == anybody_query).subquery()
     query = request.dbsession.query(User).filter(User.uid.notin_(assoc_query)).options(subqueryload(User.bunryu))
     return query.all()
+
+
+def get_chat_kv(request, key):
+    query = request.dbsession.query(ChatKV).filter(ChatKV.key == key).options(subqueryload(ChatKV.user))
+    result = query.all()
+    if result:
+        return result[0]
+    else:
+        return None
+
+
+def create_chat_kv(request, key, value):
+    kv = ChatKV()
+    kv.key = key
+    kv.value = linkify(clean(value, tags=list()), parse_email=True,
+                       callbacks=[callbacks.nofollow, callbacks.target_blank])
+    kv.user = request.user
+    return kv

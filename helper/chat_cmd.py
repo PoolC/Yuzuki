@@ -3,7 +3,7 @@ import re
 
 from model.user import User
 from helper.request import YuzukiRequest
-from helper.model_control import create_chat
+from helper.model_control import create_chat, get_chat_kv, create_chat_kv
 
 dbsession = YuzukiRequest.dbsession
 query = dbsession.query(User).filter(User.username == "chat_system")
@@ -40,10 +40,49 @@ class ChangeColor:
         return request.user, u"색상을 #%s로 변경합니다" % color.lower(), None
 
 
+class Get:
+    def __init__(self):
+        self.usage = u"(사용법: /get hello)"
+        self.man = u"저장한 key-value 값을 불러옵니다. " + self.usage
+
+    def process(self, request, cmd_arg):
+        key = cmd_arg.strip()
+        if not key:
+            return None, None, u"인자의 수가 올바르지 않습니다. " + self.usage
+        kv = get_chat_kv(request, key)
+        if kv:
+            value = kv.value
+            author = kv.user.nickname
+            message = u"[get] %s => %s (작성자: %s)" % (key, value, author)
+            return request.user, message, None
+        else:
+            message = u"[get] key '%s'가 존재하지 않습니다." % key
+            return chat_system, message, None
+
+
+class Set:
+    def __init__(self):
+        self.usage = u"(사용법: /set hello / Hello, World!)"
+        self.man = u"유용하게 사용할 key-value 값을 저장합니다. " + self.usage
+
+    def process(self, request, cmd_args):
+        args = cmd_args.split("/")
+        if (len(args) < 2):
+            return None, None, u"인자의 수가 올바르지 않습니다. " + self.usage
+        key = args[0].strip()
+        value = "/".join(args[1:]).strip()
+        kv = create_chat_kv(request, key, value)
+        request.dbsession.add(kv)
+        message = u"[set] key '%s'에 value '%s'가 저장되었습니다. (작성자: %s)" % (kv.key, kv.value, kv.user.nickname)
+        return chat_system, message, None
+
+
 class ChatCmdManager:
     def __init__(self):
         self.chat_cmd_map = {
             "color": ChangeColor(),
+            "get": Get(),
+            "set": Set(),
         }
         man = Man(self.chat_cmd_map)
         self.chat_cmd_map["man"] = man
