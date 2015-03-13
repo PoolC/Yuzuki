@@ -117,9 +117,9 @@ def create_reply(request, article, content):
     return reply
 
 
-def create_chat(request, content):
+def create_chat(request, content, speaker=None):
     chat = Chat()
-    chat.user = request.user
+    chat.user = speaker if speaker else request.user
     chat.content = linkify(clean(content, tags=list()), parse_email=True,
                            callbacks=[callbacks.nofollow, callbacks.target_blank])
     return chat
