@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-from sqlalchemy.dialects.drizzle.base import CHAR
 
 from model.user import User
 from helper.request import YuzukiRequest
