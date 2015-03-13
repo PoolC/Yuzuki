@@ -10,7 +10,7 @@
 {% block board_content %}
     {% for item in items %}
         <tr>
-            <td class="subject">
+            <td class="subject oneline">
                 <a href="/article/view?id={{ item["article_id"] }}">[{{ item["type"] }}] {{ item["content"] }}</a>
             </td>
             <td class="author"><a onclick="open_user_popup({{ item["user"].uid }})">{{ item["user"].nickname | e }}</a>

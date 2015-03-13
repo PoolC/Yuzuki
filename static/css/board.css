@@ -10,6 +10,16 @@
     width: 30%;
 }
 
+.fixed-table {
+    table-layout: fixed;
+}
+
+.oneline {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 @media (min-width: 768px) {
     .subject {
         width: 60%;
