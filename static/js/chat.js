@@ -5,9 +5,8 @@ var latest_uid = 1;
 
 var chat_input_handler = {
     init: function (params) {
-        this.text_complete_hidden = false;
         var mentionable_users = params["mentionable_users"] || [];
-        mentionable_users.push("전체");
+        mentionable_users.unshift("전체");
 
         $("#chat-input").textcomplete([
             {
@@ -18,44 +17,11 @@ var chat_input_handler = {
                     }));
                 },
                 replace: function (value) {
-                    return "@" + value;
+                    return "@" + value + " ";
                 },
                 index: 1
             }
-        ]).on({
-            'textComplete:show': $.proxy(this.on_text_complete_show, this),
-            'textComplete:hide': $.proxy(this.on_text_complete_hide, this),
-            keydown: $.proxy(this.on_keydown, this),
-            paste: $.proxy(this.on_paste, this)
-        });
-    },
-    on_text_complete_show: function (e) {
-        this.text_complete_hidden = false;
-    },
-    on_text_complete_hide: function (e) {
-        this.text_complete_hidden = true;
-    },
-    on_keydown: function (e) {
-        if (e.keyCode == 13 && this.text_complete_hidden) {
-            e.preventDefault();
-            this.submit();
-        }
-    },
-    on_paste: function (e) {
-        var textarea = $(this);
-        setTimeout(function () {
-            var sanitized = textarea.val().replace(/[\n\r]/g, '');
-            textarea.val(sanitized);
-        }, 100);
-    },
-    submit: function (e) {
-        var input_text = $("#chat-input").val();
-        if (this._is_input_present(input_text)) {
-            $("#chat-form").submit();
-        }
-    },
-    _is_input_present: function (input) {
-        return !(input.length === 0 || !input.trim());
+        ]);
     }
 };
 
