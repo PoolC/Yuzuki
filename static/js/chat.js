@@ -3,6 +3,28 @@ var chat_input = $("#chat-input");
 var message_ul = $("#chat-message-ul");
 var latest_uid = 1;
 
+var chat_input_handler = {
+    init: function (params) {
+        var mentionable_users = params["mentionable_users"] || [];
+        mentionable_users.unshift("전체");
+
+        $("#chat-input").textcomplete([
+            {
+                match: /\B@([-_a-zA-Z가-힣\d\(\)]*)$/,
+                search: function (term, callback) {
+                    callback($.map(mentionable_users, function (user) {
+                        return user.indexOf(term) === 0 ? user : null;
+                    }));
+                },
+                replace: function (value) {
+                    return "@" + value + " ";
+                },
+                index: 1
+            }
+        ]);
+    }
+};
+
 $("#chat-form").submit(function (e) {
     if (!submit_lock) {
         submit_lock = true;
