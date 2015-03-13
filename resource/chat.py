@@ -8,7 +8,7 @@ from twisted.web.server import NOT_DONE_YET
 
 from config import CHAT_PER_PAGE, CHAT_CONNECTION_INTERVAL
 from exception import BadRequest
-from helper.chat_cmd import process_cmd
+from helper.chat_cmd import ChatCmdManager
 from helper.model_control import get_chat_newer_than, get_chat_page, create_chat
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
@@ -76,6 +76,7 @@ class ChatMessageStream(YuzukiResource):
     def __init__(self):
         YuzukiResource.__init__(self)
         self.request_pool = list()
+        self.cmd_manager = ChatCmdManager()
 
     @need_anybody_permission
     def render_GET(self, request):
@@ -86,7 +87,7 @@ class ChatMessageStream(YuzukiResource):
     def render_POST(self, request):
         content = request.get_argument("content")
         if content.startswith("/"):
-            chat, err = process_cmd(request, content)
+            chat, err = self.cmd_manager.process_cmd(request, content)
             if err:
                 request.setResponseCode(BAD_REQUEST)
                 return err

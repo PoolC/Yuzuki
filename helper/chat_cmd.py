@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from sqlalchemy.dialects.drizzle.base import CHAR
 
 from model.user import User
 from helper.request import YuzukiRequest
@@ -10,7 +11,7 @@ query = dbsession.query(User).filter(User.username == "chat_system")
 chat_system = query.all()[0]
 
 
-class _man():
+class Man:
     def __init__(self, processor_map):
         self.processor_map = processor_map
         self.usage = u"(사용법 /man [" + ", ".join(processor_map.keys()) + "])"
@@ -27,7 +28,7 @@ class _man():
         return None, None, processor.man
 
 
-class change_color():
+class ChangeColor:
     def __init__(self):
         self.usage = u"(사용법: /color COFFEE)"
         self.man = u"메시지의 색상을 변경합니다. 6자리 16진수로 웹 코드를 사용합니다. " + self.usage
@@ -40,24 +41,24 @@ class change_color():
         return request.user, u"색상을 #%s로 변경합니다" % color.lower(), None
 
 
-_chat_cmd_map = {
-    "color": change_color(),
-}
+class ChatCmdManager:
+    def __init__(self):
+        self.chat_cmd_map = {
+            "color": ChangeColor(),
+        }
+        man = Man(self.chat_cmd_map)
+        self.chat_cmd_map["man"] = man
 
-_man_proc = _man(_chat_cmd_map)
-_chat_cmd_map["man"] = _man_proc
-
-
-def process_cmd(request, content):
-    cmd_parts = content.split(" ")
-    cmd_name = cmd_parts[0][1:]
-    cmd_arg = content[len(cmd_name) + 2:]
-    processor = _chat_cmd_map[cmd_name] if cmd_name in _chat_cmd_map else None
-    if not processor:
-        return None, u"그런 명령어는 존재하지 않습니다. /man 을 참조하세요."
-    speaker, message, err = processor.process(request, cmd_arg)
-    if not err:
-        chat = create_chat(request, message, speaker)
-        return chat, None
-    else:
-        return None, err
+    def process_cmd(self, request, content):
+        cmd_parts = content.split(" ")
+        cmd_name = cmd_parts[0][1:]
+        cmd_arg = content[len(cmd_name) + 2:]
+        processor = self.chat_cmd_map[cmd_name] if cmd_name in self.chat_cmd_map else None
+        if not processor:
+            return None, u"그런 명령어는 존재하지 않습니다. /man 을 참조하세요."
+        speaker, message, err = processor.process(request, cmd_arg)
+        if not err:
+            chat = create_chat(request, message, speaker)
+            return chat, None
+        else:
+            return None, err
