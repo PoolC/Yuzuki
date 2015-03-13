@@ -156,8 +156,14 @@ def get_chat_kv(request, key):
         return None
 
 
-def create_chat_kv(request, key, value):
-    kv = ChatKV()
+def set_chat_kv(request, key, value):
+    query = request.dbsession.query(ChatKV).filter(ChatKV.key == key).options(subqueryload(ChatKV.user))
+    result = query.all()
+    if result:
+        kv = result[0]
+    else:
+        kv = ChatKV()
+        request.dbsession.add(kv)
     kv.key = key
     kv.value = linkify(clean(value, tags=list()), parse_email=True,
                        callbacks=[callbacks.nofollow, callbacks.target_blank])
