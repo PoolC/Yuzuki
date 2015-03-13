@@ -5,10 +5,11 @@ var latest_uid = 1;
 
 var chat_input_handler = {
     init: function (params) {
+        this.chat_input = $("#chat-input");
         var mentionable_users = params["mentionable_users"] || [];
         mentionable_users.unshift("전체");
 
-        $("#chat-input").textcomplete([
+        this.chat_input.textcomplete([
             {
                 match: /\B@([-_a-zA-Z가-힣\d\(\)]*)$/,
                 search: function (term, callback) {
@@ -22,6 +23,49 @@ var chat_input_handler = {
                 index: 1
             }
         ]);
+    },
+    display_chat_input: function (show) {
+        var chat_input_with_submit = this.chat_input.parent();
+        if (show) {
+            chat_input_with_submit.show()
+        } else {
+            chat_input_with_submit.hide();
+        }
+    },
+};
+
+var chat_pagination_handler = {
+    init: function (params) {
+        this.page_total = params["page_total"] || 1;
+        this.current_page = params["current_page"] || 1;
+        this.max_visible = params["max_visible"] || 10;
+        this.leaps = params["leaps"] || false;
+        this.chat_pagination = $("#pagination");
+
+        this.chat_pagination.bootpag({
+            total: this.page_total,
+            page: this.current_page,
+            maxVisible: this.max_visible,
+            leaps: this.leaps,
+            renderNew: true
+        }).on({
+            page: $.proxy(this.load_chat_items, this)
+        });
+
+        this.chat_pagination.trigger("page", this.current_page);
+    },
+    load_chat_items: function (e, page) {
+        $.ajax("/chat/message/data", {
+            data: { page: page },
+            dataType: "json"
+        }).done(function (data) {
+            this.change_page(page);
+            process_chat_items(data);
+        }.bind(this));
+    },
+    change_page: function (page) {
+        this.current_page = page;
+        chat_input_handler.display_chat_input(page === 1);
     }
 };
 
@@ -98,6 +142,10 @@ var process_chat_items = function (data, enable_noti) {
 };
 
 var get_newer_chat = function (enable_noti) {
+    if (chat_pagination_handler.current_page != 1) {
+        return;
+    }
+
     return $.ajax("/chat/message/data?id=" + latest_uid, {
         dataType: "json"
     }).done(function (data) {

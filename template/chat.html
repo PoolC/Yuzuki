@@ -9,23 +9,21 @@
             <div id="chat-message row">
                 <ul id="chat-message-ul" class="list-unstyled"></ul>
             </div>
-            {% if not page or page == "1" %}
-                <div id="chat-input row">
-                    <form id="chat-form" action="/chat/message/stream" method="post">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="input-group">
-                                    <input id="chat-input" type="text" class="form-control"
-                                    name="content" autocomplete="off" required/>
-                                    <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-default">입력</button>
-                                    </div>
+            <div id="chat-input row">
+                <form id="chat-form" action="/chat/message/stream" method="post">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <input id="chat-input" type="text" class="form-control"
+                                name="content" autocomplete="off" required/>
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">입력</button>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-            {% endif %}
+                    </div>
+                </form>
+            </div>
             <div class="row">
                 <div class="outer-wrap">
                     <div id="pagination"></div>
@@ -57,32 +55,21 @@
     <script src="/static/js/jquery.textcomplete.min.js"></script>
     <script>
         prompted_error = false;
-        $("#pagination").bootpag({
-            total: {{ page_total }},
-            page: {{ page if page else 1 }},
-            maxVisible: 10,
-            leaps: false,
-            href: "/chat?page={{ "{{" }}number{{ "}}" }}"
-        });
+        chat_per_page = {{ CHAT_PER_PAGE }};
     </script>
-    <script>chat_per_page = {{ CHAT_PER_PAGE }};</script>
     <script src="/static/js/markup.min.js"></script>
     <script src="/static/js/chat.js"></script>
-    {% if not page or page == "1" %}
-        <script>
-            get_newer_chat(false);
-            wait_for_chat_stream();
-            chat_input_handler.init({
-                mentionable_users: {{ user_nicknames }}
-            });
-            $("#chat-input").focus();
-        </script>
-    {% else %}
-        <script>
-            $.ajax("/chat/message/data?page={{ page }}", {
-                dataType: "json"
-            }).done(process_chat_items);
-        </script>
-    {% endif %}
+    <script>
+    chat_input_handler.init({
+        mentionable_users: {{ user_nicknames }}
+    });
+    chat_pagination_handler.init({
+        page_total: {{ page_total }},
+        current_page: {{ page if page else 1 }},
+        max_visible: 10,
+        leaps: false
+    });
+    wait_for_chat_stream();
+    </script>
     <script src="/static/js/chatuser.js"></script>
 {% endblock %}
