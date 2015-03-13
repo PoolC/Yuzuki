@@ -1,5 +1,6 @@
 .article-subject {
     padding: 10px 45px;
+    word-break: break-word;
 }
 
 .meta {
@@ -67,6 +68,10 @@ form .reply-content-box {
 
 .reply-row > div.reply-content-box {
     width: 66%;
+}
+
+.reply-row > div.reply-content-box > span.reply-content {
+    word-break: break-all;
 }
 
 .reply-delete {

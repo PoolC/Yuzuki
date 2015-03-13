@@ -13,7 +13,7 @@
         </div>
         {% if items %}
             <div class="col-xs-12">
-                <table class="table">
+                <table class="table fixed-table">
                     <thead>
                     <tr>
                         {% block caption %}
@@ -27,7 +27,7 @@
                     {% block board_content %}
                         {% for article in items %}
                             <tr>
-                                <td class="subject">
+                                <td class="subject oneline">
                                     {% if article.reply_count %}
                                         <a href="/article/view?id={{ article.uid }}&page={{ page }}">{{ article.subject | e }}
                                             [{{ article.reply_count }}]</a>
