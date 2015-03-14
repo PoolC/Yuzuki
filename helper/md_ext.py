@@ -4,7 +4,7 @@ from markdown import Markdown
 markdown_extension_list = [
     "extra",
     "admonition",
-    "codehilite(css_class=highlight)",
+    "codehilite",
     "nl2br",
     "sane_lists",
     "toc",
