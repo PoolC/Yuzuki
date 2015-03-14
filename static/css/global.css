@@ -130,7 +130,6 @@ html * {
     background-image: none;
     border: 1px solid transparent;
     border-radius: 4px;
-    left: -25px;
 }
 
 .menu-toggle .icon-bar {
