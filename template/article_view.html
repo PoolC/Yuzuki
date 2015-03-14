@@ -41,7 +41,7 @@
         <div id="reply-wrap">
             <div id="reply-table" class="col-xs-12"></div>
             {% if request.user and request.user in article.board.comment_group.users %}
-                <form method="post" action="/reply/write" class="col-xs-12 reply-row">
+                <form method="post" action="/reply/write" class="col-xs-12 reply-row reply-form">
                     <input type="hidden" name="article_id" value="{{ article.uid }}"/>
 
                     <div class="reply-nickname col-xs-2">
@@ -55,7 +55,7 @@
                         {% if page %}
                             <input type="hidden" name="page" value="{{ page }}"/>
                         {% endif %}
-                        <input type="submit" value="완료" class="btn btn-default"/>
+                        <input name="submit" type="submit" value="완료" class="btn btn-default"/>
                     </div>
                 </form>
             {% endif %}
@@ -228,5 +228,8 @@
                 }
             }
         });
+        $(".reply-form").on("submit", function() {
+            this.submit.disabled = true;
+        })
     </script>
 {% endblock %}
