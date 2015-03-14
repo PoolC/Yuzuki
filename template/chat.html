@@ -50,6 +50,10 @@
         if (Notification.permission === "default") {
             $("#notification").append(noti_button);
         }
+        var chat_menu = $("#chat");
+        chat_menu.parent().addClass("in");
+        chat_menu.addClass("active");
+        chat_menu.append("<span class=\"sr-only\">현재 선택됨</span>");
     </script>
     <script src="/static/js/jquery.bootpag.js"></script>
     <script src="/static/js/jquery.textcomplete.min.js"></script>
