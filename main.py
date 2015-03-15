@@ -30,6 +30,6 @@ class Main(YuzukiResource):
             return self.page_not_found
         return resource
 
-
+logging.getLogger().info("Yuzuki started")
 endpoints.serverFromString(reactor, "tcp:8080").listen(YuzukiSite(Main()))
 reactor.run()

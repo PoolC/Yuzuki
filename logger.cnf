@@ -16,7 +16,7 @@ class=handlers.TimedRotatingFileHandler
 interval=midnight
 backupCount=5
 formatter=simple
-level=DEBUG
+level=INFO
 args=('log/yuzuki.log',)
 
 [handler_screen]
@@ -27,4 +27,4 @@ args=(sys.stdout,)
 
 [logger_root]
 level=NOTSET
-handlers=screen,file
+handlers=file
