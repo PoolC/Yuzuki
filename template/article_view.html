@@ -99,18 +99,20 @@
         }
 
         $("#article-delete").click(function () {
-            $.ajax("/article/delete?id={{ article.uid }}", {
-                type: "DELETE"
-            }).done(function () {
-                alert("success");
-                {% if page %}
-                    window.location.replace("/board?name={{ article.board.name }}&page={{ page }}");
-                {% else %}
-                    window.location.replace("/board?name={{ article.board.name }}");
-                {% endif %}
-            }).fail(function () {
-                alert("게시물 삭제에 실패하였습니다. 새로고침 후 다시 시도해주세요.");
-            });
+            if (confirm("게시물을 정말로 삭제하시겠습니까?")) {
+                $.ajax("/article/delete?id={{ article.uid }}", {
+                    type: "DELETE"
+                }).done(function () {
+                    alert("게시물 삭제에 성공했습니다.");
+                    {% if page %}
+                        window.location.replace("/board?name={{ article.board.name }}&page={{ page }}");
+                    {% else %}
+                        window.location.replace("/board?name={{ article.board.name }}");
+                    {% endif %}
+                }).fail(function () {
+                    alert("게시물 삭제에 실패하였습니다. 새로고침 후 다시 시도해주세요.");
+                });
+            }
         });
 
         var current_page = 1;
