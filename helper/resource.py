@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-from twisted.web.resource import Resource
+import logging
+
+from twisted.web.resource import NoResource, Resource
 from twisted.web.server import NOT_DONE_YET
 
-from exception import Unauthorized, Forbidden
+
+from exception import Forbidden, PageNotFound, Unauthorized
 from helper.permission import is_anybody
 
 
@@ -14,6 +17,20 @@ class YuzukiResource(Resource):
             return result
         request.finalize()
         return result.encode("UTF-8")
+
+    def getChildWithDefault(self, path, request):
+        resource = Resource.getChildWithDefault(self, path, request)
+
+        request.logger = logging.getLogger(resource.__class__.__module__)
+        log_str = request.method + " " + request.get_path_and_query()
+        if request.user:
+            log_str += " " + request.user.username
+        request.logger.info(log_str)
+
+        if isinstance(resource, NoResource):
+            raise PageNotFound()
+
+        return resource
 
 
 def need_admin_permission(f):

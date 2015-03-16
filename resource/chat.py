@@ -50,12 +50,6 @@ class Chat(YuzukiResource):
         }
         return render_template("chat.html", request, context)
 
-    def getChildWithDefault(self, path, request):
-        if path:
-            return YuzukiResource.getChildWithDefault(self, path, request)
-        else:
-            return self
-
 
 class ChatUser(YuzukiResource):
     isLeaf = False
