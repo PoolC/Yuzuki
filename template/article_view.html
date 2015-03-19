@@ -181,8 +181,9 @@
                     if (e.which === 13) {
                         refresh_table_with_page(current_page);
                         var $this = $(this);
+                        var reply_uid = $(this).parent().parent().attr("id").split("-")[1];
                         var reply_data = {
-                            id: $this.parent().parent().attr("id"),
+                            id: reply_uid,
                             content: $this.val()
                         };
                         $.ajax("/reply/edit", {
