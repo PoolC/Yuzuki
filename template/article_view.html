@@ -118,10 +118,10 @@
         var current_page = 1;
         var render_reply = function (reply) {
             var reply_el = $("<div></div>").attr("id", "reply-" + reply.uid).addClass("reply-row");
-            var nickname = $("<a></a>").attr("id", "user-" + reply.user_id)
-                    .addClass("reply-nickname").addClass("col-xs-2")
-                    .attr("onclick", "open_user_popup(" + reply.user_id + ")")
+            var nickname = $("<div></div>").addClass("reply-nickname").addClass("col-xs-2");
+            var nickname_content = $("<a></a>").attr("onclick", "open_user_popup(" + reply.user_id + ")")
                     .text(reply.user_nickname);
+            nickname.append(nickname_content);
             var content = $("<div></div>").addClass("reply-content-box").
                     addClass("col-xs-8").append("<span class=reply-content>" + reply.content + "</span>");
             {% if request.user and request.user.is_admin %}
@@ -175,7 +175,11 @@
                 var reply_content = content_box.find(".reply-content");
                 var text = reply_content.text();
                 content_box.find("span").hide();
-                content_box.append("<input class=\"reply-edit-input form-control\"type=\"text\"/>");
+                var input_box = $(document.createElement("input"));
+                input_box.addClass("reply-edit-input").addClass("form-control");
+                input_box.attr("type", "text");
+                input_box.val(text);
+                content_box.append(input_box);
                 editing = true;
                 $(".reply-edit-input").keypress(function (e) {
                     if (e.which === 13) {
