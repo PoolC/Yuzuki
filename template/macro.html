@@ -1,0 +1,14 @@
+{% macro select_tag(name, items, value, repr, required, selected=None) %}
+<select class="form-control" name="{{ name }}"{{ " required" if required else "" }}>
+        {% if not selected %}
+        <option value="" selected="selected">선택하세요</option>
+        {% endif %}
+        {% for item in items %}
+            {% if item == selected %}
+            <option value="{{ getattr(item, value) }}" selected="selected">{{ getattr(item, repr) }}</option>
+            {% else %}
+            <option value="{{ getattr(item, value) }}">{{ getattr(item, repr) }}</option>
+            {% endif %}
+        {% endfor %}
+</select>
+{% endmacro %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% import "macro.html" as macro %}
+{% block body %}
+<h1>게시판 정보 수정</h1>
+<p><a href="/admin">&lt;&lt; 돌아가기</a></p>
+
+<form method="post">
+<table class="table">
+<thead>
+    <tr>
+        <th></th>
+        <th>기존</th>
+        <th>변경</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>name</td>
+        <td>{{ board.name }}</td>
+        <td><input class="form-control" type="text" name="name" value="{{ board.name }}" required /></td>
+    </tr>
+    <tr>
+        <td>repr</td>
+        <td>{{ board.repr }}</td>
+        <td><input class="form-control" type="text" name="repr" value="{{ board.repr }}" required /></td>
+    </tr>
+    <tr>
+        <td>repr_order</td>
+        <td>{{ board.repr_order }}</td>
+        <td><input class="form-control" type="number" name="repr_order" value="{{ board.repr_order }}"/></td>
+    </tr>
+    <tr>
+        <td>classification</td>
+        <td>{{ board.classification }}</td>
+        <td><input class="form-control" type="text" name="classification" value="{{ board.classification or "" }}"/></td>
+    </tr>
+    <tr>
+        <td>description</td>
+        <td>{{ board.description }}</td>
+        <td><textarea class="form-control" name="description"></textarea></td>
+    </tr>
+    <tr>
+        <td>write_group</td>
+        <td>{{ board.write_group.name }}</td>
+        <td>{{ macro.select_tag("write_group_uid", groups, "uid", "name", True, board.write_group) }}</td>
+    </tr>
+    <tr>
+        <td>comment_group</td>
+        <td>{{ board.comment_group.name }}</td>
+        <td>{{ macro.select_tag("comment_group_uid", groups, "uid", "name", True, board.comment_group) }}</td>
+    </tr>
+    <tr>
+        <td>enabled</td>
+        <td>{{ board.enabled }}</td>
+        <td>
+            <select class="form-control" name="enabled" required>
+                {% if board.enabled %}
+                <option selected="selected">True</option>
+                <option>False</option>
+                {% else %}
+                <option>True</option>
+                <option selected="selected">False</option>
+                {% endif %}
+            </select>
+        </td>
+    </tr>
+</tbody>
+</table>
+<input class="btn btn-default pull-right" type="submit" value="수정" />
+</form>
+{% endblock %}

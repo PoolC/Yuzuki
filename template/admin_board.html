@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>게시판 관리</h1>
+    <p><a href="/admin/board">&lt;&lt; 돌아가기</a></p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>name</th>
+            <th>repr</th>
+            <th>repr_order</th>
+            <th>classification</th>
+            <th>description</th>
+            <th>write_group</th>
+            <th>comment_group</th>
+            <th>enabled</th>
+            <th>수정</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for board in boards %}
+            <tr>
+                <td>{{ board.name }}</td>
+                <td>{{ board.repr }}</td>
+                <td>{{ board.repr_order }}</td>
+                <td>{{ board.classification }}</td>
+                <td>{{ board.description }}</td>
+                <td>{{ board.write_group.name }}</td>
+                <td>{{ board.comment_group.name }}</td>
+                <td>{{ board.enabled }}</td>
+                <td><a href="/admin/board/edit?id={{ board.uid }}" class="btn btn-default">수정</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/admin/board/add" class="btn btn-default">게시판 추가</a></p>
+{% endblock %}

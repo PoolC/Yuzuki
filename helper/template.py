@@ -25,6 +25,7 @@ jinja2_env.globals = {
     "site_name": SITE_NAME,
     "datetime": datetime,
     "board_meta": board_meta,
+    "getattr": getattr,
 }
 
 
