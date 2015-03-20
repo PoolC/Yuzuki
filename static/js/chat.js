@@ -297,7 +297,6 @@ var chat_app = (function () {
                 var chat_data = data[i];
                 var item = new chat_item(chat_data);
 
-                console.log(enable_noti, item.contain_notification());
                 if (item.contain_notification() && enable_noti) {
                     this.notify_user(item);
                 }

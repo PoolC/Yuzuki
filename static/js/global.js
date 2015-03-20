@@ -13,7 +13,6 @@ $(window).resize(function () {
 });
 
 $(".menu-toggle").click(function () {
-    console.log("hey");
     if (mobileVisible) {
         $(".sidebar").hide(400);
         mobileVisible = false;
