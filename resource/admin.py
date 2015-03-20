@@ -24,7 +24,7 @@ class UserApprove(YuzukiResource):
     def render_GET(self, request):
         users = get_not_anybody_user(request)
         context = {"users": users}
-        return render_template("admin.html", request, context)
+        return render_template("admin_approve.html", request, context)
 
     @need_admin_permission
     def render_POST(self, request):
