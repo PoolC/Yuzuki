@@ -20,14 +20,11 @@ class Admin(YuzukiResource):
 
 
 class UserApprove(YuzukiResource):
-    def render_page(self, request):
+    @need_admin_permission
+    def render_GET(self, request):
         users = get_not_anybody_user(request)
         context = {"users": users}
         return render_template("admin.html", request, context)
-
-    @need_admin_permission
-    def render_GET(self, request):
-        return self.render_page(request)
 
     @need_admin_permission
     def render_POST(self, request):
@@ -41,4 +38,5 @@ class UserApprove(YuzukiResource):
         anybody = query.one()
         anybody.users.append(user)
         request.dbsession.commit()
-        return self.render_page(request)
+        request.redirect("/admin/approve")
+        return "redirect"
