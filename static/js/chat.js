@@ -191,7 +191,11 @@ var chat_app = (function () {
                 $("<div>", {
                     class: "chat-item-user-nickname col-xs-2",
                     text: this.user_nickname,
-                    on: { click: function (e) { open_user_popup(this.user_id); }.bind(this) }
+                    on: {
+                        click: function (e) {
+                            open_user_popup(this.user_id);
+                        }.bind(this)
+                    }
                 })
             ).append(
                 $("<div>", {
@@ -216,7 +220,7 @@ var chat_app = (function () {
                 return content === "@" + this.user_nickname || content === "@전체";
             });
         }
-    }
+    };
 
     var chat_item_list = {
         init: function (app, params) {
@@ -232,7 +236,7 @@ var chat_app = (function () {
                 this.element.children().first().remove();
             }
         }
-    }
+    };
 
 
     var chat_form = {
@@ -270,7 +274,7 @@ var chat_app = (function () {
             this.app.chat_item_list.append(item);
             this.submit_lock = false;
         }
-    }
+    };
 
     var chat_app = {
         init: function (params) {
