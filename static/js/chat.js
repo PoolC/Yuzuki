@@ -203,7 +203,7 @@ var chat_app = (function () {
                 }).append(
                     $("<span>", {
                         class: "chat-content",
-                        text: this.content
+                        html: this.content
                     })
                 ).append(
                     $("<span>", {
