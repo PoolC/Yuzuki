@@ -154,7 +154,8 @@ class YuzukiRequest(Request):
                 self.setResponseCode(INTERNAL_SERVER_ERROR)
                 body = generate_error_message(self, INTERNAL_SERVER_ERROR, u"서버 에러가 발생하였습니다.")
             if issubclass(reason.type, SQLAlchemyError):
-                self.dbsession.rollback()
+                YuzukiRequest.dbsession.close()
+                YuzukiRequest.dbsession = DatabaseHelper.session()
             body = body.encode("UTF-8")
             self.setHeader(b'content-type', b"text/html")
             self.setHeader(b'content-length', intToBytes(len(body)))
