@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
-from exception import BadRequest, Unauthorized, Forbidden
+from exception import BadRequest, Unauthorized
 from helper.model_control import get_article, get_reply_page, get_reply, delete_reply, edit_reply, create_reply
 from helper.permission import is_anybody, can_comment, is_author_or_admin, is_author
 from helper.resource import YuzukiResource, need_anybody_permission
@@ -36,7 +36,7 @@ class ReplyWrite(YuzukiResource):
         article_id = request.get_argument("article_id")
         article = get_article(request, article_id)
         if not can_comment(request, article.board):
-            raise Forbidden()
+            raise Unauthorized()
         content = request.get_argument("content")
         # no empty reply
         if content.strip():
@@ -63,7 +63,7 @@ class ReplyDelete(YuzukiResource):
             request.dbsession.commit()
             return "success"
         else:
-            raise Forbidden()
+            raise Unauthorized()
 
 
 class ReplyEdit(YuzukiResource):
@@ -80,4 +80,4 @@ class ReplyEdit(YuzukiResource):
             else:
                 raise BadRequest()
         else:
-            raise Forbidden()
+            raise Unauthorized()

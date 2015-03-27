@@ -4,8 +4,7 @@ import logging
 from twisted.web.resource import NoResource, Resource
 from twisted.web.server import NOT_DONE_YET
 
-
-from exception import Forbidden, PageNotFound, Unauthorized
+from exception import PageNotFound, Unauthorized
 from helper.permission import is_anybody
 
 
@@ -35,10 +34,8 @@ class YuzukiResource(Resource):
 
 def need_admin_permission(f):
     def _render_wrapper(resource, request):
-        if not request.user:
+        if not request.user or not request.user.is_admin:
             raise Unauthorized()
-        if not request.user.is_admin:
-            raise Forbidden()
         else:
             return f(resource, request)
 

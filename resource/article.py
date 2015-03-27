@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from config import REPLY_PER_PAGE
-from exception import BadRequest, Unauthorized, Forbidden
+from exception import BadRequest, Unauthorized
 from helper.model_control import get_board, get_article, delete_article, edit_article, create_article
 from helper.permission import can_write, is_anybody, is_author, is_author_or_admin
 from helper.resource import YuzukiResource, need_anybody_permission
@@ -43,7 +43,7 @@ class ArticleWrite(YuzukiResource):
         board_name = request.get_argument("name")
         board = get_board(request, board_name)
         if not can_write(request, board):
-            raise Forbidden()
+            raise Unauthorized()
         context = {"board": board}
         return render_template("article_write.html", request, context)
 
@@ -52,7 +52,7 @@ class ArticleWrite(YuzukiResource):
         board_name = request.get_argument("name")
         board = get_board(request, board_name)
         if not can_write(request, board):
-            raise Forbidden()
+            raise Unauthorized()
         subject = request.get_argument("subject")
         content = request.get_argument("content")
         # no empty subject
@@ -76,7 +76,7 @@ class ArticleDelete(YuzukiResource):
             request.dbsession.commit()
             return "delete success"
         else:
-            raise Forbidden()
+            raise Unauthorized()
 
 
 class ArticleEdit(YuzukiResource):
@@ -88,7 +88,7 @@ class ArticleEdit(YuzukiResource):
             context = {"article": article}
             return render_template("article_edit.html", request, context)
         else:
-            raise Forbidden()
+            raise Unauthorized()
 
     @need_anybody_permission
     def render_POST(self, request):
@@ -106,4 +106,4 @@ class ArticleEdit(YuzukiResource):
             else:
                 raise BadRequest()
         else:
-            raise Forbidden()
+            raise Unauthorized()
