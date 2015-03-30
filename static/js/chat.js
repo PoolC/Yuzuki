@@ -81,8 +81,10 @@ var chat_app = (function () {
                 {
                     match: /\B@([-_a-zA-Z가-힣\d\(\)]*)$/,
                     search: function (term, callback) {
+                        var downcased_term = term.toLowerCase();
                         callback($.map(mentionable_users, function (user) {
-                            return user.indexOf(term) === 0 ? user : null;
+                            var downcased_user = user.toLowerCase();
+                            return downcased_user.indexOf(downcased_term) === 0 ? user : null;
                         }));
                     },
                     replace: function (value) {
