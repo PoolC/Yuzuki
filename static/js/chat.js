@@ -73,6 +73,7 @@ var chat_app = (function () {
             this.app = app;
             this.element = $("#chat-input");
             this.chat_histories = chat_histories.init();
+            this.on_textcomplete = false;
 
             var mentionable_users = params["mentionable_users"] || [];
             mentionable_users.unshift("전체");
@@ -94,16 +95,24 @@ var chat_app = (function () {
                 }
             ]);
 
+            this.element.on("textComplete:show", $.proxy(function (e) {
+                this.on_textcomplete = true;
+            }, this));
+            this.element.on("textComplete:hide", $.proxy(function (e) {
+                this.on_textcomplete = false;
+            }, this));
             this.element.on("keydown", $.proxy(this.on_keydown, this));
 
             return this;
         },
         on_keydown: function (e) {
-            if (e.keyCode === KEY_CODES["UP_ARROW"]) {
-                this.set_text(this.chat_histories.next());
-            }
-            else if (e.keyCode === KEY_CODES["DOWN_ARROW"]) {
-                this.set_text(this.chat_histories.prev());
+            if (!this.on_textcomplete) {
+                if (e.keyCode === KEY_CODES["UP_ARROW"]) {
+                    this.set_text(this.chat_histories.next());
+                }
+                else if (e.keyCode === KEY_CODES["DOWN_ARROW"]) {
+                    this.set_text(this.chat_histories.prev());
+                }
             }
         },
         display_chat_input: function (show) {
