@@ -2,7 +2,12 @@
 from markdown import Markdown
 
 markdown_extension_list = [
-    "extra",
+    "abbr",
+    "attr_list",
+    "def_list",
+    "fenced_code",
+    "tables",
+    "smart_strong",
     "admonition",
     "codehilite",
     "nl2br",
