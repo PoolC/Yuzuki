@@ -73,8 +73,8 @@ class ProfileEdit(YuzukiResource):
         if pd_phone:
             request.user.pd_phone = pd_phone
         if pd_bio:
-            request.user.pd_bio = linkify(markdown_convert(pd_bio), parse_email=True,
-                                          callbacks=[callbacks.nofollow, callbacks.target_blank])
+            request.user.pd_bio = markdown_convert(linkify(pd_bio, parse_email=True,
+                                                           callbacks=[callbacks.nofollow, callbacks.target_blank]))
         request.dbsession.commit()
         request.redirect("/profile/view")
         return "profile edit success"

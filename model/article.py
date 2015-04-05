@@ -34,5 +34,5 @@ class Article(Base):
 
     def change_content(self, content):
         self.content = content
-        self.compiled_content = linkify(markdown_convert(content), parse_email=True,
-                                        callbacks=[callbacks.nofollow, callbacks.target_blank])
+        self.compiled_content = markdown_convert(linkify(content, parse_email=True,
+                                                         callbacks=[callbacks.nofollow, callbacks.target_blank]))
