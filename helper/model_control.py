@@ -52,6 +52,8 @@ def edit_article(request, article, subject, content):
     article_record = ArticleRecord(article)
     article.subject = subject
     article.change_content(content)
+    article.is_modified = True
+    article.last_modified = datetime.now()
     request.dbsession.add(article_record)
 
 
