@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import os
 from logging.config import fileConfig
 
 ARTICLE_PER_PAGE = 15
@@ -15,4 +16,6 @@ REDIS_CONNECT_ARGS = {
     "db": 0,
 }
 logger = logging.getLogger()
+if not os.path.exists("log"):
+    os.mkdir("log")
 fileConfig("logger.cnf")
