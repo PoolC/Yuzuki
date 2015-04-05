@@ -1,1 +1,1 @@
-poolc ALL=(root) NOPASSWD: /usr/sbin/service yuzuki start, /usr/sbin/service yuzuki stop, /usr/sbin/service yuzuki restart, /usr/sbin/service yuzuki status
+yuzuki ALL=(root) NOPASSWD: /usr/sbin/service yuzuki start, /usr/sbin/service yuzuki stop, /usr/sbin/service yuzuki restart, /usr/sbin/service yuzuki status
