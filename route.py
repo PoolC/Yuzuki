@@ -16,6 +16,7 @@ from resource.profile import Profile
 from resource.register import Register
 from resource.reply import ReplyParent
 from resource.search import Search
+from resource.upload import Upload
 from resource.welcome import Welcome
 
 ROUTE = {
@@ -36,5 +37,6 @@ ROUTE = {
     "robots.txt": File("static/etc/robots.txt"),
     "static": File("static"),
     "search": Search(),
+    "upload": Upload(),
     "welcome": Welcome(),
 }

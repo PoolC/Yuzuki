@@ -18,4 +18,6 @@ REDIS_CONNECT_ARGS = {
 logger = logging.getLogger()
 if not os.path.exists("log"):
     os.mkdir("log")
+if not os.path.exists("upload"):
+    os.mkdir("upload")
 fileConfig("logger.cnf")

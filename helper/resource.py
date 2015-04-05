@@ -21,7 +21,7 @@ class YuzukiResource(Resource):
         resource = Resource.getChildWithDefault(self, path, request)
 
         request.logger = logging.getLogger(resource.__class__.__module__)
-        log_str = request.method + " " + request.get_path_and_query()
+        log_str = request.method + " " + request.path
         if request.user:
             log_str += " " + request.user.username
         request.logger.info(log_str)
