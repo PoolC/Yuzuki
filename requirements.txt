@@ -1,8 +1,8 @@
-Jinja2==2.7.3
+Jinja2
 #MySQL-python
 SQLAlchemy==0.9.8
 Twisted==14.0.2
 redis
-Markdown==2.5.2
+Markdown
 git+https://github.com/TintypeMolly/bleach@124-parse-email-fix
-Pygments==2.0.2
+Pygments
