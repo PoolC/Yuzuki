@@ -1,6 +1,6 @@
 Jinja2
 #MySQL-python
-SQLAlchemy==0.9.8
+SQLAlchemy==1.0.0b5
 Twisted==14.0.2
 redis
 Markdown
