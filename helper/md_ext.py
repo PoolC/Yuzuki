@@ -14,4 +14,5 @@ md = Markdown(extensions=markdown_extension_list)
 
 
 def markdown_convert(source):
+    md.reset()
     return md.convert(source)

@@ -3,6 +3,6 @@ Jinja2
 SQLAlchemy==1.0.0b5
 Twisted==15.0.0
 redis
-git+https://github.com/TintypeMolly/Python-Markdown@fix-reset-footnotes
+Markdown
 git+https://github.com/TintypeMolly/bleach@124-parse-email-fix
 Pygments
