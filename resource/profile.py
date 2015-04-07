@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import re
 
-from bleach import linkify, callbacks
 from twisted.web.http import BAD_REQUEST
 
 from exception import Unauthorized, BadRequest
-from helper.md_ext import markdown_convert
+from helper.content import markdown_and_linkify
 from helper.pbkdf2 import pbkdf2
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
@@ -73,8 +72,8 @@ class ProfileEdit(YuzukiResource):
         if pd_phone:
             request.user.pd_phone = pd_phone
         if pd_bio:
-            request.user.pd_bio = markdown_convert(linkify(pd_bio, parse_email=True,
-                                                           callbacks=[callbacks.nofollow, callbacks.target_blank]))
+            request.user.pd_bio = markdown_and_linkify(pd_bio)
+
         request.dbsession.commit()
         request.redirect("/profile/view")
         return "profile edit success"

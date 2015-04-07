@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from bleach import linkify, callbacks
+
 from sqlalchemy import Boolean, Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
-from helper.md_ext import markdown_convert
+from helper.content import markdown_and_linkify
 from model.base import Base
 
 
@@ -34,5 +34,4 @@ class Article(Base):
 
     def change_content(self, content):
         self.content = content
-        self.compiled_content = markdown_convert(linkify(content, parse_email=True,
-                                                         callbacks=[callbacks.nofollow, callbacks.target_blank]))
+        self.compiled_content = markdown_and_linkify(content)

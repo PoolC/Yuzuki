@@ -2,11 +2,10 @@
 from datetime import datetime
 from hashlib import sha256
 
-from bleach import linkify, callbacks
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, ForeignKey, CHAR
 from sqlalchemy.orm import relationship
 
-from helper.md_ext import markdown_convert
+from helper.content import markdown_and_linkify
 from helper.pbkdf2 import pbkdf2, pbkdf2_check
 from model.base import Base
 
@@ -39,9 +38,7 @@ class User(Base):
         self.pd_address = pd_address
         self.pd_phone = pd_phone
         self.pd_bunryu = pd_bunryu
-        self.pd_bio = markdown_convert(linkify(pd_bio, parse_email=True,
-                                               callbacks=[callbacks.nofollow,
-                                                          callbacks.target_blank])) if pd_bio else pd_bio
+        self.pd_bio = markdown_and_linkify(pd_bio) if pd_bio else pd_bio
 
     def check_password(self, password):
         return pbkdf2_check(password, self.password)
