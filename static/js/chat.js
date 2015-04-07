@@ -68,6 +68,77 @@ var chat_app = (function () {
         }
     };
 
+    var normalize_name = (function() {
+
+	/**
+	 * constants
+	 */
+	var KOREAN_BEGIN_CODE = 0xAC00;
+	var KOREAN_END_CODE = 0xD7A3;
+	var KOREAN_FINAL_COUNT = 28;
+	var KOREAN_MEDIAL_COUNT = 21;
+
+	/**
+	 * Split Korean character into 'Hangul Compatibility Jamo' characters
+	 * for 2-bulsik, not identify initial and final.
+	 */
+	var split_korean_character = function(char) {
+	    var InitialCharSet = new Array (
+		0x3131, 0x3132, 0x3134, 0x3137, 0x3138, 0x3139,
+		0x3141, 0x3142, 0x3143, 0x3145, 0x3146, 0x3147,
+		0x3148, 0x3149, 0x314a, 0x314b, 0x314c, 0x314d,
+		0x314e
+	    );
+	    var MedialCharSet = new Array (
+		0x314f, 0x3150, 0x3151, 0x3152, 0x3153, 0x3154,
+		0x3155, 0x3156, 0x3157, 0x3158, 0x3159, 0x315a,
+		0x315b, 0x315c, 0x315d, 0x315e, 0x315f, 0x3160,
+		0x3161, 0x3162, 0x3163
+	    );
+	    var FinalCharSet = new Array (
+		0x0000, 0x3131, 0x3132, 0x3133, 0x3134, 0x3135,
+		0x3136, 0x3137, 0x3139, 0x313a, 0x313b, 0x313c,
+		0x313d, 0x313e, 0x313f, 0x3140, 0x3141, 0x3142,
+		0x3144, 0x3145, 0x3146, 0x3147, 0x3148, 0x314a,
+		0x314b, 0x314c, 0x314d, 0x314e
+	    );
+	    
+	    var splitted = new Array();
+	    var InitialIndex, MedialIndex;
+
+	    char -= KOREAN_BEGIN_CODE;
+	    InitialIndex = Math.floor(char / (KOREAN_MEDIAL_COUNT * KOREAN_FINAL_COUNT));
+	    char = char % (KOREAN_MEDIAL_COUNT * KOREAN_FINAL_COUNT);
+	    MidIndex = Math.floor(char / KOREAN_FINAL_COUNT);
+	    char = char % KOREAN_FINAL_COUNT;
+	    splitted.push(String.fromCharCode(InitialCharSet[InitialIndex]));
+	    splitted.push(String.fromCharCode(MedialCharSet[MidIndex]));
+	    if (char != 0x0000) {
+		splitted.push(String.fromCharCode(FinalCharSet[char]));
+	    }
+	    return splitted;
+	};
+
+	/**
+	 * Normalize name for auto complete
+	 */
+	return function(str) {
+
+	    str = str.toLowerCase();
+	    ret = "";
+	    for (var i = 0; i < str.length; i++) {
+		var char = str.charCodeAt(i);
+		if (char >= KOREAN_BEGIN_CODE && char <= KOREAN_END_CODE) {
+		    ret = ret.concat(split_korean_character(char));
+		} else {
+		    ret = ret.concat(str.charAt(i));
+		}
+	    }
+
+	    return ret;
+	}
+    })();
+
     var chat_input_box = {
         init: function (app, params) {
             this.app = app;
@@ -80,12 +151,12 @@ var chat_app = (function () {
 
             this.element.textcomplete([
                 {
-                    match: /\B@([-_a-zA-Z가-힣\d\(\)]*)$/,
+                    match: /\B@([-_a-zA-Z가-힣ㄱ-ㅎ\d\(\)]*)$/,
                     search: function (term, callback) {
-                        var downcased_term = term.toLowerCase();
+                        var normalized_term = normalize_name(term);
                         callback($.map(mentionable_users, function (user) {
-                            var downcased_user = user.toLowerCase();
-                            return downcased_user.indexOf(downcased_term) === 0 ? user : null;
+                            var normalized_user = normalize_name(user);
+                            return normalized_user.indexOf(normalized_term) === 0 ? user : null;
                         }));
                     },
                     replace: function (value) {
