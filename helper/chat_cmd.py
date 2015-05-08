@@ -2,12 +2,14 @@
 import re
 
 from model.user import User
-from helper.request import YuzukiRequest
 from helper.model_control import create_chat, get_chat_kv, set_chat_kv, search_chat_kv_by_key, search_chat_kv_by_value
 
-dbsession = YuzukiRequest.dbsession
-query = dbsession.query(User).filter(User.username == "chat_system")
-chat_system = query.all()[0]
+
+def get_chat_system(request):
+    dbsession = request.dbsession
+    query = dbsession.query(User).filter(User.username == "chat_system")
+    chat_system = query.all()[0]
+    return chat_system
 
 
 class Man:
@@ -56,7 +58,7 @@ class Get:
             return request.user, message, None
         else:
             message = u"[get] key '%s'가 존재하지 않습니다." % key
-            return chat_system, message, None
+            return get_chat_system(request), message, None
 
 
 class Set:
@@ -66,13 +68,13 @@ class Set:
 
     def process(self, request, cmd_args):
         args = cmd_args.split("/")
-        if (len(args) < 2):
+        if len(args) < 2:
             return None, None, u"인자의 수가 올바르지 않습니다. " + self.usage
         key = args[0].strip()
         value = "/".join(args[1:]).strip()
         kv = set_chat_kv(request, key, value)
         message = u"[set] key '%s'에 value '%s'가 저장되었습니다. (작성자: %s)" % (kv.key, kv.value, kv.user.nickname)
-        return chat_system, message, None
+        return get_chat_system(request), message, None
 
 
 class KeySearch:
@@ -87,11 +89,11 @@ class KeySearch:
         kv_list = search_chat_kv_by_key(request, search_word)
         if not kv_list:
             message = u"%s님의 key에 대한 '%s' 검색 결과가 존재하지 않습니다." % (request.user.nickname, search_word)
-            return chat_system, message, None
+            return get_chat_system(request), message, None
         else:
             search_result = ", ".join([kv.key for kv in kv_list])
             message = u"%s님의 key에 대한 '%s' 검색 결과: [%s]" % (request.user.nickname, search_word, search_result)
-            return chat_system, message, None
+            return get_chat_system(request), message, None
 
 
 class ValueSearch:
@@ -106,11 +108,11 @@ class ValueSearch:
         kv_list = search_chat_kv_by_value(request, search_word)
         if not kv_list:
             message = u"%s님의 value에 대한 '%s' 검색 결과가 존재하지 않습니다." % (request.user.nickname, search_word)
-            return chat_system, message, None
+            return get_chat_system(request), message, None
         else:
             search_result = ", ".join([kv.key for kv in kv_list])
             message = u"%s님의 value에 대한 '%s' 검색 결과: [%s]" % (request.user.nickname, search_word, search_result)
-            return chat_system, message, None
+            return get_chat_system(request), message, None
 
 
 class ChatCmdManager:
