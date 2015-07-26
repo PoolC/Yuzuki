@@ -9,22 +9,12 @@ from helper.permission import is_anybody
 from localization import SITE_NAME
 from model.board import Board
 
-dbsession = DatabaseHelper.session()
-board_meta = dict()
-query = dbsession.query(Board).filter(Board.classification == "somoim").filter(Board.enabled).order_by(
-    Board.repr_order.asc())
-board_meta["somoim"] = [(board.name, board.repr) for board in query.all()]
-query = dbsession.query(Board).filter(Board.classification == "normal").filter(Board.enabled).order_by(
-    Board.repr_order.asc())
-board_meta["normal"] = [(board.name, board.repr) for board in query.all()]
-dbsession.close()
 
 jinja2_env = Environment(loader=FileSystemLoader("template", encoding="utf-8"),
                          extensions=['jinja2.ext.with_'])
 jinja2_env.globals = {
     "site_name": SITE_NAME,
     "datetime": datetime,
-    "board_meta": board_meta,
     "getattr": getattr,
 }
 
@@ -36,6 +26,12 @@ def get_template(name, parent=None, glob=None):
 def render_template(name, request, context=None):
     if context == None:
         context = dict()
+    board_query = request.dbsession.query(Board).filter(Board.enabled).order_by(Board.repr_order.asc())
+    board_meta = {
+        "somoim": [(board.name, board.repr) for board in board_query.filter(Board.classification == "somoim")],
+        "normal": [(board.name, board.repr) for board in board_query.filter(Board.classification == "normal")],
+    }
+    context["board_meta"] = board_meta
     context["request"] = request
     context["is_anybody"] = is_anybody(request)
     return get_template(name).render(context)
