@@ -26,7 +26,7 @@ def markdown_and_linkify(source):
 
 
 def target_blank_except_footnote(attrs, new=False):
-    if "class" in attrs and attrs["class"] == "footnote-backref":
+    if "class" in attrs and attrs["class"] in ("footnote-backref", "footnote-ref"):
         return attrs
     else:
         return callbacks.target_blank(attrs, new)
