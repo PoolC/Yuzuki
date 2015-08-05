@@ -325,12 +325,19 @@ var chat_app = (function () {
         init: function (app, params) {
             this.app = app;
             this.element = $("#chat-form");
+            this.input = this.element.find('input[name="content"]');
             this.submit_lock = false;
             this.element.on('submit', $.proxy(this.on_submit, this));
         },
         on_submit: function (e) {
             e.preventDefault();
 
+            if (this.input.val().length == 0) {
+                $("<div title=\"에러\">내용을 입력해주세요</div>").dialog({
+                    modal: true
+                });
+                return;
+            }
             if (!this.submit_lock) {
                 this.submit_lock = true;
                 $.ajax("/chat/message/stream", {
