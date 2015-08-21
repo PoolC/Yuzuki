@@ -330,13 +330,12 @@ var chat_app = (function () {
             this.element.on('submit', $.proxy(this.on_submit, this));
         },
         on_submit: function (e) {
-            e.preventDefault();
-
             if (this.input.val().length == 0) {
                 $("<div title=\"에러\">내용을 입력해주세요.</div>").dialog({
                     modal: true
                 });
-                return;
+
+                return false;
             }
             if (!this.submit_lock) {
                 this.submit_lock = true;
@@ -347,6 +346,7 @@ var chat_app = (function () {
                     error: $.proxy(this.on_error, this)
                 });
             }
+
             return false;
         },
         on_success: function () {
