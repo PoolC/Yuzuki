@@ -333,7 +333,7 @@ var chat_app = (function () {
             e.preventDefault();
 
             if (this.input.val().length == 0) {
-                $("<div title=\"에러\">내용을 입력해주세요</div>").dialog({
+                $("<div title=\"에러\">내용을 입력해주세요.</div>").dialog({
                     modal: true
                 });
                 return;
