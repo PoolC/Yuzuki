@@ -21,7 +21,13 @@
 
 <p class="foo">{{ detail }}</p>
 
-<p class="foo"><a href="/">홈페이지로</a>{% if not request.user %}&nbsp; &nbsp;<a href="/login?redirect={{ request.uri }}">로그인</a>{% endif %}</p>
+<p class="foo">
+    <a href="/">홈페이지로</a>
+    {%- if not request.user %}
+    &nbsp; &nbsp;
+    <a href="/login?redirect={{ request.uri }}">로그인</a>
+    {%- endif %}
+</p>
 <img class="foo" src="/static/img/illya.jpg"/>
 </body>
 </html>
