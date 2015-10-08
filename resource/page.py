@@ -24,7 +24,7 @@ class Page(YuzukiResource):
             content = StringIO()
             md.convertFile(f, content, "utf-8")
             context = {
-                "content": content.getvalue(),
+                "content": content.getvalue().decode("utf-8"),
             }
             return render_template("page.html", request, context)
 
