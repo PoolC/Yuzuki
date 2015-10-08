@@ -4,10 +4,9 @@ from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from twisted.web.http import RESPONSES
 
-from helper.database import DatabaseHelper
+from side_menu_conf import SIDE_MENU
 from helper.permission import is_anybody
 from localization import SITE_NAME
-from model.board import Board
 
 
 jinja2_env = Environment(loader=FileSystemLoader("template", encoding="utf-8"),
@@ -26,12 +25,8 @@ def get_template(name, parent=None, glob=None):
 def render_template(name, request, context=None):
     if context == None:
         context = dict()
-    board_query = request.dbsession.query(Board).filter(Board.enabled).order_by(Board.repr_order.asc())
-    board_meta = {
-        "somoim": [(board.name, board.repr) for board in board_query.filter(Board.classification == "somoim")],
-        "normal": [(board.name, board.repr) for board in board_query.filter(Board.classification == "normal")],
-    }
-    context["board_meta"] = board_meta
+
+    context["side_menu"] = SIDE_MENU
     context["request"] = request
     context["is_anybody"] = is_anybody(request)
     return get_template(name).render(context)

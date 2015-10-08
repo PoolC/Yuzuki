@@ -55,35 +55,11 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li id="about"><a href="/about">소개</a></li>
-                <li id="notice"><a href="/board?name=notice">공지사항</a></li>
-                {% if is_anybody %}
-                    <li id="new"><a href="/new">새 글</a></li>
-                    <li id="free"><a href="/board?name=free">자유게시판</a></li>
-                    <li>
-                        <a data-toggle="collapse" data-target="#somoim">소모임 게시판</a>
-                        <ul id="somoim" class="nav nav-collapse collapse">
-                            {% for board in board_meta["somoim"] %}
-                                <li id="{{ board[0] }}"><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li>
-                        <a data-toggle="collapse" data-target="#normal">일반 게시판</a>
-                        <ul id="normal" class="nav nav-collapse collapse">
-                            {% for board in board_meta["normal"] %}
-                                <li id="{{ board[0] }}"><a href="/board?name={{ board[0] }}">{{ board[1] }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li id="chat"><a href="/chat">채팅방</a></li>
-                    <li>
-                    <a href="https://github.com/PoolC/Yuzuki/issues" target="_blank">홈페이지 개선</a>
-                    <iframe class="fork-button pull-right" src="https://ghbtns.com/github-btn.html?user=PoolC&repo=Yuzuki&type=fork&count=true" frameborder="0" scrolling="0" width="80px" height="20px"></iframe>
-                    </li>
-                    {% if request.user.is_admin %}
-                    <li><a href="/admin">관리자 메뉴</a></li>
-                    {% endif %}
+                {% for menu_el in side_menu %}
+                    {{ menu_el.render(is_anybody) }}
+                {% endfor %}
+                {% if request.user.is_admin %}
+                <li><a href="/admin">관리자 메뉴</a></li>
                 {% endif %}
             </ul>
         </div>
