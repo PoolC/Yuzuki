@@ -1,12 +1,6 @@
-### This is about page sample
+# It Works!
 
-1. sample list 1
-2. sample list 2
+**This is sample.**
 
-**haha**
-
-------------------------
-
-trololoololololoololo
-
-hehe
+This page is default about page. Edit ***page/about*** file please.
+This page is written in [markdown](https://guides.github.com/features/mastering-markdown/).
