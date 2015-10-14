@@ -2,7 +2,7 @@
 from jinja2 import escape
 from sqlalchemy.orm import subqueryload
 
-from config import ARTICLE_PER_PAGE
+from config.config import ARTICLE_PER_PAGE
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
 from model.article import Article

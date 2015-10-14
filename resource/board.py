@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from config import ARTICLE_PER_PAGE
+from config.config import ARTICLE_PER_PAGE
 from exception import Unauthorized
 from helper.model_control import get_board, get_article_page
 from helper.permission import is_anybody, can_write

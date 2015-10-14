@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from config import REPLY_PER_PAGE
+import re
+
+from config.config import REPLY_PER_PAGE
 from exception import BadRequest, Unauthorized
 from helper.model_control import get_board, get_article, delete_article, edit_article, create_article
 from helper.permission import can_write, is_anybody, is_author, is_author_or_admin
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
-import re
 
 article_content_re = re.compile(r'&(#\d+|[a-z]+);')
 '''

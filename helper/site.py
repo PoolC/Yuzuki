@@ -4,7 +4,7 @@ import json
 import redis
 from twisted.web.server import Site, Session
 
-from config import REDIS_CONNECT_ARGS, USE_REDIS
+from config.config import REDIS_CONNECT_ARGS, USE_REDIS
 from helper.request import YuzukiRequest
 
 if USE_REDIS:

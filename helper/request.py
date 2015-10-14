@@ -9,7 +9,7 @@ from twisted.python.compat import intToBytes
 from twisted.web.http import INTERNAL_SERVER_ERROR
 from twisted.web.server import Request
 
-from config import DEBUG
+from config.config import DEBUG
 from exception import YuzukiException, BadRequest
 from helper.database import DatabaseHelper
 from helper.template import generate_error_message

@@ -2,7 +2,7 @@
 from sqlalchemy.orm import subqueryload
 from sqlalchemy import or_
 
-from config import ARTICLE_PER_PAGE
+from config.config import ARTICLE_PER_PAGE
 from exception import BadRequest
 from helper.model_control import get_board
 from helper.resource import YuzukiResource, need_anybody_permission

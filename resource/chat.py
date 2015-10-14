@@ -6,7 +6,7 @@ from twisted.internet import reactor
 from twisted.web.http import BAD_REQUEST
 from twisted.web.server import NOT_DONE_YET
 
-from config import CHAT_PER_PAGE, CHAT_CONNECTION_INTERVAL
+from config.config import CHAT_PER_PAGE, CHAT_CONNECTION_INTERVAL
 from exception import BadRequest
 from helper.chat_cmd import ChatCmdManager
 from helper.model_control import get_chat_newer_than, get_chat_page, create_chat

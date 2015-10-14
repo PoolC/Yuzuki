@@ -4,7 +4,7 @@ from datetime import datetime
 from bleach import clean, linkify, callbacks
 from sqlalchemy.orm import subqueryload
 
-from config import ARTICLE_PER_PAGE, REPLY_PER_PAGE, CHAT_PER_PAGE
+from config.config import ARTICLE_PER_PAGE, REPLY_PER_PAGE, CHAT_PER_PAGE
 from exception import PageNotFound
 from model.article import Article
 from model.article_record import ArticleRecord

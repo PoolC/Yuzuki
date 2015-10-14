@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from StringIO import StringIO
+
 from helper.resource import YuzukiResource
 from helper.template import render_template
-from config import SITE_DESCRIPTION
+from config.config import SITE_DESCRIPTION
 from helper.content import md
-from StringIO import StringIO
+
 
 class Index(YuzukiResource):
     def render_GET(self, request):

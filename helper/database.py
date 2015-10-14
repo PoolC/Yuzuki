@@ -2,8 +2,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from config import DB_CONNECTION_STRING
+from config.config import DB_CONNECTION_STRING
 from model.base import Base
+
 
 # import all models you defined here
 from model.association.user_group import UserGroupAssociation
