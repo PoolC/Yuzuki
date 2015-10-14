@@ -14,5 +14,4 @@ class Index(YuzukiResource):
                 "SITE_DESCRIPTION": SITE_DESCRIPTION,
                 "content": content.getvalue().decode("utf-8"),
             }
-            print context
         return render_template("page.html", request, context)
