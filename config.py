@@ -15,6 +15,8 @@ REDIS_CONNECT_ARGS = {
     "port": 6379,
     "db": 0,
 }
+SITE_DESCRIPTION = u"Site description is displayed in search engine's search result."
+
 logger = logging.getLogger()
 if not os.path.exists("log"):
     os.mkdir("log")

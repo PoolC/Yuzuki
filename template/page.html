@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% block head %}
+    {% if is_index %}
+        <meta name="description" content="{{ site_description }}"/>
+    {% endif %}
+{% endblock %}
 {% block body %}
     {{ content }}
 {% endblock %}
