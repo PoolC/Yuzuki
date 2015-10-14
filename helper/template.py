@@ -4,7 +4,7 @@ from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from twisted.web.http import RESPONSES
 
-from side_menu_conf import SIDE_MENU
+from config.side_menu_conf import SIDE_MENU
 from helper.permission import is_anybody
 from localization import SITE_NAME
 

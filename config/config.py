@@ -14,4 +14,4 @@ REDIS_CONNECT_ARGS = {
     "db": 0,
 }
 SITE_DESCRIPTION = u"Site description is displayed in search engine's search result."
-fileConfig("logger.cnf")
+fileConfig("config/logger.cnf")
