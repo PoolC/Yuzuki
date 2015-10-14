@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import logging
-import os
 from logging.config import fileConfig
 
 ARTICLE_PER_PAGE = 15
@@ -16,8 +14,4 @@ REDIS_CONNECT_ARGS = {
     "db": 0,
 }
 SITE_DESCRIPTION = u"Site description is displayed in search engine's search result."
-
-logger = logging.getLogger()
-if not os.path.exists("log"):
-    os.mkdir("log")
 fileConfig("logger.cnf")

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
+import os
+logger = logging.getLogger()
+if not os.path.exists("log"):
+    os.mkdir("log")
 
 from twisted.internet import reactor, endpoints
 
