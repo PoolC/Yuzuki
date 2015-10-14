@@ -15,3 +15,4 @@ REDIS_CONNECT_ARGS = {
 }
 SITE_DESCRIPTION = u"Site description will be displayed in search engine's search result."
 fileConfig("config/logger.cnf")
+SITE_NAME = "Yuzuki"

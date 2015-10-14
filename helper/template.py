@@ -6,7 +6,7 @@ from twisted.web.http import RESPONSES
 
 from config.side_menu_conf import SIDE_MENU
 from helper.permission import is_anybody
-from localization import SITE_NAME
+from config.config import SITE_NAME
 
 
 jinja2_env = Environment(loader=FileSystemLoader("template", encoding="utf-8"),
