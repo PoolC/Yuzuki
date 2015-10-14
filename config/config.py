@@ -13,5 +13,5 @@ REDIS_CONNECT_ARGS = {
     "port": 6379,
     "db": 0,
 }
-SITE_DESCRIPTION = u"Site description is displayed in search engine's search result."
+SITE_DESCRIPTION = u"Site description will be displayed in search engine's search result."
 fileConfig("config/logger.cnf")
