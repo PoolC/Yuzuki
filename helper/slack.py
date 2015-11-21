@@ -1,6 +1,7 @@
 import requests
 from config import SLACK_POST_INFO, logger
 import json
+import threading
 from bleach import clean
 
 SLACK_CHAT_POST_MESSAGE_URL = "https://slack.com/api/chat.postMessage"
@@ -43,6 +44,10 @@ def post_message(channel, text, attachments = None):
                                  for attachment in attachments]
         params['attachments'] = json.dumps(attachments_converted)
 
+    thread = threading.Thread(target=post_message_inner, args=(params,))
+    thread.start()
+
+def post_message_inner(params):
     res = requests.get(SLACK_CHAT_POST_MESSAGE_URL, params=params)
     response = json.loads(res.text)
     if not response["ok"]:
