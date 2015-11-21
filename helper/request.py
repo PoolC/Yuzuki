@@ -19,6 +19,10 @@ from model.user import User
 class NoArgument:
     pass
 
+def make_external_url(request, url):
+    if url[0] != "/":
+        url = "/".join(request.uri.split('/')[:-1] + [url])
+    return request.getHostWithProtocol() + url
 
 class YuzukiRequest(Request):
     dbsession = DatabaseHelper.session()
@@ -174,6 +178,10 @@ class YuzukiRequest(Request):
             return real_ip
         else:
             Request.getClientIP(self)
+
+    def getHostWithProtocol(self):
+        return "http%s://%s" % ('s' if self.isSecure() else '',
+                                self.getRequestHostname())
 
     def setNoCache(self):
         self.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")

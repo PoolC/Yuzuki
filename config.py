@@ -15,6 +15,13 @@ REDIS_CONNECT_ARGS = {
     "port": 6379,
     "db": 0,
 }
+SLACK_POST_INFO = {
+    "username": "bot",
+    "token": "",
+    "as_user": False
+}
+SLACK_NOTI_CHANNEL = '#general'
+SLACK_NOTI_TARGET_BOARDS = ()
 logger = logging.getLogger()
 if not os.path.exists("log"):
     os.mkdir("log")
