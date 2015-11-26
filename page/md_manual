@@ -1,0 +1,225 @@
+# Markdown guide
+
+Markdown(이하 md) 문법에 대한 문서입니다.
+
+## 기본
+
+```
+그냥 텍스트를 입력하면 됩니다.
+```
+그냥 텍스트를 입력하면 됩니다.
+
+```
+문단을 구분하고 싶으면
+
+빈줄을 입력합니다
+```
+문단을 구분하고 싶으면
+
+빈줄을 입력합니다
+```
+그냥 줄내림을 하고 싶으면  
+줄 마지막에 빈칸을 2개 입력합니다
+```
+그냥 줄내림을 하고 싶으면  
+줄 마지막에 빈칸을 2개 입력합니다
+
+### 강조
+
+```
+*italic* _italic_ **bold** __bold__ ~~strike~~
+```
+*italic* _italic_ **bold** __bold__ ~~strike~~
+
+### Escaping
+
+```
+a = b*c*d;
+a = b\*c\*d;
+```
+a = b*c*d;
+a = b\*c\*d;
+
+### 링크
+
+```
+http://goo.gl
+[구우그을](http://goo.gl)
+[레에퍼런스][google_short]
+
+[google_short]: http://goo.gl
+```
+http://goo.gl
+[구우그을](http://goo.gl)
+[레에퍼런스][google_short]
+
+[google_short]: http://goo.gl
+
+### 이미지
+```
+![wtf](https://shipduck.github.io/umi/posts/amel-throws-irrational/irrational.jpg)
+![혼돈파괴망가][ㅎㄷㅍㄱㅁㄱ]
+
+[ㅎㄷㅍㄱㅁㄱ]: https://shipduck.github.io/umi/posts/chaos-destruction-manga/chaos-destruction-manga.jpg
+```
+![wtf](https://shipduck.github.io/umi/posts/amel-throws-irrational/irrational.jpg)
+![혼돈파괴망가][ㅎㄷㅍㄱㅁㄱ]
+
+[ㅎㄷㅍㄱㅁㄱ]: https://shipduck.github.io/umi/posts/chaos-destruction-manga/chaos-destruction-manga.jpg
+
+## 인용
+```
+> 이것은 인용한 내용이라고 합니다.
+> 출처 : 내 머리속
+```
+> 이것은 인용한 내용이라고 합니다.
+> 출처 : 내 머리속
+
+## Headers
+
+Header는 두가지 방식으로 표현이 가능합니다.
+
+### Header밑에 밑줄을 입력하는 방식
+
+```
+  Header 1
+  ======
+  
+  Header 2
+  ----------
+```
+
+Header 1
+======
+  
+Header 2
+----------
+
+### Header앞에 표기하는 방식
+
+```
+  # Header 1
+  ## Header 2
+  ### Header 3
+  #### Header 4
+  ##### Header 5
+  ###### Header 6
+```
+
+# Header 1
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6
+
+## List
+
+목록은 순서가 있는 목록과 순서가 없는 목록, 정의 목록 세가지로 구분되어있습니다.
+
+앞의 구분기호를 입력 후 한칸을 띄고 내용을 입력하면 됩니다.
+
+### 순서가 있는 목록
+
+```
+1. alpha
+2. beta
+3. cupcake
+    여기서부터 먹을 수 있는 것
+4. doughnut
+4. eclare
+```
+1. alpha
+2. beta
+3. cupcake
+    여기서부터 먹을 수 있는 것
+4. doughnut
+4. eclare
+
+사실 앞의 숫자는 무조건 1부터 순서대로 출력됩니다.
+
+### 순서가 없는 목록
+`+`, `-`, `*` 아무것이나 섞어서 써도 됩니다.
+
+```
+* hello,
+- world!
++ (NULL)
+```
+* hello,
+- world!
++ (NULL)
+
+### 정의 목록
+
+```
+Apple
+: In the california
+```
+Apple
+: In the california
+
+### 다단계
+한단계 씩 깊어질 때마다 앞에 공백을 4칸씩 입력한다.  
+다른 목록과도 섞어어 쓸 수 있다.
+```
+1. 0.0
+    1. 1. 1
+        * 2. 2
+2. 0.0
+```
+1. 0.0
+    1. 1. 1
+        * 2. 2
+2. 0.0
+
+## 코드
+```
+template<int a> int meaningless() { return a; }를 강조하거나 깨지지 않게 하려면  
+`template<int a> int meaningless() { return a; }`처럼 한다.
+```
+template<int a> int meaningless() { return a; }를 강조하거나 깨지지 않게 하려면  
+`template<int a> int meaningless() { return a; }`처럼 한다.
+
+<pre>
+&#96;&#96;&#96;javascript
+while(1) { alert('Hello, World!'); }
+&#96;&#96;&#96;</pre>
+
+```javascript
+while(1) { alert('Hello, World!'); }
+```
+
+## 표
+
+줄을 잘맞춰서 그려주면 됩니다.
+
+name         | value
+-------------|---------------
+INT32_MAX|0x7FFFFF
+UINT32_MAX|0xFFFFFFFF
+
+## 약어 설명
+이렇게 쓰라고 있는 것이 아닙니다.
+```
+액셀러레이터
+*[액셀러레이터]: 일방통행
+```
+액셀러레이터
+*[액셀러레이터]: 일방통행
+
+## 미주
+```
+x[^1]
+x[^2]
+x[^3]
+[^1]: 이렇게
+[^2]: 쓰면
+[^3]: 안됩니다
+```
+x[^1]
+x[^2]
+x[^3]
+[^1]: 이렇게
+[^2]: 쓰면
+[^3]: 안됩니다
