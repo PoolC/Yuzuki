@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from config import REPLY_PER_PAGE, SLACK_NOTI_CHANNEL, SLACK_NOTI_TARGET_BOARDS
+from config import REPLY_PER_PAGE
 from exception import BadRequest, Unauthorized
 from helper.model_control import get_board, get_article, delete_article, edit_article, create_article
 from helper.permission import can_write, is_anybody, is_author, is_author_or_admin
-from helper.request import make_external_url
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
-from helper.slack import post_message as post_message_to_slack, ArticleInfo
+from helper.slack import post_message as post_message_to_slack
 import re
 
 article_content_re = re.compile(r'&(#\d+|[a-z]+);')
@@ -74,11 +73,7 @@ class ArticleWrite(YuzukiResource):
             article_view_url = "/article/view?id=%s" % article.uid
             request.redirect(article_view_url)
 
-            if board_name in SLACK_NOTI_TARGET_BOARDS:
-                article_view_url = make_external_url(request, article_view_url)
-                post_message_to_slack(SLACK_NOTI_CHANNEL,
-                                      u"%s에 새 글이 등록 되었습니다." % board.repr,
-                                      [ArticleInfo(article, article_view_url)])
+            post_message_to_slack(request, article, article_view_url)
             return "article posted"
         else:
             raise BadRequest()
