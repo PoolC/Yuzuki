@@ -6,4 +6,3 @@ redis
 Markdown
 git+https://github.com/TintypeMolly/bleach@124-parse-email-fix
 Pygments
-requests

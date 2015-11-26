@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
-from config import SLACK_NOTI_CHANNEL, SLACK_POST_INFO, SLACK_NOTI_TARGET_BOARDS, logger
 import json
-import threading
+import StringIO
+import urllib
+
 from bleach import clean
+from twisted.internet import reactor
+from twisted.web.client import Agent, FileBodyProducer, readBody
+from twisted.web.http_headers import Headers
+
+from config import SLACK_NOTI_CHANNEL, SLACK_POST_INFO, SLACK_NOTI_TARGET_BOARDS, logger
 
 SLACK_CHAT_POST_MESSAGE_URL = "https://slack.com/api/chat.postMessage"
+
+agent = Agent(reactor)
 
 def post_message(request, article, article_view_url):
     if article.board.repr not in SLACK_NOTI_TARGET_BOARDS:
@@ -26,12 +34,21 @@ def post_message(request, article, article_view_url):
         "author_name": article.author.nickname,
     })
     params["attachments"] = json.dumps(attachments)
+    body = FileBodyProducer(StringIO.StringIO(urllib.urlencode(params)))
 
-    thread = threading.Thread(target=post_message_inner, args=(params,))
-    thread.start()
+    d = agent.request(
+        "POST",
+        "https://slack.com/api/chat.postMessage",
+        Headers({"User-Agent": ["Twisted Web Server Slack Notify"]}),
+        body
+    )
+    d.addBoth(slack_callback)
 
-def post_message_inner(params):
-    res = requests.get(SLACK_CHAT_POST_MESSAGE_URL, params=params)
-    response = json.loads(res.text)
+def slack_callback(resp):
+        d = readBody(resp)
+        d.addCallback(slack_resp)
+
+def slack_resp(resp_body):
+    response = json.loads(resp_body)
     if not response["ok"]:
         logger.error("Slack post message error : %s", response["error"])
