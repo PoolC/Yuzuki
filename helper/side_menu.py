@@ -69,7 +69,7 @@ class LinkMenuElement(SideMenuElement):
     def to_element(self):
         return u"""
         <li id="%(name)s">
-            <a href="/%(path)s">
+            <a href="%(path)s">
                 %(repr)s
             </a>
         </li>

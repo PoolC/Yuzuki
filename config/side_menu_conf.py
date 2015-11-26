@@ -24,12 +24,12 @@ improve_button = ArbitraryMenuElement(u"""
 </li>
 """, True)
 SIDE_MENU = [
-    LinkMenuElement("about", "page/about", u"소개", True),
+    LinkMenuElement("about", "/page/about", u"소개", True),
     BoardMenuElement("notice", True),
     LinkMenuElement("new", "new", u"새 글", False),
     BoardMenuElement("free", False),
     somoim,
     normal,
-    LinkMenuElement("chat", "chat", u"채팅방", False),
+    LinkMenuElement("chat", "https://poolc.slack.com/", u"채팅방", False),
     improve_button,
 ]
