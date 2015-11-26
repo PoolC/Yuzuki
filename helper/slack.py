@@ -12,20 +12,20 @@ def post_message(request, article, article_view_url):
     article_link = request.getProto() + "://" + request.getHost() + article_view_url
     content = clean(article.compiled_content, tags=[], strip=True)
     if len(content) > 30:
-        content = content[:27] + '...'
+        content = content[:27] + "..."
     params = {
-        'text': u"%s에 새 글이 등록되었습니다." % article.board.repr,
-        'channel': SLACK_NOTI_CHANNEL,
+        "text": u"%s에 새 글이 등록되었습니다." % article.board.repr,
+        "channel": SLACK_NOTI_CHANNEL,
     }
     params.update(SLACK_POST_INFO)
     attachments = list()
     attachments.append({
-        'title': article.subject,
-        'title_link': article_link,
-        'text': content,
-        'author_name': article.author.nickname,
+        "title": article.subject,
+        "title_link": article_link,
+        "text": content,
+        "author_name": article.author.nickname,
     })
-    params['attachments'] = json.dumps(attachments)
+    params["attachments"] = json.dumps(attachments)
 
     thread = threading.Thread(target=post_message_inner, args=(params,))
     thread.start()
