@@ -16,3 +16,10 @@ REDIS_CONNECT_ARGS = {
 SITE_DESCRIPTION = u"Site description will be displayed in search engine's search result."
 fileConfig("config/logger.cnf")
 SITE_NAME = "Yuzuki"
+SLACK_POST_INFO = {
+    "username": "bot",
+    "token": "",
+    "as_user": False
+}
+SLACK_NOTI_CHANNEL = '#general'
+SLACK_NOTI_TARGET_BOARDS = ()

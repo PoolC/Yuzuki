@@ -19,7 +19,6 @@ from model.user import User
 class NoArgument:
     pass
 
-
 class YuzukiRequest(Request):
     dbsession = DatabaseHelper.session()
 
@@ -179,3 +178,9 @@ class YuzukiRequest(Request):
         self.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")
         self.setHeader("Pragma", "no-cache")
         self.setHeader("Expires", "0")
+
+    def getProto(self):
+        if self.requestHeaders.hasHeader("X-Forwarded-Proto"):
+            return self.getHeader("X-Forwarded-Proto").lower()
+        else:
+            return "https" if self.isSecure() else "http"

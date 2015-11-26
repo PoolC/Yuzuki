@@ -7,6 +7,7 @@ from helper.model_control import get_board, get_article, delete_article, edit_ar
 from helper.permission import can_write, is_anybody, is_author, is_author_or_admin
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
+from helper.slack import post_message as post_message_to_slack
 
 article_content_re = re.compile(r'&(#\d+|[a-z]+);')
 '''
@@ -70,7 +71,10 @@ class ArticleWrite(YuzukiResource):
             article = create_article(request, board, subject, content)
             request.dbsession.add(article)
             request.dbsession.commit()
-            request.redirect("/article/view?id=%s" % article.uid)
+            article_view_url = "/article/view?id=%s" % article.uid
+            request.redirect(article_view_url)
+
+            post_message_to_slack(request, article, article_view_url)
             return "article posted"
         else:
             raise BadRequest()
