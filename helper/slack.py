@@ -8,7 +8,7 @@ from twisted.internet import reactor
 from twisted.web.client import Agent, FileBodyProducer, readBody
 from twisted.web.http_headers import Headers
 
-from config import SLACK_NOTI_CHANNEL, SLACK_POST_INFO, SLACK_NOTI_TARGET_BOARDS, logger
+from config.config import SLACK_NOTI_CHANNEL, SLACK_POST_INFO, SLACK_NOTI_TARGET_BOARDS
 
 SLACK_CHAT_POST_MESSAGE_URL = "https://slack.com/api/chat.postMessage"
 
@@ -42,13 +42,13 @@ def post_message(request, article, article_view_url):
         Headers({"User-Agent": ["Twisted Web Server Slack Notify"]}),
         body
     )
-    d.addBoth(slack_callback)
+    d.addBoth(slack_callback, request)
 
-def slack_callback(resp):
+def slack_callback(resp, request):
         d = readBody(resp)
-        d.addCallback(slack_resp)
+        d.addCallback(slack_resp, request)
 
-def slack_resp(resp_body):
+def slack_resp(resp_body, request):
     response = json.loads(resp_body)
     if not response["ok"]:
-        logger.error("Slack post message error : %s", response["error"])
+        request.logger.error("Slack post message error : %s", response["error"])
