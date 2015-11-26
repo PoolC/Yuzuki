@@ -1,8 +1,8 @@
 Jinja2
 #MySQL-python
-SQLAlchemy==1.0.0b5
-Twisted==15.1.0
+SQLAlchemy
+Twisted==15.4.0
 redis
 Markdown
-git+https://github.com/TintypeMolly/bleach@124-parse-email-fix
+bleach
 Pygments
