@@ -12,6 +12,8 @@ from helper.template import render_template
 from helper.slack import post_message as post_message_to_slack
 
 article_content_re = re.compile(r'&(#\d+|[a-z]+);')
+
+
 def replaceArticleContentForEdit(article):
     '''
     For editing article content with codemirror,
