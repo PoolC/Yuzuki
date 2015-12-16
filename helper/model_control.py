@@ -3,6 +3,7 @@ from datetime import datetime
 
 from bleach import clean, linkify, callbacks
 from sqlalchemy.orm import subqueryload
+from sqlalchemy.sql.expression import true
 
 from config.config import ARTICLE_PER_PAGE, REPLY_PER_PAGE, CHAT_PER_PAGE
 from exception import PageNotFound
@@ -32,7 +33,7 @@ def get_board(request, board_name):
 def get_article(request, article_id):
     query = request.dbsession.query(Article)\
                              .filter(Article.uid == article_id)\
-                             .filter(Article.enabled is True)\
+                             .filter(Article.enabled == true())\
                              .options(subqueryload(Article.board))\
                              .options(subqueryload(Article.user))
     result = query.all()
@@ -62,7 +63,7 @@ def edit_article(request, article, subject, content):
 
 def get_article_page(request, board, page):
     query = request.dbsession.query(Article)\
-                             .filter(Article.enabled is True)\
+                             .filter(Article.enabled == true())\
                              .filter(Article.board == board)\
                              .order_by(Article.uid.desc())\
                              .options(subqueryload(Article.user))
@@ -73,7 +74,7 @@ def get_article_page(request, board, page):
 
 def get_reply_page(request, article, page):
     query = request.dbsession.query(Reply)\
-                             .filter(Reply.enabled is True)\
+                             .filter(Reply.enabled == true())\
                              .filter(Reply.article == article)\
                              .order_by(Reply.uid.asc())\
                              .options(subqueryload(Reply.user))
@@ -86,7 +87,7 @@ def get_reply_page(request, article, page):
 def get_reply(request, reply_id):
     query = request.dbsession.query(Reply)\
                              .filter(Reply.uid == reply_id)\
-                             .filter(Reply.enabled is True)\
+                             .filter(Reply.enabled == true())\
                              .options(subqueryload(Reply.user))\
                              .options(subqueryload(Reply.article)
                                       .subqueryload(Article.board))
