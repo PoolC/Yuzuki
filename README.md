@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/PoolC/Yuzuki.svg)](https://travis-ci.org/PoolC/Yuzuki)
 # Yuzuki
 PoolC 홈페이지 제작 프로젝트
 
