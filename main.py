@@ -5,7 +5,7 @@ logger = logging.getLogger()
 if not os.path.exists("log"):
     os.mkdir("log")
 
-from twisted.internet import reactor, endpoints
+from twisted.internet import reactor
 
 from helper.site import YuzukiSite
 from helper.resource import YuzukiResource
@@ -21,5 +21,5 @@ class Main(YuzukiResource):
             self.putChild(path, ROUTE[path])
 
 logging.getLogger().info("Yuzuki started")
-endpoints.serverFromString(reactor, "tcp:8080").listen(YuzukiSite(Main()))
+reactor.listenTCP(8080, YuzukiSite(Main()))
 reactor.run()
