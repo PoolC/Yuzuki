@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 from helper.side_menu import (
     ParentMenuElement,
     BoardMenuElement,
@@ -9,9 +10,15 @@ from helper.database import DatabaseHelper
 from model.board import Board
 
 dbsession = DatabaseHelper.session()
-board_query = dbsession.query(Board).filter(Board.enabled).order_by(Board.repr_order.asc())
-somoim_board_elements = [BoardMenuElement(b.name, False) for b in board_query.filter(Board.classification == "somoim")]
-normal_board_elements = [BoardMenuElement(b.name, False) for b in board_query.filter(Board.classification == "normal")]
+board_query = dbsession.query(Board)\
+                       .filter(Board.enabled)\
+                       .order_by(Board.repr_order.asc())
+somoim_board_elements = [BoardMenuElement(b.name, False)
+                         for b in
+                         board_query.filter(Board.classification == "somoim")]
+normal_board_elements = [BoardMenuElement(b.name, False)
+                         for b in
+                         board_query.filter(Board.classification == "normal")]
 somoim = ParentMenuElement("somoim", u"소모임", somoim_board_elements, False)
 normal = ParentMenuElement("normal", u"일반 게시판", normal_board_elements, False)
 improve_button = ArbitraryMenuElement(u"""
