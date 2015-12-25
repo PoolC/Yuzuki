@@ -33,7 +33,7 @@ improve_button = ArbitraryMenuElement(u"""
 SIDE_MENU = [
     LinkMenuElement("about", "/page/about", u"소개", True),
     BoardMenuElement("notice", True),
-    LinkMenuElement("new", "new", u"새 글", False),
+    LinkMenuElement("new", "/new", u"새 글", False),
     BoardMenuElement("free", False),
     somoim,
     normal,
