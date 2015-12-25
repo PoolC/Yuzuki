@@ -22,7 +22,7 @@ from model.user import User  # noqa
 
 
 class DatabaseHelper(object):
-    _engine = create_engine(DB_CONNECTION_STRING)
+    _engine = create_engine(DB_CONNECTION_STRING, pool_recycle=3600)
     _Session = sessionmaker(bind=_engine)
 
     @classmethod
