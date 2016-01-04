@@ -26,8 +26,8 @@ def post_message(request, article, article_view_url):
     if article.board.repr not in SLACK_NOTI_TARGET_BOARDS:
         return
     article_link = "{0}://{1}{2}".format(request.getProto(),
-                                      request.getRequestHostname(),
-                                      article_view_url)
+                                         request.getRequestHostname(),
+                                         article_view_url)
     content = clean(article.compiled_content, tags=[], strip=True)
     if len(content) > 30:
         content = content[:27] + "..."
