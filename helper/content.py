@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from StringIO import StringIO
+
 from markdown import Markdown
 from bleach import linkify, callbacks
 
@@ -17,6 +19,13 @@ md = Markdown(extensions=markdown_extension_list)
 def markdown_convert(source):
     md.reset()
     return md.convert(source)
+
+
+def markdown_convert_file(file):
+    md.reset()
+    content = StringIO()
+    md.convertFile(file, "utf-8", content)
+    return content.getvalue().decode("utf-8")
 
 
 def markdown_and_linkify(source):

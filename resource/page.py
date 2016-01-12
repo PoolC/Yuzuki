@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-from StringIO import StringIO
 
 from exception import BadRequest, PageNotFound
-from helper.content import md
+from helper.content import markdown_convert_file
 from helper.resource import YuzukiResource
 from helper.template import render_template
 
@@ -21,10 +20,8 @@ class Page(YuzukiResource):
         if not os.path.isfile(file_path):
             raise PageNotFound()
         with open(file_path) as f:
-            content = StringIO()
-            md.convertFile(f, content, "utf-8")
             context = {
-                "content": content.getvalue().decode("utf-8"),
+                "content": markdown_convert_file(f),
             }
             return render_template("page.html", request, context)
 
