@@ -24,7 +24,7 @@ def markdown_convert(source):
 def markdown_convert_file(file):
     md.reset()
     content = StringIO()
-    md.convertFile(file, "utf-8", content)
+    md.convertFile(file, content, "utf-8")
     return content.getvalue().decode("utf-8")
 
 
