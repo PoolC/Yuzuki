@@ -22,26 +22,38 @@ contextFactory = WebClientContextFactory()
 agent = Agent(reactor, contextFactory)
 
 
-def post_message(request, article, article_view_url):
+def post_new_article_message(request, article, article_view_url):
     if article.board.repr not in SLACK_NOTI_TARGET_BOARDS:
         return
-    article_link = "{0}://{1}{2}".format(request.getProto(),
-                                         request.getRequestHostname(),
-                                         article_view_url)
     content = clean(article.compiled_content, tags=[], strip=True)
     if len(content) > 30:
         content = content[:27] + "..."
+    return post_message(
+        request,
+        u"%s에 새 글이 등록되었습니다." % article.board.repr,
+        article.user.nickname,
+        SLACK_NOTI_CHANNEL,
+        article.subject,
+        content,
+        article_view_url
+    )
+
+
+def post_message(request, text, actor, channel, title, content, article_url):
+    article_link = "{0}://{1}{2}".format(request.getProto(),
+                                         request.getRequestHostname(),
+                                         article_url)
     params = {
-        "text": u"%s에 새 글이 등록되었습니다." % article.board.repr,
-        "channel": SLACK_NOTI_CHANNEL,
+        "text": text,
+        "channel": channel,
     }
     params.update(SLACK_POST_INFO)
     attachments = list()
     attachments.append({
-        "title": article.subject,
+        "title": title,
         "title_link": article_link,
         "text": content,
-        "author_name": article.user.nickname,
+        "author_name": actor,
     })
     params["attachments"] = json.dumps(attachments)
     params = {key: params[key].encode("utf-8")
