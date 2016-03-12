@@ -22,6 +22,17 @@ contextFactory = WebClientContextFactory()
 agent = Agent(reactor, contextFactory)
 
 
+def post_messages_to_subscribers(request, subscribers, text, actor, title,
+                                 content, url):
+    for subscriber in subscribers:
+        if subscriber == actor:
+            continue
+        if subscriber.slack_id:
+            post_message(request, text, actor.nickname,
+                         "@{0}".format(subscriber.slack_id), title,
+                         content, url)
+
+
 def post_new_article_message(request, article, article_view_url):
     if article.board.repr not in SLACK_NOTI_TARGET_BOARDS:
         return
