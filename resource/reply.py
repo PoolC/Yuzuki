@@ -7,6 +7,7 @@ from helper.model_control import get_article, get_reply_page, get_reply,\
 from helper.permission import is_anybody, can_comment, is_author_or_admin,\
     is_author
 from helper.resource import YuzukiResource, need_anybody_permission
+from helper.slack import post_message
 
 
 class ReplyParent(YuzukiResource):
@@ -49,6 +50,17 @@ class ReplyWrite(YuzukiResource):
             redirect = "/article/view?id=%s" % article.uid
             if page:
                 redirect += "&page=%s" % page
+            for subscriber in article.subscribing_users:
+                if subscriber == reply.user:
+                    continue
+                if subscriber.slack_id:
+                    post_message(request,
+                                 u"구독하고 있는 글에 새 댓글이 등록되었습니다.",
+                                 reply.user.nickname,
+                                 "@{0}".format(subscriber.slack_id),
+                                 article.subject,
+                                 content,
+                                 redirect)
             request.redirect(redirect)
             return "success"
         else:
