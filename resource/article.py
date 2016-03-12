@@ -11,6 +11,7 @@ from helper.permission import can_write, is_anybody, is_author, \
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
 from helper.slack import (
+    post_messages_to_subscribers,
     post_new_article_message as post_new_article_message_to_slack
 )
 
@@ -138,7 +139,15 @@ class ArticleEdit(YuzukiResource):
             if subject.strip():
                 edit_article(request, article, subject, content)
                 request.dbsession.commit()
-                request.redirect("/article/view?id=%s" % article.uid)
+                redirect_url = "/article/view?id=%s" % article.uid
+                request.redirect(redirect_url)
+                post_messages_to_subscribers(request,
+                                             article.subscribing_users,
+                                             u"구독하고 있는 글이 수정되었습니다.",
+                                             article.user,
+                                             article.subject,
+                                             article.compiled_content,
+                                             redirect_url)
                 return "article edit success"
             else:
                 raise BadRequest()
