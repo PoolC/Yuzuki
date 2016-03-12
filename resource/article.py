@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from json import dumps
 
 from config.config import REPLY_PER_PAGE
 from exception import BadRequest, Unauthorized
@@ -32,6 +33,7 @@ class ArticleParent(YuzukiResource):
         self.putChild("write", ArticleWrite())
         self.putChild("delete", ArticleDelete())
         self.putChild("edit", ArticleEdit())
+        self.putChild("subscribe", ArticleSubscribe())
 
 
 class ArticleView(YuzukiResource):
@@ -96,6 +98,19 @@ class ArticleDelete(YuzukiResource):
             return "delete success"
         else:
             raise Unauthorized()
+
+
+class ArticleSubscribe(YuzukiResource):
+    @need_anybody_permission
+    def render_POST(self, request):
+        article_id = request.get_argument("id")
+        article = get_article(request, article_id)
+        if request.user in article.subscribing_users:
+            article.subscribing_users.remove(request.user)
+        else:
+            article.subscribing_users.append(request.user)
+        request.dbsession.commit()
+        return dumps(request.user in article.subscribing_users)
 
 
 class ArticleEdit(YuzukiResource):
