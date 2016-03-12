@@ -29,6 +29,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     is_blocked = Column(Boolean, default=False)
     chat_color = Column(CHAR(6), default="000000")
+    slack_id = Column(String(255), nullable=True)
 
     def __init__(self, username, nickname, password, pd_realname, pd_email,
                  pd_address, pd_phone, pd_bunryu, pd_bio):
