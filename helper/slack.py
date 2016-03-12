@@ -22,6 +22,13 @@ contextFactory = WebClientContextFactory()
 agent = Agent(reactor, contextFactory)
 
 
+def make_preview_content(content):
+    content = clean(content, tags=[], strip=True)
+    if len(content) > 30:
+        content = content[:27] + "..."
+    return content
+
+
 def post_messages_to_subscribers(request, subscribers, text, actor, title,
                                  content, url):
     for subscriber in subscribers:
@@ -30,15 +37,13 @@ def post_messages_to_subscribers(request, subscribers, text, actor, title,
         if subscriber.slack_id:
             post_message(request, text, actor.nickname,
                          "@{0}".format(subscriber.slack_id), title,
-                         content, url)
+                         make_preview_content(content), url)
 
 
 def post_new_article_message(request, article, article_view_url):
     if article.board.repr not in SLACK_NOTI_TARGET_BOARDS:
         return
-    content = clean(article.compiled_content, tags=[], strip=True)
-    if len(content) > 30:
-        content = content[:27] + "..."
+    content = make_preview_content(article.compiled_content)
     return post_message(
         request,
         u"%s에 새 글이 등록되었습니다." % article.board.repr,
