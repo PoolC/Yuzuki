@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 
 from helper.content import markdown_and_linkify
 from model.base import Base
+from model.subscription import subscription_table
 
 
 class Article(Base):
@@ -29,6 +30,8 @@ class Article(Base):
     deleted_user = relationship("User", foreign_keys=deleted_user_id)
     reply_count = Column(Integer(), default=0)
     replies = relationship("Reply")
+    subscribing_users = relationship("User", secondary=subscription_table,
+                                     back_populates="subscribed_articles")
 
     def __repr__(self):
         return "<Article uid=%s, subject=%s>" % (self.uid, self.subject)

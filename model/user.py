@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship
 from helper.content import markdown_and_linkify
 from helper.pbkdf2 import pbkdf2, pbkdf2_check
 from model.base import Base
+from model.subscription import subscription_table
 
 
 class User(Base):
@@ -30,6 +31,8 @@ class User(Base):
     is_blocked = Column(Boolean, default=False)
     chat_color = Column(CHAR(6), default="000000")
     slack_id = Column(String(255), nullable=True)
+    subscribed_articles = relationship("Article", secondary=subscription_table,
+                                       back_populates="subscribing_users")
 
     def __init__(self, username, nickname, password, pd_realname, pd_email,
                  pd_address, pd_phone, pd_bunryu, pd_bio):
