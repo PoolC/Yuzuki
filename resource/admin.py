@@ -114,4 +114,37 @@ class BoardEdit(YuzukiResource):
 class BoardAdd(YuzukiResource):
     @need_admin_permission
     def render_GET(self, request):
-        pass
+        groups = request.dbsession.query(Group).all()
+        context = {
+            "groups": groups,
+        }
+        return render_template("admin_board_add.html", request, context)
+
+    def render_POST(self, request):
+        name = request.get_argument("name")
+        repr = request.get_argument("repr")
+        repr_order = request.get_argument_int("repr_order", None)
+        classification = request.get_argument("classification") or None
+        description = request.get_argument("description") or None
+        write_group_uid = request.get_argument_int("write_group_uid")
+        write_group = request.dbsession\
+                             .query(Group)\
+                             .filter(Group.uid == write_group_uid)\
+                             .one()
+        comment_group_uid = request.get_argument_int("comment_group_uid")
+        comment_group = request.dbsession\
+                               .query(Group)\
+                               .filter(Group.uid == comment_group_uid)\
+                               .one()
+        enabled = request.get_argument("enabled") == "True"
+
+        board = Board(name, repr, write_group, comment_group)
+        board.repr_order = repr_order
+        board.classification = classification
+        board.description = description
+        board.enabled = enabled
+        request.dbsession.add(board)
+
+        request.dbsession.commit()
+        request.redirect("/admin/board")
+        return "redirected"

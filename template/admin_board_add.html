@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import "macro.html" as macro %}
+{% block body %}
+<h1>게시판 추가</h1>
+<p><a href="/admin/board">&lt;&lt; 돌아가기</a></p>
+
+<form method="post">
+<table class="table">
+<thead>
+    <tr>
+        <th></th>
+        <th>값</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>name</td>
+        <td><input class="form-control" type="text" name="name" value="" required /></td>
+    </tr>
+    <tr>
+        <td>repr</td>
+        <td><input class="form-control" type="text" name="repr" value="" required /></td>
+    </tr>
+    <tr>
+        <td>repr_order</td>
+        <td><input class="form-control" type="number" name="repr_order" value=""/></td>
+    </tr>
+    <tr>
+        <td>classification</td>
+        <td><input class="form-control" type="text" name="classification" value=""/></td>
+    </tr>
+    <tr>
+        <td>description</td>
+        <td><textarea class="form-control" name="description"></textarea></td>
+    </tr>
+    <tr>
+        <td>write_group</td>
+        <td>{{ macro.select_tag("write_group_uid", groups, "uid", "name", True, "anybody") }}</td>
+    </tr>
+    <tr>
+      <td>comment_group</td>
+        <td>{{ macro.select_tag("comment_group_uid", groups, "uid", "name", True, "anybody") }}</td>
+    </tr>
+    <tr>
+        <td>enabled</td>
+        <td>
+            <select class="form-control" name="enabled" required>
+                <option selected="selected">True</option>
+                <option>False</option>
+            </select>
+        </td>
+    </tr>
+</tbody>
+</table>
+<input class="btn btn-default pull-right" type="submit" value="만들기" />
+</form>
+{% endblock %}
