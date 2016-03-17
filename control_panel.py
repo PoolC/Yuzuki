@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 from helper.database import DatabaseHelper
 
 dbsession = DatabaseHelper.session()
