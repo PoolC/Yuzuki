@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import json
 
 from config.config import REPLY_PER_PAGE
 from exception import BadRequest, Unauthorized
@@ -9,7 +10,10 @@ from helper.permission import can_write, is_anybody, is_author, \
     is_author_or_admin
 from helper.resource import YuzukiResource, need_anybody_permission
 from helper.template import render_template
-from helper.slack import post_message as post_message_to_slack
+from helper.slack import (
+    post_messages_to_subscribers,
+    post_new_article_message as post_new_article_message_to_slack
+)
 
 article_content_re = re.compile(r'&(#\d+|[a-z]+);')
 
@@ -32,6 +36,7 @@ class ArticleParent(YuzukiResource):
         self.putChild("write", ArticleWrite())
         self.putChild("delete", ArticleDelete())
         self.putChild("edit", ArticleEdit())
+        self.putChild("subscribe", ArticleSubscribe())
 
 
 class ArticleView(YuzukiResource):
@@ -79,7 +84,8 @@ class ArticleWrite(YuzukiResource):
             article_view_url = "/article/view?id=%s" % article.uid
             request.redirect(article_view_url)
 
-            post_message_to_slack(request, article, article_view_url)
+            post_new_article_message_to_slack(request, article,
+                                              article_view_url)
             return "article posted"
         else:
             raise BadRequest()
@@ -96,6 +102,19 @@ class ArticleDelete(YuzukiResource):
             return "delete success"
         else:
             raise Unauthorized()
+
+
+class ArticleSubscribe(YuzukiResource):
+    @need_anybody_permission
+    def render_POST(self, request):
+        article_id = request.get_argument("id")
+        article = get_article(request, article_id)
+        if request.user in article.subscribing_users:
+            article.subscribing_users.remove(request.user)
+        else:
+            article.subscribing_users.append(request.user)
+        request.dbsession.commit()
+        return json.dumps(request.user in article.subscribing_users)
 
 
 class ArticleEdit(YuzukiResource):
@@ -120,7 +139,15 @@ class ArticleEdit(YuzukiResource):
             if subject.strip():
                 edit_article(request, article, subject, content)
                 request.dbsession.commit()
-                request.redirect("/article/view?id=%s" % article.uid)
+                redirect_url = "/article/view?id=%s" % article.uid
+                request.redirect(redirect_url)
+                post_messages_to_subscribers(request,
+                                             article.subscribing_users,
+                                             u"구독하고 있는 글이 수정되었습니다.",
+                                             article.user,
+                                             article.subject,
+                                             article.compiled_content,
+                                             redirect_url)
                 return "article edit success"
             else:
                 raise BadRequest()

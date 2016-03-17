@@ -11,7 +11,14 @@
     </div>
     <div class="row">
         <div class="col-xs-12 article-subject">
-            <h2>{{ article.subject | e }}</h2>
+            <h2>
+                {{ article.subject | e }}
+                {% if request.user %}
+                <small>
+                  <span id="subscribe_article" class="glyphicon glyphicon-star{% if request.user not in article.subscribing_users %}-empty{% endif %}"></span>
+                </small>
+                {% endif %}
+            </h2>
         </div>
     </div>
     <div class="row">
@@ -239,5 +246,16 @@
         $(".reply-form").on("submit", function() {
             this.submit.disabled = true;
         })
+        {% if request.user %}
+        $("#subscribe_article").click(function() {
+            $.post("/article/subscribe", {
+                id:  {{ article.uid }}
+            }, function(data) {
+                $("#subscribe_article")
+                    .removeClass("glyphicon-star glyphicon-star-empty")
+                    .addClass("glyphicon-star" + (eval(data) ? "" : "-empty"));
+            });
+        }).css("color", "#FC0").css("cursor", "pointer");
+        {% endif %}
     </script>
 {% endblock %}

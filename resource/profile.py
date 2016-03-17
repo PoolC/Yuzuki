@@ -44,6 +44,7 @@ class ProfileEdit(YuzukiResource):
         pd_address = request.get_argument("pd_address") or None
         pd_phone = request.get_argument("pd_phone") or None
         pd_bio = request.get_argument("pd_bio") or None
+        slack_id = request.get_argument("slack_id") or None
 
         # error check
         err = None
@@ -74,6 +75,8 @@ class ProfileEdit(YuzukiResource):
             request.user.pd_phone = pd_phone
         if pd_bio:
             request.user.pd_bio = markdown_and_linkify(pd_bio)
+        if slack_id is not None:
+            request.user.slack_id = slack_id
 
         request.dbsession.commit()
         request.redirect("/profile/view")
