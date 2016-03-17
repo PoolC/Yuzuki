@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import re
-from json import dumps
+import re, json
 
 from config.config import REPLY_PER_PAGE
 from exception import BadRequest, Unauthorized
@@ -114,7 +113,7 @@ class ArticleSubscribe(YuzukiResource):
         else:
             article.subscribing_users.append(request.user)
         request.dbsession.commit()
-        return dumps(request.user in article.subscribing_users)
+        return json.dumps(request.user in article.subscribing_users)
 
 
 class ArticleEdit(YuzukiResource):
