@@ -114,4 +114,8 @@ class BoardEdit(YuzukiResource):
 class BoardAdd(YuzukiResource):
     @need_admin_permission
     def render_GET(self, request):
-        pass
+        groups = request.dbsession.query(Group).all()
+        context = {
+            "groups": groups,
+        }
+        return render_template("admin_board_add.html", request, context)
