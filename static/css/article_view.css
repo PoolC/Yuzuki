@@ -18,6 +18,10 @@
     padding: 20px 30px;
 }
 
+.content img {
+    max-width: 100%;
+}
+
 .buttons {
     padding-top: 20px;
     padding-bottom: 20px;
