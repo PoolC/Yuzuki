@@ -14,3 +14,7 @@ PoolC 홈페이지 제작 프로젝트
 3. run server  
   `python main.py`  
   now Yuzuki is serving on 8080 port.
+
+
+## TODO
+`flask` migration
