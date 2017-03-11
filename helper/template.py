@@ -6,7 +6,7 @@ from twisted.web.http import RESPONSES
 
 from config.side_menu_conf import SIDE_MENU
 from helper.permission import is_anybody
-from config.config import SITE_NAME
+from config.config import SITE_NAME, SITE_LOGO_IMAGE_HORIZONTAL
 
 
 jinja2_env = Environment(loader=FileSystemLoader("template", encoding="utf-8"),
@@ -45,5 +45,6 @@ def generate_error_message(request, code, detail):
         "brief": brief,
         "detail": detail,
         "title": str(code) + " " + str(brief),
+        "image": SITE_LOGO_IMAGE_HORIZONTAL,
     }
     return render_template("error.html", request, context)

@@ -15,6 +15,7 @@ class Main(YuzukiResource):
         for path in ROUTE:
             self.putChild(path, ROUTE[path])
 
+
 logger.info("Yuzuki started")
 reactor.listenTCP(8080, YuzukiSite(Main()))
 reactor.run()
